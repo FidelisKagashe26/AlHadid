@@ -1,64 +1,746 @@
 {% extends "base.html" %}
 {% block title %}About — Al-Hadid Foundation{% endblock %}
 {% block content %}
-<section class="bg-emerald-50/50 dark:bg-slate-900/40 border-b border-emerald-100 dark:border-slate-800">
-  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <h1 class="text-3xl font-semibold mb-3">About Al-Hadid Foundation</h1>
-    <p class="text-slate-600 dark:text-slate-300 max-w-3xl">
-      The Al-Hadid Foundation is a faith-driven, non-profit organization dedicated to uplifting vulnerable communities
-      and promoting Islamic values of compassion and service. Founded by <b>Zuberi Daffa</b>, we serve humanity through
-      care, empowerment, and development.
-    </p>
+
+<style>
+  /* ===== Enhanced About Page Styles ===== */
+  .hero-about{
+    position:relative;
+    overflow:hidden;
+    background: linear-gradient(135deg, rgba(209,173,81,0.05), rgba(16,185,129,0.05));
+  }
+  .hero-about::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+      repeating-linear-gradient(45deg, rgba(209,173,81,.08) 0 2px, transparent 2px 20px),
+      repeating-linear-gradient(-45deg, rgba(16,185,129,.06) 0 1px, transparent 1px 25px);
+    pointer-events:none;
+  }
+  
+  .timeline-item{
+    position: relative;
+    padding-left: 2rem;
+  }
+  .timeline-item::before{
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    width: 12px;
+    height: 12px;
+    background: linear-gradient(135deg, #d1ad51, #10b981);
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(209,173,81,0.1);
+  }
+  .timeline-item::after{
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 1.5rem;
+    width: 2px;
+    height: calc(100% - 0.5rem);
+    background: linear-gradient(180deg, rgba(209,173,81,0.3), transparent);
+  }
+  .timeline-item:last-child::after{
+    display: none;
+  }
+
+  .value-card{
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(209,173,81,0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .dark .value-card{
+    background: rgba(2,6,23,0.8);
+    border: 1px solid rgba(209,173,81,0.15);
+  }
+  .value-card:hover{
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(16,24,40,.15);
+  }
+  .dark .value-card:hover{
+    box-shadow: 0 20px 40px rgba(0,0,0,.4);
+  }
+  .value-card::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #d1ad51, #10b981);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+  .value-card:hover::before{
+    transform: scaleX(1);
+  }
+
+  .founder-card{
+    background: linear-gradient(135deg, rgba(209,173,81,0.05), rgba(255,255,255,0.95));
+    border: 2px solid rgba(209,173,81,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+  .dark .founder-card{
+    background: linear-gradient(135deg, rgba(209,173,81,0.08), rgba(2,6,23,0.95));
+    border: 2px solid rgba(209,173,81,0.15);
+  }
+
+  .impact-number{
+    background: linear-gradient(135deg, #d1ad51, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 800;
+  }
+
+  .section-divider{
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(209,173,81,0.3), transparent);
+    margin: 3rem 0;
+  }
+
+  .gold-underline::after{
+    content:""; 
+    display:block; 
+    width:72px; 
+    height:3px; 
+    margin-top:12px; 
+    border-radius:999px;
+    background:linear-gradient(90deg,#cab26b,#d1ad51);
+  }
+
+  .islamic-pattern{
+    background-image:
+      radial-gradient(circle at 25% 25%, rgba(209,173,81,0.1) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(16,185,129,0.08) 0%, transparent 50%);
+  }
+</style>
+
+<!-- ===================== HERO SECTION ===================== -->
+<section class="hero-about border-b border-emerald-100 dark:border-slate-800 relative">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <div>
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold/10 text-gold mb-6">
+          <i class="fa-solid fa-star-and-crescent"></i> 
+          <span class="text-sm font-medium">Established in the Name of Allah</span>
+        </div>
+        
+        <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+          About <span class="text-gold">Al-Hadid</span> Foundation
+        </h1>
+        
+        <p class="text-lg text-slate-600 dark:text-slate-300 mb-8 leading-relaxed">
+          A faith-driven, non-profit organization dedicated to uplifting vulnerable communities
+          and promoting Islamic values of compassion and service. Founded by <strong class="text-gold">Zuberi Daffa</strong>, 
+          we serve humanity through care, empowerment, and sustainable development.
+        </p>
+        
+        <div class="flex flex-wrap gap-4">
+          <div class="flex items-center gap-2 bg-white/50 dark:bg-slate-800/50 px-4 py-2 rounded-full">
+            <i class="fa-solid fa-calendar-alt text-gold"></i>
+            <span class="text-sm font-medium">Founded 2018</span>
+          </div>
+          <div class="flex items-center gap-2 bg-white/50 dark:bg-slate-800/50 px-4 py-2 rounded-full">
+            <i class="fa-solid fa-users text-emerald-600"></i>
+            <span class="text-sm font-medium">2,400+ Lives Touched</span>
+          </div>
+          <div class="flex items-center gap-2 bg-white/50 dark:bg-slate-800/50 px-4 py-2 rounded-full">
+            <i class="fa-solid fa-map-marker-alt text-blue-600"></i>
+            <span class="text-sm font-medium">Tanzania Wide</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="relative">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-4">
+            <img src="https://images.pexels.com/photos/8088495/pexels-photo-8088495.jpeg" 
+                 class="rounded-2xl w-full h-48 object-cover shadow-lg" alt="Community service">
+            <img src="https://images.pexels.com/photos/8088020/pexels-photo-8088020.jpeg" 
+                 class="rounded-2xl w-full h-32 object-cover shadow-lg" alt="Education">
+          </div>
+          <div class="space-y-4 mt-8">
+            <img src="https://images.pexels.com/photos/8088499/pexels-photo-8088499.jpeg" 
+                 class="rounded-2xl w-full h-32 object-cover shadow-lg" alt="Healthcare">
+            <img src="https://images.pexels.com/photos/8088021/pexels-photo-8088021.jpeg" 
+                 class="rounded-2xl w-full h-48 object-cover shadow-lg" alt="Mosque">
+          </div>
+        </div>
+        
+        <!-- Floating stats -->
+        <div class="absolute -bottom-6 -left-6 bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-xl border border-gold/20">
+          <div class="text-2xl font-bold text-gold">7+</div>
+          <div class="text-xs text-slate-600 dark:text-slate-400">Years of Service</div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
-  <div>
-    <h2 class="text-xl font-semibold mb-2">Mission</h2>
-    <p>To serve humanity by providing care for orphans, empowering women through Islamic teachings, improving places of worship, and supporting premature babies in hospitals, guided by the principles of compassion and faith.</p>
+<!-- ===================== ISLAMIC INSPIRATION ===================== -->
+<section class="py-12 islamic-pattern">
+  <div class="max-w-4xl mx-auto px-4 text-center">
+    <div class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-2xl p-8 border border-gold/10">
+      <p class="text-2xl md:text-3xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+        "إِنَّمَا الْمُؤْمِنُونَ إِخْوَةٌ"
+      </p>
+      <p class="text-lg text-slate-700 dark:text-slate-300 mb-3">
+        "The believers are but brothers"
+      </p>
+      <p class="text-sm text-gold font-medium">— Quran 49:10</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MISSION & VISION ===================== -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <div class="grid md:grid-cols-2 gap-12">
+    <div class="value-card rounded-2xl p-8">
+      <div class="w-16 h-16 bg-gold/20 rounded-full flex items-center justify-center mb-6">
+        <i class="fa-solid fa-bullseye text-gold text-2xl"></i>
+      </div>
+      <h2 class="text-2xl font-semibold mb-4 gold-underline">Our Mission</h2>
+      <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+        To serve humanity by providing comprehensive care for orphans, empowering women through Islamic teachings and practical skills, 
+        improving places of worship to strengthen community bonds, and supporting premature babies in hospitals with life-saving equipment. 
+        All our efforts are guided by the eternal principles of compassion, justice, and unwavering faith in Allah.
+      </p>
+    </div>
+
+    <div class="value-card rounded-2xl p-8">
+      <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-6">
+        <i class="fa-solid fa-eye text-emerald-600 text-2xl"></i>
+      </div>
+      <h2 class="text-2xl font-semibold mb-4 gold-underline">Our Vision</h2>
+      <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+        To build a society where vulnerable individuals are not just supported but empowered to thrive, where women are equipped with both 
+        spiritual knowledge and practical skills for independence, and where Islamic values of brotherhood, compassion, and social justice 
+        guide sustainable community development across Tanzania and beyond.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOUNDER'S MESSAGE ===================== -->
+<section class="bg-gradient-to-br from-slate-50 to-emerald-50/30 dark:from-slate-900 dark:to-slate-800 py-16">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="founder-card rounded-2xl p-8 md:p-12">
+      <div class="grid md:grid-cols-3 gap-8 items-center">
+        <div class="text-center">
+          <div class="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-br from-gold/20 to-emerald-100 flex items-center justify-center">
+            <i class="fa-solid fa-user-tie text-4xl text-gold"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-800 dark:text-slate-200">Zuberi Daffa</h3>
+          <p class="text-sm text-gold font-medium">Founder & Chairman</p>
+        </div>
+        
+        <div class="md:col-span-2">
+          <h3 class="text-2xl font-semibold mb-4 text-slate-800 dark:text-slate-200">A Message from Our Founder</h3>
+          <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+            "Bismillahi Rahmani Rahim. When I established Al-Hadid Foundation, I was guided by the Islamic principle that 
+            'whoever saves a life, it is as if he has saved all of mankind.' Our work is not just charity—it is a sacred duty 
+            to serve Allah by serving His creation."
+          </p>
+          <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+            "Every orphan we support, every woman we empower, every mosque we build, and every premature baby we help save 
+            is a step toward building the just and compassionate society that Islam envisions. May Allah accept our efforts 
+            and multiply their impact for generations to come."
+          </p>
+          
+          <div class="mt-6 flex items-center gap-4">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-graduation-cap text-gold"></i>
+              <span class="text-sm text-slate-600 dark:text-slate-400">Islamic Studies Graduate</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-briefcase text-emerald-600"></i>
+              <span class="text-sm text-slate-600 dark:text-slate-400">Community Development Expert</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CORE VALUES ===================== -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <div class="mb-12">
+    <h2 class="text-3xl font-semibold gold-underline mb-6">Our Core Values</h2>
+    <p class="text-slate-600 text-2xl font-bold text-bold dark:text-slate-300 max-w-3xl mx-auto">
+      These Islamic principles guide every decision we make and every action we take in service of humanity.
+    </p>
   </div>
 
-  <div>
-    <h2 class="text-xl font-semibold mb-2">Vision</h2>
-    <p>A society where vulnerable individuals are supported, women are empowered with knowledge, and Islamic values guide community development.</p>
-  </div>
+  <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="value-card rounded-2xl p-6 text-center">
+      <div class="w-16 h-16 bg-gold/20 rounded-full mx-auto mb-4 flex items-center justify-center">
+        <i class="fa-solid fa-heart text-gold text-2xl"></i>
+      </div>
+      <h3 class="font-semibold text-lg mb-3">Compassion (Rahma)</h3>
+      <p class="text-sm text-slate-600 dark:text-slate-300">
+        Following the mercy of Allah, we approach every person with kindness and understanding.
+      </p>
+    </div>
 
-  <div>
-    <h2 class="text-xl font-semibold mb-3">Core Objectives</h2>
-    <ul class="list-disc ms-5 space-y-1">
-      <li>Provide essential needs and education support for orphans.</li>
-      <li>Deliver Islamic education and empowerment programs for women.</li>
-      <li>Build and renovate mosques to improve worship facilities.</li>
-      <li>Provide medical and financial assistance to premature babies in hospitals.</li>
-    </ul>
+    <div class="value-card rounded-2xl p-6 text-center">
+      <div class="w-16 h-16 bg-emerald-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+        <i class="fa-solid fa-balance-scale text-emerald-600 text-2xl"></i>
+      </div>
+      <h3 class="font-semibold text-lg mb-3">Justice (Adl)</h3>
+      <p class="text-sm text-slate-600 dark:text-slate-300">
+        We ensure fair distribution of resources and equal opportunities for all beneficiaries.
+      </p>
+    </div>
+
+    <div class="value-card rounded-2xl p-6 text-center">
+      <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+        <i class="fa-solid fa-handshake text-blue-600 text-2xl"></i>
+      </div>
+      <h3 class="font-semibold text-lg mb-3">Trust (Amanah)</h3>
+      <p class="text-sm text-slate-600 dark:text-slate-300">
+        We honor the trust placed in us by donors and communities through transparency and accountability.
+      </p>
+    </div>
+
+    <div class="value-card rounded-2xl p-6 text-center">
+      <div class="w-16 h-16 bg-purple-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+        <i class="fa-solid fa-users text-purple-600 text-2xl"></i>
+      </div>
+      <h3 class="font-semibold text-lg mb-3">Unity (Wahda)</h3>
+      <p class="text-sm text-slate-600 dark:text-slate-300">
+        We bring communities together, fostering brotherhood and collective responsibility.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== OUR JOURNEY / TIMELINE ===================== -->
+<section class="bg-white dark:bg-slate-900 py-16">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mb-12">
+      <h2 class="text-3xl font-semibold gold-underline mb-6">Our Journey</h2>
+      <p class="text-slate-600 text-2xl font-bold dark:text-slate-300 max-w-3xl mx-auto">
+        From humble beginnings to impacting thousands of lives across Tanzania.
+      </p>
+    </div>
+
+    <div class="max-w-4xl mx-auto">
+      <div class="space-y-8">
+        <div class="timeline-item">
+          <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="bg-gold/20 text-gold px-3 py-1 rounded-full text-sm font-medium">2018</span>
+              <h3 class="font-semibold text-lg">Foundation Established</h3>
+            </div>
+            <p class="text-slate-600 dark:text-slate-300">
+              Al-Hadid Foundation was founded by Zuberi Daffa with a vision to serve vulnerable communities through Islamic values of compassion and service.
+            </p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-sm font-medium">2019</span>
+              <h3 class="font-semibold text-lg">First Orphan Support Program</h3>
+            </div>
+            <p class="text-slate-600 dark:text-slate-300">
+              Launched our flagship orphan support program, providing monthly assistance to 50 children in Morogoro region.
+            </p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">2020</span>
+              <h3 class="font-semibold text-lg">Women's Empowerment Initiative</h3>
+            </div>
+            <p class="text-slate-600 dark:text-slate-300">
+              Started weekly Islamic study circles and vocational training programs for women, empowering them with knowledge and skills.
+            </p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium">2021</span>
+              <h3 class="font-semibold text-lg">Mosque Development Program</h3>
+            </div>
+            <p class="text-slate-600 dark:text-slate-300">
+              Began renovating and building mosques, creating dignified worship spaces that unite communities in faith.
+            </p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="bg-pink-100 text-pink-700 px-3 py-1 rounded-full text-sm font-medium">2022</span>
+              <h3 class="font-semibold text-lg">Premature Baby Care Support</h3>
+            </div>
+            <p class="text-slate-600 dark:text-slate-300">
+              Introduced life-saving support for premature babies, providing incubators and medical equipment to hospitals.
+            </p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="bg-gold/20 text-gold px-3 py-1 rounded-full text-sm font-medium">2024</span>
+              <h3 class="font-semibold text-lg">Expanding Impact</h3>
+            </div>
+            <p class="text-slate-600 dark:text-slate-300">
+              Today, we serve over 2,400 beneficiaries across multiple regions, with plans to expand our reach even further.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CORE OBJECTIVES & PROGRAMS ===================== -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <div class="mb-12">
+    <h2 class="text-3xl font-semibold gold-underline mb-6">Our Core Programs</h2>
+    <p class="text-slate-600 text-2xl font-bold dark:text-slate-300 max-w-3xl">
+      Four comprehensive programs designed to address the most pressing needs in our communities.
+    </p>
   </div>
 
   <div class="grid md:grid-cols-2 gap-8">
-    <div class="rounded-2xl border dark:border-slate-800 p-6">
-      <h3 class="font-semibold mb-2">Orphan Support Program</h3>
-      <p class="text-slate-600 dark:text-slate-300">Monthly food, clothing, school materials; mentorship and counseling.</p>
+    <div class="group bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-8 hover:shadow-xl transition-all duration-300">
+      <div class="flex items-start gap-4">
+        <div class="w-16 h-16 bg-gold/20 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+          <i class="fa-solid fa-child-reaching text-gold text-2xl"></i>
+        </div>
+        <div class="flex-1">
+          <h3 class="font-semibold text-xl mb-3">Orphan Support Program</h3>
+          <p class="text-slate-600 dark:text-slate-300 mb-4">
+            Comprehensive care including monthly food packages, clothing, school materials, healthcare, mentorship, and counseling services.
+          </p>
+          <ul class="text-sm text-slate-500 dark:text-slate-400 space-y-1">
+            <li>• Monthly food and clothing assistance</li>
+            <li>• Educational materials and tuition support</li>
+            <li>• Healthcare and medical assistance</li>
+            <li>• Mentorship and psychological counseling</li>
+          </ul>
+        </div>
+      </div>
     </div>
-    <div class="rounded-2xl border dark:border-slate-800 p-6">
-      <h3 class="font-semibold mb-2">Women’s Islamic Empowerment</h3>
-      <p class="text-slate-600 dark:text-slate-300">Weekly Islamic study circles and vocational training for self-reliance.</p>
-    </div>
-    <div class="rounded-2xl border dark:border-slate-800 p-6">
-      <h3 class="font-semibold mb-2">Mosque Development Initiative</h3>
-      <p class="text-slate-600 dark:text-slate-300">Renovating old mosques and building new ones in underserved areas.</p>
-    </div>
-    <div class="rounded-2xl border dark:border-slate-800 p-6">
-      <h3 class="font-semibold mb-2">Premature Baby Care Support</h3>
-      <p class="text-slate-600 dark:text-slate-300">Supplying incubators/equipment and covering hospital bills for needy families.</p>
-    </div>
-  </div>
 
-  <div class="rounded-2xl border dark:border-slate-800 p-6">
-    <h2 class="text-xl font-semibold mb-2">Contact</h2>
-    <ul class="text-slate-600 dark:text-slate-300 space-y-1">
-      <li>📍 Morogoro — Tanzania</li>
-      <li>📞 0758 150 976</li>
-      <li>📧 info@alhadid.org</li>
-    </ul>
+    <div class="group bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-8 hover:shadow-xl transition-all duration-300">
+      <div class="flex items-start gap-4">
+        <div class="w-16 h-16 bg-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+          <i class="fa-solid fa-graduation-cap text-emerald-600 text-2xl"></i>
+        </div>
+        <div class="flex-1">
+          <h3 class="font-semibold text-xl mb-3">Women's Islamic Empowerment</h3>
+          <p class="text-slate-600 dark:text-slate-300 mb-4">
+            Holistic empowerment through Islamic education, practical skills training, and economic opportunities for sustainable independence.
+          </p>
+          <ul class="text-sm text-slate-500 dark:text-slate-400 space-y-1">
+            <li>• Weekly Islamic study circles and Quran classes</li>
+            <li>• Vocational training in various skills</li>
+            <li>• Microfinance and business development</li>
+            <li>• Leadership and community engagement</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="group bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-8 hover:shadow-xl transition-all duration-300">
+      <div class="flex items-start gap-4">
+        <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+          <i class="fa-solid fa-mosque text-blue-600 text-2xl"></i>
+        </div>
+        <div class="flex-1">
+          <h3 class="font-semibold text-xl mb-3">Mosque Development Initiative</h3>
+          <p class="text-slate-600 dark:text-slate-300 mb-4">
+            Building and renovating mosques to create dignified worship spaces that strengthen community bonds and spiritual growth.
+          </p>
+          <ul class="text-sm text-slate-500 dark:text-slate-400 space-y-1">
+            <li>• Complete renovation of aging mosques</li>
+            <li>• Construction of new mosques in underserved areas</li>
+            <li>• Community center facilities integration</li>
+            <li>• Maintenance and sustainability programs</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="group bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-8 hover:shadow-xl transition-all duration-300">
+      <div class="flex items-start gap-4">
+        <div class="w-16 h-16 bg-pink-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+          <i class="fa-solid fa-baby text-pink-600 text-2xl"></i>
+        </div>
+        <div class="flex-1">
+          <h3 class="font-semibold text-xl mb-3">Premature Baby Care Support</h3>
+          <p class="text-slate-600 dark:text-slate-300 mb-4">
+            Life-saving medical support through equipment provision and financial assistance for families with premature babies.
+          </p>
+          <ul class="text-sm text-slate-500 dark:text-slate-400 space-y-1">
+            <li>• Modern incubators and medical equipment</li>
+            <li>• Hospital bill assistance for needy families</li>
+            <li>• Follow-up care and family support</li>
+            <li>• Healthcare facility partnerships</li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
+
+<!-- ===================== IMPACT STATISTICS ===================== -->
+<section class="bg-gradient-to-br from-gold/5 to-emerald-50/30 dark:from-gold/10 dark:to-slate-800 py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mb-12">
+      <h2 class="text-3xl font-semibold gold-underline mb-6">Our Impact in Numbers</h2>
+      <p class="text-slate-600 text-2xl font-bold dark:text-slate-300 max-w-3xl mx-auto">
+        Alhamdulillahi, through Allah's blessing and community support, we have achieved significant milestones.
+      </p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div class="text-center bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-6 border border-gold/10">
+        <div class="impact-number text-4xl md:text-5xl font-extrabold mb-2">1,200+</div>
+        <div class="text-slate-700 dark:text-slate-300 font-medium mb-1">Orphans Supported</div>
+        <div class="text-xs text-slate-500 dark:text-slate-400">Across 25 regions in Tanzania</div>
+      </div>
+
+      <div class="text-center bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-6 border border-emerald-200/50">
+        <div class="impact-number text-4xl md:text-5xl font-extrabold mb-2">850+</div>
+        <div class="text-slate-700 dark:text-slate-300 font-medium mb-1">Women Empowered</div>
+        <div class="text-xs text-slate-500 dark:text-slate-400">Through education and skills training</div>
+      </div>
+
+      <div class="text-center bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-6 border border-blue-200/50">
+        <div class="impact-number text-4xl md:text-5xl font-extrabold mb-2">45</div>
+        <div class="text-slate-700 dark:text-slate-300 font-medium mb-1">Mosques Developed</div>
+        <div class="text-xs text-slate-500 dark:text-slate-400">Renovated and newly constructed</div>
+      </div>
+
+      <div class="text-center bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-6 border border-pink-200/50">
+        <div class="impact-number text-4xl md:text-5xl font-extrabold mb-2">310</div>
+        <div class="text-slate-700 dark:text-slate-300 font-medium mb-1">Babies Assisted</div>
+        <div class="text-xs text-slate-500 dark:text-slate-400">Premature babies saved</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PARTNERSHIPS & RECOGNITION ===================== -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <div class="mb-12">
+    <h2 class="text-3xl font-semibold gold-underline mb-6">Partnerships & Recognition</h2>
+    <p class="text-slate-600  text-2xl font-bold dark:text-slate-300 max-w-3xl mx-auto">
+      Working together with various organizations and receiving recognition for our community impact.
+    </p>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-8">
+    <div class="text-center bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700">
+      <div class="w-16 h-16 bg-gold/20 rounded-full mx-auto mb-4 flex items-center justify-center">
+        <i class="fa-solid fa-hospital text-gold text-2xl"></i>
+      </div>
+      <h3 class="font-semibold text-lg mb-2">Healthcare Partners</h3>
+      <p class="text-sm text-slate-600 dark:text-slate-300">
+        Collaborating with 12 hospitals across Tanzania to provide life-saving equipment and support.
+      </p>
+    </div>
+
+    <div class="text-center bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700">
+      <div class="w-16 h-16 bg-emerald-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+        <i class="fa-solid fa-mosque text-emerald-600 text-2xl"></i>
+      </div>
+      <h3 class="font-semibold text-lg mb-2">Islamic Organizations</h3>
+      <p class="text-sm text-slate-600 dark:text-slate-300">
+        Partnering with Islamic institutions and mosques to amplify our community impact.
+      </p>
+    </div>
+
+    <div class="text-center bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700">
+      <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+        <i class="fa-solid fa-award text-blue-600 text-2xl"></i>
+      </div>
+      <h3 class="font-semibold text-lg mb-2">Community Recognition</h3>
+      <p class="text-sm text-slate-600 dark:text-slate-300">
+        Recognized by local government and community leaders for outstanding service.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ===================== ENHANCED CONTACT SECTION ===================== -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <div class="bg-gradient-to-br from-gold/5 to-emerald-50/30 dark:from-gold/10 dark:to-slate-800 rounded-2xl p-8 md:p-12">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <div>
+        <h2 class="text-3xl font-semibold gold-underline mb-6">Get in Touch</h2>
+        <p class="text-slate-600 dark:text-slate-300 mb-8">
+          We welcome partnerships, volunteers, and anyone interested in joining our mission to serve humanity 
+          through Islamic values of compassion and service.
+        </p>
+        
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center">
+              <i class="fa-solid fa-map-marker-alt text-gold"></i>
+            </div>
+            <div>
+              <div class="font-medium text-slate-800 dark:text-slate-200">Location</div>
+              <div class="text-slate-600 dark:text-slate-300">Morogoro, Tanzania</div>
+            </div>
+          </div>
+          
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
+              <i class="fa-solid fa-phone text-emerald-600"></i>
+            </div>
+            <div>
+              <div class="font-medium text-slate-800 dark:text-slate-200">Phone</div>
+              <a href="tel:+255758150976" class="text-emerald-600 hover:text-emerald-700 transition-colors">
+                +255 758 150 976
+              </a>
+            </div>
+          </div>
+          
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+              <i class="fa-solid fa-envelope text-blue-600"></i>
+            </div>
+            <div>
+              <div class="font-medium text-slate-800 dark:text-slate-200">Email</div>
+              <a href="mailto:info@alhadid.org" class="text-blue-600 hover:text-blue-700 transition-colors">
+                info@alhadid.org
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-8 border border-gold/10">
+        <h3 class="text-xl font-semibold mb-6 text-center">Connect With Us</h3>
+        
+        <div class="grid grid-cols-2 gap-4 mb-6">
+          <a href="#" class="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl transition-colors">
+            <i class="fa-brands fa-facebook-f"></i>
+            <span class="text-sm">Facebook</span>
+          </a>
+          <a href="#" class="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-xl transition-colors">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span class="text-sm">WhatsApp</span>
+          </a>
+          <a href="#" class="flex items-center justify-center gap-2 bg-blue-400 hover:bg-blue-500 text-white px-4 py-3 rounded-xl transition-colors">
+            <i class="fa-brands fa-twitter"></i>
+            <span class="text-sm">Twitter</span>
+          </a>
+          <a href="#" class="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-xl transition-colors">
+            <i class="fa-brands fa-youtube"></i>
+            <span class="text-sm">YouTube</span>
+          </a>
+        </div>
+        
+        <div class="text-center">
+          <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">
+            Join our community and stay updated with our latest programs and impact stories.
+          </p>
+          <div class="flex gap-3">
+            <a href="#" class="btn btn-primary flex-1 text-center text-sm">
+              <i class="fa-solid fa-user-plus mr-2"></i>Volunteer
+            </a>
+            <a href="#" class="btn btn-outline flex-1 text-center text-sm">
+              <i class="fa-solid fa-heart mr-2"></i>Donate
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Enhanced animations and interactions
+  (function(){
+    // Intersection Observer for fade-in animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    // Apply fade-in to various elements
+    document.querySelectorAll('.value-card, .timeline-item > div, .founder-card').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+      observer.observe(el);
+    });
+
+    // Counter animation for impact numbers
+    const counters = document.querySelectorAll('.impact-number');
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const target = entry.target;
+          const text = target.textContent;
+          const number = parseInt(text.replace(/[^\d]/g, ''));
+          const suffix = text.replace(/[\d,]/g, '');
+          
+          let current = 0;
+          const increment = number / 50;
+          const timer = setInterval(() => {
+            current += increment;
+            if (current >= number) {
+              current = number;
+              clearInterval(timer);
+            }
+            target.textContent = Math.floor(current).toLocaleString() + suffix;
+          }, 30);
+          
+          counterObserver.unobserve(target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    counters.forEach(counter => counterObserver.observe(counter));
+
+    // Smooth scroll for internal links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if(target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  })();
+</script>
+
 {% endblock %}

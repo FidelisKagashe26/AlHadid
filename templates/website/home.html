@@ -2,56 +2,831 @@
 {% load static %}
 {% block title %}Home — {{ site_settings.site_name|default:"Al-Hadid Foundation" }}{% endblock %}
 {% block content %}
-<!-- Hero -->
-<section class="relative">
-  <div class="max-w-7xl mx-auto px-4 py-12 grid md:grid-cols-2 gap-8 items-center">
-    <div>
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/10 text-gold mb-3">
-        <i class="fa-solid fa-star-and-crescent"></i> In the Name of Allah, the Most Merciful
+
+<style>
+  /* ===== HERO BG (pattern + tint) ===== */
+  .hero{position:relative;overflow:hidden}
+  .hero .bg-layer{position:absolute;inset:0;z-index:0;pointer-events:none}
+
+  .hero .bg-pattern{
+    background-image:
+      url("{% static 'images/patterns/arabesque.jpg' %}"),
+      repeating-linear-gradient(45deg, rgba(209,173,81,.10) 0 12px, rgba(0,0,0,0) 12px 24px);
+    background-repeat:repeat;
+    background-position:center;
+    background-size:560px auto, auto;
+    opacity:.75;
+  }
+  .dark .hero .bg-pattern{ opacity:.26; filter:brightness(1.18) contrast(1.18) saturate(1.08); }
+
+  .hero .bg-tint{ background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(255,255,255,.84)); }
+  .dark .hero .bg-tint{ background:linear-gradient(180deg,rgba(2,6,23,.96),rgba(2,6,23,.86)); }
+
+  .hero .bg-vignette{
+    background:radial-gradient(700px 420px at min(42vw,560px) 32%, rgba(255,255,255,.18), transparent 60%);
+  }
+  .dark .hero .bg-vignette{
+    background:radial-gradient(700px 420px at min(42vw,560px) 32%, rgba(255,255,255,.10), transparent 60%);
+  }
+
+  .hero .content{position:relative;z-index:1}
+
+  /* Typewriter (NO caret) */
+  .hero-typed-wrap{white-space:nowrap;display:inline-flex;align-items:baseline}
+  .hero-typed{display:inline-block;min-width:8ch}
+
+  /* Glass / Shine effect on images */
+  .img-glass{position:relative;overflow:hidden}
+  .img-glass::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:
+      radial-gradient(100% 60% at 20% 15%, rgba(255,255,255,.15), transparent 60%),
+      radial-gradient(80% 50% at 80% 0%, rgba(255,255,255,.08), transparent 60%);
+    mix-blend-mode:screen;
+  }
+  .dark .img-glass::before{
+    background:
+      radial-gradient(100% 60% at 20% 15%, rgba(255,255,255,.10), transparent 60%),
+      radial-gradient(80% 50% at 80% 0%, rgba(255,255,255,.06), transparent 60%);
+  }
+  .img-glass::after{
+    content:"";position:absolute;top:0;left:-150%;height:100%;width:50%;
+    transform:skewX(-20deg);
+    background:linear-gradient(90deg, rgba(255,255,255,0) 0%,
+                                       rgba(255,255,255,.45) 50%,
+                                       rgba(255,255,255,0) 100%);
+    filter:blur(1px);
+  }
+  .img-glass.run-shine::after{ animation:shine 2.15s ease-in-out; }
+  @keyframes shine { from{ left:-150%; } to{ left:130%; } }
+
+  @media (prefers-reduced-motion: reduce){
+    .img-glass::after,.img-glass::before{ animation:none !important; transition:none !important; }
+  }
+
+  /* ====== BELOW: Extra styles for sections (colors only) ====== */
+  .section { padding-block: 3.5rem; }
+  @media (min-width:768px){ .section{ padding-block: 4.5rem; } }
+
+  .pattern-lines{
+    background-image:
+      repeating-linear-gradient(90deg, rgba(209,173,81,.10) 0 1px, transparent 1px 22px),
+      repeating-linear-gradient(0deg,  rgba(209,173,81,.06) 0 1px, transparent 1px 22px);
+    pointer-events:none;
+  }
+  .gold-underline::after{
+    content:""; display:block; width:72px; height:3px; margin-top:12px; border-radius:999px;
+    background:linear-gradient(90deg,#cab26b,#d1ad51);
+  }
+  .card-ghost{ box-shadow: 0 10px 32px rgba(16,24,40,.08); }
+  .dark .card-ghost{ box-shadow: 0 10px 32px rgba(0,0,0,.35); }
+  .lead{ font-size:1.0625rem; line-height:1.7; }
+
+  .testimonial-card{
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(209,173,81,0.1);
+    transition: all 0.3s ease;
+  }
+  .dark .testimonial-card{
+    background: rgba(2,6,23,0.95);
+    border: 1px solid rgba(209,173,81,0.15);
+  }
+  .testimonial-card:hover{
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(16,24,40,.12);
+  }
+  .dark .testimonial-card:hover{
+    box-shadow: 0 20px 40px rgba(0,0,0,.4);
+  }
+  
+  .volunteer-badge{
+    background: linear-gradient(135deg, rgba(209,173,81,0.1), rgba(16,185,129,0.1));
+    border: 1px solid rgba(209,173,81,0.2);
+  }
+  .dark .volunteer-badge{
+    background: linear-gradient(135deg, rgba(209,173,81,0.15), rgba(16,185,129,0.15));
+    border: 1px solid rgba(209,173,81,0.25);
+  }
+
+  .news-card{
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  .news-card:hover{ transform: scale(1.02); }
+  .news-card::before{
+    content: "";
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, #d1ad51, var(--tw-primary, #10b981));
+    opacity: 0; transition: opacity 0.3s ease;
+  }
+  .news-card:hover::before{ opacity: 1; }
+
+  .islamic-quote{
+    position: relative; padding: 2rem;
+    background: linear-gradient(135deg, rgba(209,173,81,0.05), rgba(16,185,129,0.05));
+    border-left: 4px solid #d1ad51;
+  }
+  .dark .islamic-quote{
+    background: linear-gradient(135deg, rgba(209,173,81,0.08), rgba(16,185,129,0.08));
+  }
+</style>
+
+<!-- ===================== HERO (UNTOUCHED) ===================== -->
+<section class="hero">
+  <div class="bg-layer bg-tint" aria-hidden="true"></div>
+  <div class="bg-layer bg-pattern" aria-hidden="true"></div>
+  <div class="bg-layer bg-vignette" aria-hidden="true"></div>
+
+  <div class="content">
+    <div class="max-w-7xl mx-auto px-4 py-12 grid md:grid-cols-2 gap-8 items-center">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/10 text-gold mb-3">
+          <i class="fa-solid fa-star-and-crescent"></i> In the Name of Allah, the Most Merciful
+        </div>
+
+        <h1 class="text-3xl md:text-5xl font-bold leading-tight">
+          Empowering Communities Through
+          <span class="hero-typed-wrap">
+            <span id="heroTyped" class="hero-typed text-primary"></span>
+          </span>
+        </h1>
+
+        <p class="mt-4 text-gray-600 dark:text-gray-300 max-w-prose">
+          We serve orphans, empower women with Islamic teachings, develop mosques, and support premature babies in hospitals.
+        </p>
+        <div class="mt-6 flex gap-3">
+          <a href="{% url 'website:news_events' %}" class="btn btn-primary">Explore Programs</a>
+          <a href="{% url 'website:contact' %}" class="btn btn-outline">Contact Us</a>
+        </div>
       </div>
-      <h1 class="text-3xl md:text-5xl font-bold leading-tight">Empowering Communities Through <span class="text-primary">Charity</span>, <span class="text-primary">Knowledge</span>, & <span class="text-gold">Faith</span></h1>
-      <p class="mt-4 text-gray-600 dark:text-gray-300 max-w-prose">We serve orphans, empower women with Islamic teachings, develop mosques, and support premature babies in hospitals.</p>
-      <div class="mt-6 flex gap-3">
-        <a href="{% url 'website:news_events' %}" class="btn btn-primary">Explore Programs</a>
-        <a href="{% url 'website:contact' %}" class="btn btn-outline">Contact Us</a>
+
+      <div class="grid grid-cols-2 gap-3">
+        <figure class="img-glass rounded-xl2 card h-52">
+          <img src="{% static 'images/mosque.jpeg' %}" class="rounded-xl2 object-cover h-full w-full" alt="Mosque">
+        </figure>
+        <figure class="img-glass rounded-xl2 card h-52">
+          <img src="{% static 'images/kids.jpeg' %}" class="rounded-xl2 object-cover h-full w-full" alt="Children">
+        </figure>
+        <figure class="img-glass rounded-xl2 card h-52 col-span-2">
+          <img src="{% static 'images/premature-baby.jpeg' %}" class="rounded-xl2 object-cover h-full w-full" alt="Premature baby">
+        </figure>
       </div>
-    </div>
-    <div class="grid grid-cols-2 gap-3">
-      <img src="{% static 'images/mosque.jpeg' %}" class="rounded-xl2 object-cover h-52 w-full card" alt="Mosque">
-      <img src="{% static 'images/kids.jpeg' %}" class="rounded-xl2 object-cover h-52 w-full card" alt="Children">
-      <img src="{% static 'images/premature-baby.jpeg' %}" class="rounded-xl2 object-cover h-52 w-full card col-span-2" alt="Premature baby">
     </div>
   </div>
 </section>
 
-<!-- Programs -->
-<section class="py-10 bg-white dark:bg-darksurface border-y border-gray-100 dark:border-darkborder">
-  <div class="max-w-7xl mx-auto px-4">
-    <h2 class="text-2xl font-semibold mb-6 text-center">Our Programs</h2>
-    <div class="grid md:grid-cols-3 gap-6">
-      {% for program in programs %}
-        <article class="card overflow-hidden">
-          {% if program.image %}<img src="{{ program.image.url }}" class="h-44 w-full object-cover" alt="{{ program.title }}">{% endif %}
-          <div class="p-4">
-            <h3 class="text-lg font-semibold">{{ program.title }}</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">{{ program.description|striptags|truncatewords:26 }}</p>
-          </div>
-        </article>
-      {% empty %}
-        <div class="md:col-span-3 text-center text-gray-500">No programs yet.</div>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-
-<!-- Mission -->
-<section class="py-12">
+<!-- ===================== ISLAMIC INSPIRATION ===================== -->
+<section class="section">
   <div class="max-w-5xl mx-auto px-4">
-    <h2 class="text-2xl font-semibold mb-3 text-center">Mission & Vision</h2>
-    <div class="prose dark:prose-invert max-w-none">
-      <p><strong>Mission:</strong> To serve humanity by providing care for orphans, empowering women through Islamic teachings, improving places of worship, and supporting premature babies in hospitals, guided by compassion and faith.</p>
-      <p><strong>Vision:</strong> A society where vulnerable individuals are supported, women are empowered with knowledge, and Islamic values guide community development.</p>
+    <div class="islamic-quote rounded-xl2">
+      <div class="text-center">
+        <p class="text-xl md:text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-3">
+          "وَمَن أَحْيَاهَا فَكَأَنَّمَا أَحْيَا النَّاسَ جَمِيعًا"
+        </p>
+        <p class="text-lg text-gray-700 dark:text-gray-300 mb-2">
+          "And whoever saves a life, it is as if he has saved all of mankind"
+        </p>
+        <p class="text-sm text-gold font-medium">— Quran 5:32</p>
+      </div>
     </div>
   </div>
 </section>
+
+<!-- ===================== ABOUT / STORY ===================== -->
+<section class="section bg-white dark:bg-darksurface border-y border-gray-100 dark:border-darkborder">
+  <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-2 gap-10 items-start">
+    <div class="px-4">
+      <h2 class="text-2xl md:text-3xl font-semibold gold-underline">Who We Are</h2>
+      <p class="lead mt-3 text-gray-700 dark:text-gray-300">
+        The <strong>Al-Hadid Foundation</strong> is a faith-driven, non-profit organization founded by
+        <strong>Zuberi Daffa</strong>. Guided by the Islamic values of compassion and service, we work
+        shoulder-to-shoulder with communities to build hope, nurture faith, and transform lives.
+      </p>
+      <p class="mt-3 text-gray-700 dark:text-gray-300">
+        Our vision is a society where vulnerable individuals are supported, women are empowered with knowledge,
+        and Islamic values guide sustainable community development. We operate transparently and partner with
+        individuals, businesses, and organizations to create lasting change.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-4">
+        <div class="volunteer-badge rounded-full px-4 py-2">
+          <span class="text-sm font-medium text-gray-800 dark:text-gray-200">
+            <i class="fa-solid fa-heart text-gold mr-2"></i>Established 2018
+          </span>
+        </div>
+        <div class="volunteer-badge rounded-full px-4 py-2">
+          <span class="text-sm font-medium text-gray-800 dark:text-gray-200">
+            <i class="fa-solid fa-globe text-primary mr-2"></i>Serving Tanzania
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-ghost rounded-xl2 overflow-hidden">
+      <div class="grid grid-cols-2 gap-2 p-2">
+        <img src="{% static 'images/kids.jpeg' %}" class="rounded-lg h-40 w-full object-cover" alt="">
+        <img src="{% static 'images/mosque.jpeg' %}" class="rounded-lg h-40 w-full object-cover" alt="">
+        <img src="{% static 'images/premature-baby.jpeg' %}" class="rounded-lg h-40 w-full object-cover col-span-2" alt="">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOCUS AREAS ===================== -->
+<section class="section">
+  <div class="max-w-7xl mx-auto px-4">
+    <h2 class="text-2xl md:text-3xl mb-6 font-semibold gold-underline">What We Focus On</h2>
+
+    <div class="grid md:grid-cols-4 gap-7 mt-8">
+      <article class="card p-6 hover:shadow-lg transition-all duration-300">
+        <div class="w-12 h-12 bg-gold/10 rounded-full flex items-center justify-center mb-4">
+          <i class="fa-solid fa-child-reaching text-gold text-xl"></i>
+        </div>
+        <h3 class="font-semibold text-lg mb-2">Supporting Orphans</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-300">
+          Food baskets, clothing, tuition and mentorship so every child can dream with dignity and hope for a brighter future.
+        </p>
+      </article>
+
+      <article class="card p-6 hover:shadow-lg transition-all duration-300">
+        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+          <i class="fa-solid fa-graduation-cap text-primary text-xl"></i>
+        </div>
+        <h3 class="font-semibold text-lg mb-2">Empowering Women</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-300">
+          Weekly Islamic study circles and practical life-skills that strengthen spiritual foundation and economic independence.
+        </p>
+      </article>
+
+      <article class="card p-6 hover:shadow-lg transition-all duration-300">
+        <div class="w-12 h-12 bg-gold/10 rounded-full flex items-center justify-center mb-4">
+          <i class="fa-solid fa-mosque text-gold text-xl"></i>
+        </div>
+        <h3 class="font-semibold text-lg mb-2">Developing Mosques</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-300">
+          Renovation and new builds—clean, welcoming spaces that unite neighborhoods in worship and community building.
+        </p>
+      </article>
+
+      <article class="card p-6 hover:shadow-lg transition-all duration-300">
+        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+          <i class="fa-solid fa-baby text-primary text-xl"></i>
+        </div>
+        <h3 class="font-semibold text-lg mb-2">Caring for Preemies</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-300">
+          Incubators and essential medical equipment for hospitals, plus direct financial support to families in critical need.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SUCCESS STORIES / TESTIMONIALS ===================== -->
+<section class="section bg-gradient-to-br from-gray-50 to-white dark:from-darksurface dark:to-gray-900">
+  <div class="max-w-7xl mx-auto px-4">
+    <h2 class="text-2xl md:text-3xl font-semibold gold-underline">Stories of Hope & Transformation</h2>
+    
+    <div class="grid md:grid-cols-3 mt-12 gap-8">
+      <article class="testimonial-card rounded-xl2 p-6">
+        <div class="flex items-center mb-4">
+          <div class="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center">
+            <i class="fa-solid fa-quote-left text-gold"></i>
+          </div>
+          <div class="ml-4">
+            <h4 class="font-semibold text-gray-800 dark:text-gray-200">Amina Mwalimu</h4>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Women's Program Graduate</p>
+          </div>
+        </div>
+        <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+          "Alhamdulillahi, through Al-Hadid's women's program, I learned both Islamic knowledge and practical skills. 
+          Now I run my own tailoring business and support my family with dignity. May Allah reward this foundation abundantly."
+        </p>
+      </article>
+
+      <article class="testimonial-card rounded-xl2 p-6">
+        <div class="flex items-center mb-4">
+          <div class="w-12 h-12 bg-primary/15 rounded-full flex items-center justify-center">
+            <i class="fa-solid fa-star text-primary"></i>
+          </div>
+          <div class="ml-4">
+            <h4 class="font-semibold text-gray-800 dark:text-gray-200">Dr. Hassan Mkuu</h4>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Hospital Partner</p>
+          </div>
+        </div>
+        <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+          "The incubators provided by Al-Hadid Foundation have saved over 50 premature babies in our hospital this year alone. 
+          Their commitment to preserving life reflects the true spirit of Islamic charity."
+        </p>
+      </article>
+
+      <article class="testimonial-card rounded-xl2 p-6">
+        <div class="flex items-center mb-4">
+          <div class="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center">
+            <i class="fa-solid fa-hands-praying text-gold"></i>
+          </div>
+          <div class="ml-4">
+            <h4 class="font-semibold text-gray-800 dark:text-gray-200">Imam Abdullah</h4>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Community Leader</p>
+          </div>
+        </div>
+        <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+          "MashaAllah, our renovated mosque now serves 300 families. The quality of work and Islamic values demonstrated by 
+          Al-Hadid Foundation inspire us all to serve our community better."
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PROGRAMS & ACTIVITIES (DETAILED) ===================== -->
+<section class="section bg-white dark:bg-darksurface border-y border-gray-100 dark:border-darkborder">
+  <div class="max-w-7xl mx-auto px-4">
+    <h2 class="text-2xl md:text-3xl font-semibold gold-underline">Programs & Activities</h2>
+
+    <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-6 mt-12">
+      <article class="card p-5 flex flex-col group">
+        <div class="h-40 rounded-xl2 overflow-hidden relative">
+          <img src="{% static 'images/kids.jpeg' %}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" alt="">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        </div>
+        <h3 class="mt-4 font-semibold text-lg text-gray-800 dark:text-gray-200">Orphan Support Program</h3>
+        <ul class="mt-2 text-sm text-gray-700 dark:text-gray-300 space-y-2 flex-grow">
+          <li class="flex items-start">
+            <i class="fa-solid fa-check-circle text-gold mr-2 mt-0.5 flex-shrink-0"></i>
+            Monthly food, clothing, and school materials
+          </li>
+          <li class="flex items-start">
+            <i class="fa-solid fa-check-circle text-gold mr-2 mt-0.5 flex-shrink-0"></i>
+            Mentorship, counseling & after-school support
+          </li>
+          <li class="flex items-start">
+            <i class="fa-solid fa-check-circle text-gold mr-2 mt-0.5 flex-shrink-0"></i>
+            Health care and medical assistance
+          </li>
+        </ul>
+      </article>
+
+      <article class="card p-5 flex flex-col group">
+        <div class="h-40 rounded-xl2 overflow-hidden relative">
+          <img src="{% static 'images/mosque.jpeg' %}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" alt="">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        </div>
+        <h3 class="mt-4 font-semibold text-lg text-gray-800 dark:text-gray-200">Women's Islamic Empowerment</h3>
+        <ul class="mt-2 text-sm text-gray-700 dark:text-gray-300 space-y-2 flex-grow">
+          <li class="flex items-start">
+            <i class="fa-solid fa-check-circle text-primary mr-2 mt-0.5 flex-shrink-0"></i>
+            Weekly Islamic study circles and Quran classes
+          </li>
+          <li class="flex items-start">
+            <i class="fa-solid fa-check-circle text-primary mr-2 mt-0.5 flex-shrink-0"></i>
+            Vocational training for self-reliance
+          </li>
+          <li class="flex items-start">
+            <i class="fa-solid fa-check-circle text-primary mr-2 mt-0.5 flex-shrink-0"></i>
+            Microfinance and business development
+          </li>
+        </ul>
+      </article>
+
+      <article class="card p-5 flex flex-col group">
+        <div class="h-40 rounded-xl2 overflow-hidden relative">
+          <img src="{% static 'images/mosque.jpeg' %}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" alt="">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        </div>
+        <h3 class="mt-4 font-semibold text-lg text-gray-800 dark:text-gray-200">Mosque Development Initiative</h3>
+        <ul class="mt-2 text-sm text-gray-700 dark:text-gray-300 space-y-2 flex-grow">
+          <li class="flex items-start">
+            <i class="fa-solid fa-check-circle text-gold mr-2 mt-0.5 flex-shrink-0"></i>
+            Complete renovation of aging mosques
+          </li>
+          <li class="flex items-start">
+            <i class="fa-solid fa-check-circle text-gold mr-2 mt-0.5 flex-shrink-0"></i>
+            Building new mosques in underserved areas
+          </li>
+          <li class="flex items-start">
+            <i class="fa-solid fa-check-circle text-gold mr-2 mt-0.5 flex-shrink-0"></i>
+            Community center facilities integration
+          </li>
+        </ul>
+      </article>
+
+      <article class="card p-5 flex flex-col group">
+        <div class="h-40 rounded-xl2 overflow-hidden relative">
+          <img src="{% static 'images/premature-baby.jpeg' %}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" alt="">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        </div>
+        <h3 class="mt-4 font-semibold text-lg text-gray-800 dark:text-gray-200">Premature Baby Care Support</h3>
+        <ul class="mt-2 text-sm text-gray-700 dark:text-gray-300 space-y-2 flex-grow">
+          <li class="flex items-start">
+            <i class="fa-solid fa-check-circle text-primary mr-2 mt-0.5 flex-shrink-0"></i>
+            Modern incubators & medical equipment
+          </li>
+          <li class="flex items-start">
+            <i class="fa-solid fa-check-circle text-primary mr-2 mt-0.5 flex-shrink-0"></i>
+            Hospital bill assistance for families
+          </li>
+          <li class="flex items-start">
+            <i class="fa-solid fa-check-circle text-primary mr-2 mt-0.5 flex-shrink-0"></i>
+            Follow-up care and family support
+          </li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== IMPACT STRIP ===================== -->
+<section class="section pattern-lines">
+  <div class="max-w-7xl mx-auto px-4 grid sm:grid-cols-2 md:grid-cols-4 gap-8 text-center">
+    <div class="transform hover:scale-105 transition-transform duration-300">
+      <div class="text-4xl md:text-5xl font-extrabold text-primary mb-2">1,200+</div>
+      <div class="text-sm font-medium text-gray-700 dark:text-gray-300">Orphans Supported</div>
+      <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">Across 25 regions</div>
+    </div>
+    <div class="transform hover:scale-105 transition-transform duration-300">
+      <div class="text-4xl md:text-5xl font-extrabold text-primary mb-2">850+</div>
+      <div class="text-sm font-medium text-gray-700 dark:text-gray-300">Women Empowered</div>
+      <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">Through education & skills</div>
+    </div>
+    <div class="transform hover:scale-105 transition-transform duration-300">
+      <div class="text-4xl md:text-5xl font-extrabold text-gold mb-2">45</div>
+      <div class="text-sm font-medium text-gray-700 dark:text-gray-300">Mosques Renovated</div>
+      <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">Serving communities</div>
+    </div>
+    <div class="transform hover:scale-105 transition-transform duration-300">
+      <div class="text-4xl md:text-5xl font-extrabold text-gold mb-2">310</div>
+      <div class="text-sm font-medium text-gray-700 dark:text-gray-300">Babies Assisted</div>
+      <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">Lives saved</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== RECENT NEWS & UPDATES ===================== -->
+<section class="section bg-white dark:bg-darksurface border-y border-gray-100 dark:border-darkborder">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="flex justify-between items-center mb-8">
+      <h2 class="text-2xl md:text-3xl pb-4 font-semibold gold-underline">Latest News & Updates</h2>
+      <a href="{% url 'website:news_events' %}" class="text-primary hover:text-gold transition-colors text-sm font-medium">
+        View All News <i class="fa-solid fa-arrow-right ml-1"></i>
+      </a>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      {% with n1=latest_news.0 %}
+      {% if n1 %}
+      <article class="news-card card p-5 h-full flex flex-col">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium">News</span>
+          <span class="text-xs text-gray-500 dark:text-gray-400">
+            {% firstof n1.published_at n1.created_at n1.date n1.when "" as n1_dt %}{{ n1_dt }}
+          </span>
+        </div>
+        <h3 class="font-semibold text-lg mb-2">{{ n1.title }}</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">
+          {% firstof n1.summary n1.excerpt n1.body n1.content n1.text "" as n1_txt %}
+          {{ n1_txt|striptags|truncatewords:26 }}
+        </p>
+        <a href="{% url 'website:news_events' %}" class="mt-auto text-primary hover:text-gold transition-colors text-sm font-medium">
+          Read More <i class="fa-solid fa-external-link ml-1"></i>
+        </a>
+      </article>
+      {% endif %}
+      {% endwith %}
+
+      {% with e1=upcoming_events.0|default:latest_events.0 %}
+      {% if e1 %}
+      <article class="news-card card p-5 h-full flex flex-col">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="bg-gold/10 text-gold px-2 py-1 rounded-full text-xs font-medium">Upcoming Event</span>
+          <span class="text-xs text-gray-500 dark:text-gray-400">
+            {% firstof e1.date e1.starts_on e1.start_time e1.starts_at e1.when e1.created_at "" as e1_dt %}{{ e1_dt }}
+          </span>
+        </div>
+        <h3 class="font-semibold text-lg mb-2">{{ e1.title }}</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">
+          {% firstof e1.description e1.summary e1.body e1.content e1.text "" as e1_txt %}
+          {{ e1_txt|striptags|truncatewords:24 }}
+        </p>
+        <a href="{% url 'website:news_events' %}" class="mt-auto text-primary hover:text-gold transition-colors text-sm font-medium">
+          Event Details <i class="fa-solid fa-external-link ml-1"></i>
+        </a>
+      </article>
+      {% endif %}
+      {% endwith %}
+
+      {% with n2=latest_news.1 e2=upcoming_events.1|default:latest_events.1 %}
+      {% if n2 %}
+      <article class="news-card card p-5 h-full flex flex-col">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium">News</span>
+          <span class="text-xs text-gray-500 dark:text-gray-400">
+            {% firstof n2.published_at n2.created_at n2.date n2.when "" as n2_dt %}{{ n2_dt }}
+          </span>
+        </div>
+        <h3 class="font-semibold text-lg mb-2">{{ n2.title }}</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">
+          {% firstof n2.summary n2.excerpt n2.body n2.content n2.text "" as n2_txt %}
+          {{ n2_txt|striptags|truncatewords:26 }}
+        </p>
+        <a href="{% url 'website:news_events' %}" class="mt-auto text-primary hover:text-gold transition-colors text-sm font-medium">
+          Read More <i class="fa-solid fa-external-link ml-1"></i>
+        </a>
+      </article>
+
+      {% elif e2 %}
+      <article class="news-card card p-5 h-full flex flex-col">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="bg-gold/10 text-gold px-2 py-1 rounded-full text-xs font-medium">Event</span>
+          <span class="text-xs text-gray-500 dark:text-gray-400">
+            {% firstof e2.date e2.starts_on e2.start_time e2.starts_at e2.when e2.created_at "" as e2_dt %}{{ e2_dt }}
+          </span>
+        </div>
+        <h3 class="font-semibold text-lg mb-2">{{ e2.title }}</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">
+          {% firstof e2.description e2.summary e2.body e2.content e2.text "" as e2_txt %}
+          {{ e2_txt|striptags|truncatewords:24 }}
+        </p>
+        <a href="{% url 'website:news_events' %}" class="mt-auto text-primary hover:text-gold transition-colors text-sm font-medium">
+          Event Details <i class="fa-solid fa-external-link ml-1"></i>
+        </a>
+      </article>
+
+      {% else %}
+      <article class="news-card card p-5 h-full flex flex-col items-start justify-between">
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <span class="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs font-medium">Update</span>
+          </div>
+          <h3 class="font-semibold text-lg mb-2">More updates coming soon</h3>
+          <p class="text-sm text-gray-600 dark:text-gray-300">
+            Check back for fresh stories and upcoming events from our community.
+          </p>
+        </div>
+        <a href="{% url 'website:news_events' %}" class="mt-4 text-primary hover:text-gold transition-colors text-sm font-medium">
+          View All <i class="fa-solid fa-arrow-right ml-1"></i>
+        </a>
+      </article>
+      {% endif %}
+      {% endwith %}
+    </div>
+  </div>
+</section>
+
+<!-- ===================== VOLUNTEER & PARTNERSHIP ===================== -->
+<section class="section bg-gradient-to-br from-gold/5 to-emerald-50/50 dark:from-gold/10 dark:to-emerald-900/10">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <div>
+        <h2 class="text-2xl md:text-3xl font-semibold gold-underline mb-6">Join Our Mission</h2>
+        <p class="lead text-gray-700 dark:text-gray-300 mb-6">
+          Be part of a community dedicated to serving humanity. Whether through volunteering, partnerships, or donations, 
+          your contribution creates lasting positive change guided by Islamic principles of compassion and justice.
+        </p>
+        
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-gold/20 rounded-full flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid fa-hands-helping text-gold"></i>
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-800 dark:text-gray-200">Volunteer Opportunities</h4>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Join our team of dedicated volunteers in various programs</p>
+            </div>
+          </div>
+          
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-primary/15 rounded-full flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid fa-handshake text-primary"></i>
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-800 dark:text-gray-200">Corporate Partnerships</h4>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Partner with us for sustainable community development</p>
+            </div>
+          </div>
+          
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-primary/15 rounded-full flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid fa-graduation-cap text-primary"></i>
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-800 dark:text-gray-200">Skill-Based Volunteering</h4>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Share your professional expertise with our programs</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card-ghost rounded-xl2 px-6">
+        <h3 class="text-xl font-semibold my-6 text-center">Get Involved Today</h3>
+        <div class="space-y-4 space-x-4">
+          <a href="{% url 'website:contact' %}" class="block w-full btn btn-primary text-center">
+            <i class="fa-solid fa-user-plus mr-2"></i>Become a Volunteer
+          </a>
+          <a href="{% url 'website:donate' %}" class="block w-full btn btn-outline text-center">
+            <i class="fa-solid fa-heart mr-2"></i>Make a Donation
+          </a>
+          <a href="{% url 'website:contact' %}" class="block w-full btn btn-outline text-center">
+            <i class="fa-solid fa-building mr-2"></i>Partner With Us
+          </a>
+        </div>
+        
+        <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-600">
+          <p class="text-xs text-center text-gray-600 dark:text-gray-400">
+            <i class="fa-solid fa-shield-alt text-primary mr-1"></i>
+            100% of donations go directly to our programs
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FUNDING & TRANSPARENCY ===================== -->
+<section class="section bg-white dark:bg-darksurface border-y border-gray-100 dark:border-darkborder">
+  <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-2 gap-10 items-start">
+    <div>
+      <h2 class="text-2xl md:text-3xl font-semibold gold-underline">Funding & Sustainability</h2>
+      <p class="text-gray-700 dark:text-gray-300 mt-4 mb-6">
+        Our commitment to transparency and accountability ensures every contribution makes maximum impact. We believe in building trust through open communication and detailed reporting.
+      </p>
+      <ul class="text-gray-700 dark:text-gray-300 space-y-3">
+        <li class="flex items-start">
+          <i class="fa-solid fa-check-circle text-gold mr-3 mt-1 flex-shrink-0"></i>
+          <span>Donations from individuals, businesses and international partners committed to Islamic philanthropy</span>
+        </li>
+        <li class="flex items-start">
+          <i class="fa-solid fa-check-circle text-gold mr-3 mt-1 flex-shrink-0"></i>
+          <span>Community fundraising events and charity drives during blessed occasions</span>
+        </li>
+        <li class="flex items-start">
+          <i class="fa-solid fa-check-circle text-gold mr-3 mt-1 flex-shrink-0"></i>
+          <span>Strategic partnerships with Islamic organizations for amplified impact</span>
+        </li>
+        <li class="flex items-start">
+          <i class="fa-solid fa-check-circle text-gold mr-3 mt-1 flex-shrink-0"></i>
+          <span>Transparent annual reporting that builds long-term donor trust and confidence</span>
+        </li>
+      </ul>
+    </div>
+    
+    <div class="card-ghost rounded-xl2 p-6">
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 bg-gold/20 rounded-full mx-auto flex items-center justify-center mb-4">
+          <i class="fa-solid fa-hand-holding-heart text-gold text-2xl"></i>
+        </div>
+        <h3 class="font-semibold text-xl">How Your Gift Helps</h3>
+      </div>
+      
+      <div class="space-y-4 mb-6">
+        <div class="flex justify-between items-center">
+          <span class="text-sm text-gray-700 dark:text-gray-300">Program Services</span>
+          <span class="font-semibold text-gold">85%</span>
+        </div>
+        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+          <div class="bg-gold h-2 rounded-full" style="width: 85%"></div>
+        </div>
+        
+        <div class="flex justify-between items-center">
+          <span class="text-sm text-gray-700 dark:text-gray-300">Administration</span>
+          <span class="font-semibold text-primary">10%</span>
+        </div>
+        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+          <div class="bg-primary h-2 rounded-full" style="width: 10%"></div>
+        </div>
+        
+        <div class="flex justify-between items-center">
+          <span class="text-sm text-gray-700 dark:text-gray-300">Fundraising</span>
+          <span class="font-semibold text-primary">5%</span>
+        </div>
+        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+          <div class="bg-primary h-2 rounded-full" style="width: 5%"></div>
+        </div>
+      </div>
+
+      <p class="text-sm text-gray-700 dark:text-gray-300 mb-6 text-center">
+        Every contribution directly fuels essential care: nutritious food for orphans, quality education for women,
+        dignified worship spaces, and lifesaving medical support for premature babies.
+      </p>
+      
+      <div class="flex flex-col sm:flex-row gap-3">
+        <a href="{% url 'website:donate' %}" class="btn btn-primary flex-1 text-center">
+          <i class="fa-solid fa-heart mr-2"></i>Donate Now
+        </a>
+        <a href="{% url 'website:contact' %}" class="btn btn-outline flex-1 text-center">
+          <i class="fa-solid fa-handshake mr-2"></i>Partner With Us
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CONTACT TEASER ===================== -->
+<section class="section">
+  <div class="max-w-5xl mx-auto px-4 text-center">
+    <h2 class="text-2xl md:text-3xl font-semibold mb-6">Let's Build Hope Together</h2>
+    <p class="text-gray-700 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
+      Join our mission to serve humanity with compassion and Islamic values. Every act of kindness, 
+      every contribution, and every prayer brings us closer to building stronger, more caring communities.
+    </p>
+    
+    <div class="flex flex-wrap justify-center items-center gap-6 text-sm">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-map-marker-alt text-gold"></i>
+        <span class="text-gray-700 dark:text-gray-300">Morogoro, Tanzania</span>
+      </div>
+      
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-phone text-primary"></i>
+        <a class="hover:text-primary transition-colors" href="tel:+255758150976">+255 758 150 976</a>
+      </div>
+      
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-envelope text-primary"></i>
+        <a class="hover:text-primary transition-colors" href="mailto:info@alhadid.org">info@alhadid.org</a>
+      </div>
+    </div>
+    
+    <div class="mt-8 flex justify-center gap-4">
+      <a href="#" class="w-10 h-10 border border-primary text-primary hover:bg-primary hover:text-white rounded-full flex items-center justify-center transition-colors">
+        <i class="fa-brands fa-facebook-f"></i>
+      </a>
+      <a href="#" class="w-10 h-10 border border-primary text-primary hover:bg-primary hover:text-white rounded-full flex items-center justify-center transition-colors">
+        <i class="fa-brands fa-twitter"></i>
+      </a>
+      <a href="#" class="w-10 h-10 border border-primary text-primary hover:bg-primary hover:text-white rounded-full flex items-center justify-center transition-colors">
+        <i class="fa-brands fa-whatsapp"></i>
+      </a>
+      <a href="#" class="w-10 h-10 border border-primary text-primary hover:bg-primary hover:text-white rounded-full flex items-center justify-center transition-colors">
+        <i class="fa-brands fa-youtube"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Typewriter (HERO unchanged)
+  (function(){
+    const el = document.getElementById('heroTyped');
+    if(!el) return;
+
+    const items = [
+      { text: 'Charity.',   cls: 'text-primary' },
+      { text: 'Knowledge.', cls: 'text-primary' },
+      { text: 'Faith.',     cls: 'text-gold'    },
+    ];
+
+    const TYPE_MS=70, ERASE_MS=45, HOLD_MS=900, GAP_MS=350;
+    let i=0;
+
+    const sleep = ms => new Promise(r=>setTimeout(r,ms));
+    async function type(t){ el.textContent=''; for(let k=1;k<=t.length;k++){ el.textContent=t.slice(0,k); await sleep(TYPE_MS);} }
+    async function erase(){ for(let k=el.textContent.length-1;k>=0;k--){ el.textContent=el.textContent.slice(0,k); await sleep(ERASE_MS);} }
+    function setColor(c){ el.classList.remove('text-primary','text-gold'); el.classList.add(c); }
+
+    (async function loop(){
+      while(true){
+        const {text,cls}=items[i%items.length];
+        setColor(cls); await type(text); await sleep(HOLD_MS); await erase(); await sleep(GAP_MS); i++;
+      }
+    })();
+  })();
+
+  // Auto-shine (HERO unchanged)
+  (function(){
+    const cards = document.querySelectorAll('.img-glass');
+    if(!cards.length) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function trigger(el){
+      if(reduce) return;
+      el.classList.add('run-shine');
+      el.addEventListener('animationend', ()=> el.classList.remove('run-shine'), { once:true });
+    }
+
+    cards.forEach((el, idx) => {
+      const firstDelay = 500 + idx*600;
+      const baseEvery  = 3800 + idx*300;
+      const jitter     = 900;
+      setTimeout(() => {
+        trigger(el);
+        setInterval(() => trigger(el), baseEvery + Math.floor(Math.random()*jitter));
+      }, firstDelay);
+    });
+  })();
+
+  // Fade-ins
+  (function(){
+    const opts = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+    const io = new IntersectionObserver((es)=>{
+      es.forEach(e=>{ if(e.isIntersecting){ e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; } });
+    }, opts);
+    document.querySelectorAll('.card, .testimonial-card, .news-card').forEach(el=>{
+      el.style.opacity='0'; el.style.transform='translateY(20px)';
+      el.style.transition='opacity .6s ease-out, transform .6s ease-out';
+      io.observe(el);
+    });
+  })();
+</script>
+
 {% endblock %}

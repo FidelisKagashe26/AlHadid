@@ -5,19 +5,63 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from .models import Program, News, Event, DonationMethod, Gallery, ContactMessage, SiteSettings
 from website.forms import ContactForm
+from django.utils import timezone
+from django.core.exceptions import FieldError
 
 def home(request):
-    programs = Program.objects.filter(is_active=True)[:3]
-    news = News.objects.filter(is_published=True)[:3]
-    events = Event.objects.filter(is_published=True)[:3]
-    gallery = Gallery.objects.filter(is_published=True)[:6]
-    
+    # -------- Programs & Gallery --------
+    programs = Program.objects.filter(is_active=True).order_by('-id')[:3]
+    gallery  = Gallery.objects.filter(is_published=True).order_by('-id')[:6]
+
+    # -------- News (latest) --------
+    news_qs = News.objects.filter(is_published=True)
+    try:
+        latest_news = news_qs.order_by('-published_at', '-created_at')[:3]
+    except FieldError:
+        # kama hauna published_at/created_at, tumia id kama fallback
+        try:
+            latest_news = news_qs.order_by('-created_at')[:3]
+        except FieldError:
+            latest_news = news_qs.order_by('-id')[:3]
+
+    # -------- Events (upcoming + latest fallback) --------
+    events_qs = Event.objects.filter(is_published=True)
+    today = timezone.localdate()
+
+    # Upcoming (jaribu 'date', kisha 'start_date')
+    try:
+        upcoming_events = events_qs.filter(date__gte=today).order_by('date')[:3]
+        if not upcoming_events.exists():
+            raise FieldError  # lengo: kuvuka kwenda fallback ya start_date
+    except FieldError:
+        try:
+            upcoming_events = events_qs.filter(start_date__gte=today).order_by('start_date')[:3]
+        except FieldError:
+            upcoming_events = events_qs.none()
+
+    # Latest (jaribu 'date', kisha 'start_date', kisha id)
+    try:
+        latest_events = events_qs.order_by('-date')[:3]
+    except FieldError:
+        try:
+            latest_events = events_qs.order_by('-start_date')[:3]
+        except FieldError:
+            latest_events = events_qs.order_by('-id')[:3]
+
+    # -------- Context --------
     context = {
-        'programs': programs,
-        'news': news,
-        'events': events,
-        'gallery': gallery,
         'page_title': 'Home',
+        'programs': programs,
+        'gallery': gallery,
+
+        # Mpya kwa section ya “Latest News & Updates”
+        'latest_news': latest_news,
+        'upcoming_events': upcoming_events,
+        'latest_events': latest_events,
+
+        # Backward-compat (kama sehemu nyingine zinategemea hizi):
+        'news': latest_news,
+        'events': latest_events,
     }
     return render(request, 'website/home.html', context)
 
