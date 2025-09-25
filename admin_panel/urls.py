@@ -15,32 +15,32 @@ urlpatterns = [
 
     # Programs
     path('programs/', views.programs_list, name='programs_list'),
-    path('programs/add/', views.program_add, name='program_add'),
-    path('programs/<int:pk>/edit/', views.program_edit, name='program_edit'),
-    path('programs/<int:pk>/delete/', views.program_delete, name='program_delete'),
+    path('programs/add/', views.program_add, name='programs_create'),
+    path('programs/<int:pk>/edit/', views.program_edit, name='programs_update'),
+    path('programs/<int:pk>/delete/', views.program_delete, name='programs_delete'),
 
     # News
     path('news/', views.news_list, name='news_list'),
-    path('news/add/', views.news_add, name='news_add'),
+    path('news/add/', views.news_add, name='news_create'),
     path('news/<int:pk>/edit/', views.news_edit, name='news_update'),
     path('news/<int:pk>/delete/', views.news_delete, name='news_delete'),
 
     # Events
     path('events/', views.events_list, name='events_list'),
-    path('events/add/', views.events_add, name='events_add'),
-    path('events/<int:pk>/edit/', views.events_edit, name='events_edit'),
+    path('events/add/', views.events_add, name='events_create'),
+    path('events/<int:pk>/edit/', views.events_edit, name='events_update'),
     path('events/<int:pk>/delete/', views.events_delete, name='events_delete'),
 
     # Gallery
     path('gallery/', views.gallery_list, name='gallery_list'),
-    path('gallery/add/', views.gallery_add, name='gallery_add'),
-    path('gallery/<int:pk>/edit/', views.gallery_edit, name='gallery_edit'),
+    path('gallery/add/', views.gallery_add, name='gallery_create'),
+    path('gallery/<int:pk>/edit/', views.gallery_edit, name='gallery_update'),
     path('gallery/<int:pk>/delete/', views.gallery_delete, name='gallery_delete'),
 
     # Donations
     path('donations/', views.donations_list, name='donations_list'),
-    path('donations/add/', views.donations_add, name='donations_add'),
-    path('donations/<int:pk>/edit/', views.donations_edit, name='donations_edit'),
+    path('donations/add/', views.donations_add, name='donations_create'),
+    path('donations/<int:pk>/edit/', views.donations_edit, name='donations_update'),
     path('donations/<int:pk>/delete/', views.donations_delete, name='donations_delete'),
 
     # Messages

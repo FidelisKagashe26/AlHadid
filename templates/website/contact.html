@@ -121,7 +121,7 @@
             </div>
 
             <div>
-              <label class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Subject *</label>
+              <label class="mb-1 mt-3 block text-sm font-medium text-slate-700 dark:text-slate-300">Subject *</label>
               {{ form.subject }}
               {% if form.subject.errors %}
                 <p class="mt-1 text-sm error-text">{{ form.subject.errors|striptags }}</p>
@@ -129,7 +129,7 @@
             </div>
 
             <div>
-              <label class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Message *</label>
+              <label class="mb-1 mt-3 block text-sm font-medium text-slate-700 dark:text-slate-300">Message *</label>
               {{ form.message }}
               {% if form.message.errors %}
                 <p class="mt-1 text-sm error-text">{{ form.message.errors|striptags }}</p>
@@ -139,7 +139,7 @@
             {{ form.website }} {# honeypot (hidden) #}
 
             <button type="submit"
-              class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 font-semibold text-white shadow-sm transition hover:bg-emerald-700 sm:w-auto">
+              class="inline-flex mt-3 w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 font-semibold text-white shadow-sm transition hover:bg-emerald-700 sm:w-auto">
               Send Message
             </button>
           </form>
