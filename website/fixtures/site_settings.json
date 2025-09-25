@@ -1,0 +1,19 @@
+[
+{
+  "model": "website.sitesettings",
+  "pk": 1,
+  "fields": {
+    "site_name": "Al Hadid Foundation",
+    "tagline": "Serving communities with compassion",
+    "description": "Al Hadid Foundation supports education, health outreach, and community development across Tanzania.",
+    "phone": "+255 700 000 000",
+    "email": "info@alhadidfoundation.org",
+    "address": "Dodoma, Tanzania",
+    "facebook_url": "https://facebook.com/example",
+    "twitter_url": "https://twitter.com/example",
+    "instagram_url": "https://instagram.com/example",
+    "whatsapp_number": "+255700000000",
+    "google_maps_embed": ""
+  }
+}
+]

@@ -1,0 +1,35 @@
+[
+{
+  "model": "website.gallery",
+  "pk": 1,
+  "fields": {
+    "title": "Clinic Day — Dodoma",
+    "image": "",
+    "description": "Volunteers serving the community at our clinic day.",
+    "is_published": true,
+    "created_at": "2025-08-01T12:00:00Z"
+  }
+},
+{
+  "model": "website.gallery",
+  "pk": 2,
+  "fields": {
+    "title": "Education Supplies",
+    "image": "",
+    "description": "Distribution of school supplies for primary students.",
+    "is_published": true,
+    "created_at": "2025-08-12T12:00:00Z"
+  }
+},
+{
+  "model": "website.gallery",
+  "pk": 3,
+  "fields": {
+    "title": "Volunteer Training",
+    "image": "",
+    "description": "New volunteers during orientation.",
+    "is_published": true,
+    "created_at": "2025-09-01T12:00:00Z"
+  }
+}
+]

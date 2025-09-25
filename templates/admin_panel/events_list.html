@@ -1,0 +1,40 @@
+{% extends "admin_panel/base.html" %}
+{% block title %}Events — {{ site_settings.site_name|default:"Al-Hadid" }}{% endblock %}
+{% block content %}
+<div class="flex items-center justify-between mb-4">
+  <h1 class="text-2xl font-semibold">Events</h1>
+  <a href="{% url 'admin_panel:events_create' %}" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add Event</a>
+</div>
+
+<div class="card overflow-x-auto">
+  <table class="min-w-full divide-y divide-gray-200 dark:divide-darkborder">
+    <thead class="bg-gray-50 dark:bg-neutral-800">
+      <tr>
+        <th class="px-4 py-2 text-left text-sm font-semibold">Title</th>
+        <th class="px-4 py-2 text-left text-sm font-semibold">Date/Time</th>
+        <th class="px-4 py-2 text-left text-sm font-semibold">Location</th>
+        <th class="px-4 py-2 text-right text-sm font-semibold">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-100 dark:divide-darkborder">
+      {% for e in events %}
+      <tr>
+        <td class="px-4 py-2">{{ e.title }}</td>
+        <td class="px-4 py-2">
+          {% if e.start_datetime %}{{ e.start_datetime|date:"M d, Y H:i" }}
+          {% elif e.event_date %}{{ e.event_date|date:"M d, Y" }}
+          {% else %}—{% endif %}
+        </td>
+        <td class="px-4 py-2">{{ e.location|default:"—" }}</td>
+        <td class="px-4 py-2 text-right">
+          <a href="{% url 'admin_panel:events_update' e.pk %}" class="btn btn-outline">Edit</a>
+          <a href="{% url 'admin_panel:events_delete' e.pk %}" class="btn btn-danger" onclick="return confirm('Delete this event?')">Delete</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4" class="px-4 py-6 text-center text-gray-500">No events yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

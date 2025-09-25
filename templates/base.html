@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="sw" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Al-Hadid Foundation{% endblock %}</title>
+  <link rel="icon" href="{% static 'img/logo.png' %}">
+  <link rel="stylesheet" href="{% static 'css/tw.css' %}">
+  <script>
+    // set theme early
+    (function () {
+      const s = localStorage.getItem('theme');
+      if (s === 'dark' || (!s && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+</head>
+<body class="bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100">
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-950/80 backdrop-blur border-b border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="{% url 'website:home' %}" class="flex items-center gap-3">
+        <img src="{% static 'images/logo.png' %}" class="h-9 w-9" alt="Al-Hadid">
+        <span class="font-semibold">Al-Hadid Foundation</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm">
+        <a href="{% url 'website:home' %}" class="hover:text-emerald-600">Home</a>
+        <a href="{% url 'website:news_events' %}" class="hover:text-emerald-600">News & Events</a>
+        <a href="{% url 'website:gallery' %}" class="hover:text-emerald-600">Gallery</a>
+        <a href="{% url 'website:about' %}" class="hover:text-emerald-600">About</a>
+        <a href="{% url 'website:donate' %}" class="hover:text-emerald-600">Donate</a>
+        <a href="{% url 'website:contact' %}" class="hover:text-emerald-600">Contact</a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <button id="themeToggle" class="rounded-xl border border-slate-300 dark:border-slate-700 p-2" aria-label="Toggle theme">
+          <svg id="sun" class="h-5 w-5 hidden dark:inline" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.364 6.364-1.414-1.414M7.05 7.05 5.636 5.636m12.728 0-1.414 1.414M7.05 16.95l-1.414 1.414"/><circle cx="12" cy="12" r="4"/></svg>
+          <svg id="moon" class="h-5 w-5 dark:hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <a href="{% url 'admin_panel:login' %}" class="hidden sm:inline-flex items-center rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 text-sm">Admin</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="min-h-[60vh]">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-12 border-t border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid md:grid-cols-4 gap-8">
+      <div>
+        <div class="flex items-center gap-3 mb-3">
+          <img src="{% static 'images/logo.png' %}" class="h-9 w-9" alt="">
+          <span class="font-semibold">Al-Hadid Foundation</span>
+        </div>
+        <p class="text-sm text-slate-600 dark:text-slate-300">
+          Faith-driven, non-profit organization uplifting vulnerable communities through compassion and service.
+        </p>
+      </div>
+      <div>
+        <h4 class="font-semibold mb-3">Quick Links</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a class="hover:text-emerald-600" href="{% url 'website:about' %}">About Us</a></li>
+          <li><a class="hover:text-emerald-600" href="{% url 'website:news_events' %}">News & Events</a></li>
+          <li><a class="hover:text-emerald-600" href="{% url 'website:donate' %}">Donate</a></li>
+          <li><a class="hover:text-emerald-600" href="{% url 'website:contact' %}">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold mb-3">Contact</h4>
+        <ul class="text-sm space-y-1">
+          <li>Morogoro — Tanzania</li>
+          <li>Phone: <a class="hover:text-emerald-600" href="tel:+255758150976">+255 758 150 976</a></li>
+          <li>Email: <a class="hover:text-emerald-600" href="mailto:info@alhadid.org">info@alhadid.org</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold mb-3">Follow</h4>
+        <div class="flex gap-3">
+          <a href="#" class="p-2 rounded-xl border dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Facebook">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-9h3l1-4h-4V7a1 1 0 0 1 1-1h3V2h-3a5 5 0 0 0-5 5v2H6v4h3v9h4z"/></svg>
+          </a>
+          <a href="#" class="p-2 rounded-xl border dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Instagram">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 5.8A4.2 4.2 0 1 0 16.2 12 4.2 4.2 0 0 0 12 7.8zm6-1.5a1.2 1.2 0 1 0 1.2 1.2 1.2 1.2 0 0 0-1.2-1.2zM12 9a3 3 0 1 1-3 3 3 3 0 0 1 3-3z"/></svg>
+          </a>
+          <a href="#" class="p-2 rounded-xl border dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="X">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h3l-7 8 8 12h-6l-5-7-6 7H2l8-9L2 2h6l5 7 5-7z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-slate-200 dark:border-slate-800 py-4 text-center text-sm text-slate-500 dark:text-slate-400">
+      © {{ now|date:"Y" }} Al-Hadid Foundation. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- WhatsApp Float -->
+  <a href="https://wa.me/255758150976" target="_blank" aria-label="WhatsApp"
+     class="fixed bottom-5 right-5 rounded-full p-3 shadow-lg bg-emerald-600 hover:bg-emerald-700 text-white">
+    <svg viewBox="0 0 32 32" class="h-6 w-6" fill="currentColor"><path d="M19.11 17.29c-.29-.15-1.7-.83-1.96-.92-.26-.1-.45-.15-.64.15-.19.29-.74.92-.91 1.11-.17.2-.34.22-.63.07-.29-.15-1.22-.45-2.33-1.44-.86-.77-1.44-1.72-1.61-2.01-.17-.29-.02-.45.13-.6.13-.13.29-.34.43-.51.15-.17.19-.29.29-.49.1-.2.05-.37-.02-.52-.07-.15-.64-1.54-.88-2.1-.23-.56-.47-.48-.64-.49l-.54-.01c-.17 0-.45.07-.68.34-.23.29-.89.87-.89 2.11 0 1.24.91 2.44 1.04 2.61.13.17 1.8 2.75 4.37 3.86 2.57 1.11 2.57.74 3.03.71.46-.03 1.49-.61 1.7-1.2.21-.58.21-1.08.14-1.2-.07-.12-.26-.19-.55-.34zM26.67 5.33A13.31 13.31 0 1 0 4.03 22.7L2.67 29.33l6.77-1.78A13.3 13.3 0 1 0 26.67 5.33zM9.52 25.96l-.4.11 1.18-4.33-.28-.44a10.63 10.63 0 1 1 3.64 3.53l-.42-.27-3.72 1.4z"/></svg>
+  </a>
+
+  <script>
+    document.getElementById('themeToggle').addEventListener('click', function(){
+      const html = document.documentElement;
+      const dark = html.classList.toggle('dark');
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
+    });
+  </script>
+</body>
+</html>

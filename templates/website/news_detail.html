@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ news.title }} — {{ site_settings.site_name|default:"Al-Hadid" }}{% endblock %}
+{% block content %}
+<section class="max-w-3xl mx-auto px-4 py-10">
+  <nav class="text-sm mb-4">
+    <a class="text-primary" href="{% url 'website:home' %}">Home</a> ·
+    <a class="text-primary" href="{% url 'website:news_events' %}">News & Events</a>
+  </nav>
+  <article class="prose dark:prose-invert card p-6">
+    <h1 class="mb-2">{{ news.title }}</h1>
+    <div class="text-xs text-gray-500">{{ news.created_at|date:"M d, Y" }}</div>
+    {% if news.image %}<img src="{{ news.image.url }}" class="rounded-xl2 my-4">{% endif %}
+    <div>{{ news.content|safe }}</div>
+  </article>
+</section>
+{% endblock %}

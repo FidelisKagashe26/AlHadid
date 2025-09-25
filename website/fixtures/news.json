@@ -1,0 +1,26 @@
+[
+{
+  "model": "website.news",
+  "pk": 1,
+  "fields": {
+    "title": "Scholarship Cohort Announced",
+    "content": "<p>We are proud to announce the 2025 scholarship cohort supporting 50 students.</p>",
+    "image": "",
+    "is_published": true,
+    "created_at": "2025-04-01T09:30:00Z",
+    "updated_at": "2025-09-24T11:54:05.431Z"
+  }
+},
+{
+  "model": "website.news",
+  "pk": 2,
+  "fields": {
+    "title": "New Clinic Dates Confirmed",
+    "content": "<p>Our next health outreach clinics will be held in Dodoma and Mwanza this quarter.</p>",
+    "image": "",
+    "is_published": true,
+    "created_at": "2025-05-12T10:00:00Z",
+    "updated_at": "2025-09-24T11:54:05.441Z"
+  }
+}
+]

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Home — {{ site_settings.site_name|default:"Al-Hadid Foundation" }}{% endblock %}
+{% block content %}
+<!-- Hero -->
+<section class="relative">
+  <div class="max-w-7xl mx-auto px-4 py-12 grid md:grid-cols-2 gap-8 items-center">
+    <div>
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/10 text-gold mb-3">
+        <i class="fa-solid fa-star-and-crescent"></i> In the Name of Allah, the Most Merciful
+      </div>
+      <h1 class="text-3xl md:text-5xl font-bold leading-tight">Empowering Communities Through <span class="text-primary">Charity</span>, <span class="text-primary">Knowledge</span>, & <span class="text-gold">Faith</span></h1>
+      <p class="mt-4 text-gray-600 dark:text-gray-300 max-w-prose">We serve orphans, empower women with Islamic teachings, develop mosques, and support premature babies in hospitals.</p>
+      <div class="mt-6 flex gap-3">
+        <a href="{% url 'website:news_events' %}" class="btn btn-primary">Explore Programs</a>
+        <a href="{% url 'website:contact' %}" class="btn btn-outline">Contact Us</a>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-3">
+      <img src="{% static 'images/mosque.jpeg' %}" class="rounded-xl2 object-cover h-52 w-full card" alt="Mosque">
+      <img src="{% static 'images/kids.jpeg' %}" class="rounded-xl2 object-cover h-52 w-full card" alt="Children">
+      <img src="{% static 'images/premature-baby.jpeg' %}" class="rounded-xl2 object-cover h-52 w-full card col-span-2" alt="Premature baby">
+    </div>
+  </div>
+</section>
+
+<!-- Programs -->
+<section class="py-10 bg-white dark:bg-darksurface border-y border-gray-100 dark:border-darkborder">
+  <div class="max-w-7xl mx-auto px-4">
+    <h2 class="text-2xl font-semibold mb-6 text-center">Our Programs</h2>
+    <div class="grid md:grid-cols-3 gap-6">
+      {% for program in programs %}
+        <article class="card overflow-hidden">
+          {% if program.image %}<img src="{{ program.image.url }}" class="h-44 w-full object-cover" alt="{{ program.title }}">{% endif %}
+          <div class="p-4">
+            <h3 class="text-lg font-semibold">{{ program.title }}</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">{{ program.description|striptags|truncatewords:26 }}</p>
+          </div>
+        </article>
+      {% empty %}
+        <div class="md:col-span-3 text-center text-gray-500">No programs yet.</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Mission -->
+<section class="py-12">
+  <div class="max-w-5xl mx-auto px-4">
+    <h2 class="text-2xl font-semibold mb-3 text-center">Mission & Vision</h2>
+    <div class="prose dark:prose-invert max-w-none">
+      <p><strong>Mission:</strong> To serve humanity by providing care for orphans, empowering women through Islamic teachings, improving places of worship, and supporting premature babies in hospitals, guided by compassion and faith.</p>
+      <p><strong>Vision:</strong> A society where vulnerable individuals are supported, women are empowered with knowledge, and Islamic values guide community development.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

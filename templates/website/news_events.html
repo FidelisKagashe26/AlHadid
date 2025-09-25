@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}News & Events — {{ site_settings.site_name|default:"Al-Hadid" }}{% endblock %}
+{% block content %}
+<section class="max-w-7xl mx-auto px-4 py-10">
+  <h1 class="text-3xl font-semibold mb-6">News & Events</h1>
+
+  <h2 class="text-xl font-semibold mb-3">News</h2>
+  <div class="grid md:grid-cols-3 gap-6 mb-10">
+    {% if news %}
+      {% for n in news %}
+      <article class="card overflow-hidden">
+        {% if n.image %}<img src="{{ n.image.url }}" class="h-40 w-full object-cover">{% endif %}
+        <div class="p-4">
+          <div class="text-xs text-gray-500">{{ n.created_at|date:"M d, Y" }}</div>
+          <h3 class="font-semibold mt-1">{{ n.title }}</h3>
+          <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">{{ n.content|striptags|truncatewords:24 }}</p>
+          <a href="{% url 'website:news_detail' n.pk %}" class="text-primary font-medium mt-2 inline-block">Read more →</a>
+        </div>
+      </article>
+      {% endfor %}
+    {% else %}
+      <div class="md:col-span-3 text-gray-500">No news published yet.</div>
+    {% endif %}
+  </div>
+
+  <h2 class="text-xl font-semibold mb-3">Events</h2>
+  <div class="grid md:grid-cols-3 gap-6">
+    {% if events %}
+      {% for e in events %}
+      <article class="card overflow-hidden">
+        {% if e.image %}<img src="{{ e.image.url }}" class="h-40 w-full object-cover">{% endif %}
+        <div class="p-4">
+          <div class="text-xs text-gray-500">
+            {% if e.start_datetime %}{{ e.start_datetime|date:"M d, Y H:i" }}{% elif e.event_date %}{{ e.event_date|date:"M d, Y" }}{% else %}—{% endif %}
+            {% if e.location %} • {{ e.location }}{% endif %}
+          </div>
+          <h3 class="font-semibold mt-1">{{ e.title }}</h3>
+          <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">{{ e.description|striptags|truncatewords:24 }}</p>
+          <a href="{% url 'website:event_detail' e.pk %}" class="text-primary font-medium mt-2 inline-block">View details →</a>
+        </div>
+      </article>
+      {% endfor %}
+    {% else %}
+      <div class="md:col-span-3 text-gray-500">No events yet.</div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "admin_panel/base.html" %}
+{% block title %}Delete Admin — {{ site_settings.site_name|default:"Al-Hadid" }}{% endblock %}
+{% block content %}
+<div class="card p-6 border border-red-300 dark:border-red-800">
+  <h1 class="text-xl font-semibold mb-2">Delete Admin</h1>
+  <p class="mb-4">Are you sure you want to delete <strong>{{ user_obj.username }}</strong>?</p>
+  <form method="post" class="flex gap-2">{% csrf_token %}
+    <button class="btn btn-danger">Yes, delete</button>
+    <a class="btn btn-outline" href="{% url 'admin_users_list' %}">Cancel</a>
+  </form>
+</div>
+{% endblock %}

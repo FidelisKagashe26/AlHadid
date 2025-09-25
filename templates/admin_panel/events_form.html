@@ -1,0 +1,52 @@
+{% extends "admin_panel/base.html" %}
+{% block title %}{{ title|default:"Event" }} — {{ site_settings.site_name|default:"Al-Hadid" }}{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-semibold mb-4">{{ title|default:"Event" }}</h1>
+<div class="card p-5">
+  <form method="post" enctype="multipart/form-data">{% csrf_token %}
+    {% if form %}{{ form.as_p }}{% else %}
+      <div class="grid md:grid-cols-2 gap-4">
+        <label class="space-y-1">
+          <span class="text-sm">Title</span>
+          <input name="title" class="w-full rounded-lg" value="{{ event.title }}">
+        </label>
+        <label class="space-y-1">
+          <span class="text-sm">Location</span>
+          <input name="location" class="w-full rounded-lg" value="{{ event.location }}">
+        </label>
+        <label class="space-y-1 md:col-span-2">
+          <span class="text-sm">Description</span>
+          <textarea name="description" rows="4" class="w-full rounded-lg">{{ event.description }}</textarea>
+        </label>
+
+        <!-- Support either event_date or start/end datetimes -->
+        <label class="space-y-1">
+          <span class="text-sm">Event Date</span>
+          <input type="date" name="event_date" class="w-full rounded-lg" value="{{ event.event_date|date:'Y-m-d' }}">
+        </label>
+        <label class="space-y-1">
+          <span class="text-sm">Start DateTime</span>
+          <input type="datetime-local" name="start_datetime" class="w-full rounded-lg" value="{{ event.start_datetime|date:'Y-m-d\\TH:i' }}">
+        </label>
+        <label class="space-y-1">
+          <span class="text-sm">End DateTime</span>
+          <input type="datetime-local" name="end_datetime" class="w-full rounded-lg" value="{{ event.end_datetime|date:'Y-m-d\\TH:i' }}">
+        </label>
+
+        <label class="space-y-1 md:col-span-2">
+          <span class="text-sm">Image</span>
+          <input type="file" name="image">
+        </label>
+        <label class="inline-flex items-center gap-2 md:col-span-2">
+          <input type="checkbox" name="is_published" {% if event.is_published %}checked{% endif %}>
+          <span>Published</span>
+        </label>
+      </div>
+    {% endif %}
+    <div class="mt-4 flex gap-2">
+      <button class="btn btn-primary">Save</button>
+      <a href="{% url 'admin_panel:events_list' %}" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

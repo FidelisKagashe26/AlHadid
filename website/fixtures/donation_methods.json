@@ -1,0 +1,26 @@
+[
+{
+  "model": "website.donationmethod",
+  "pk": 1,
+  "fields": {
+    "name": "Bank Transfer",
+    "account_number": "000123456789",
+    "bank_name": "CRDB Bank",
+    "description": "Use reference: DONATION",
+    "is_active": true,
+    "order": 1
+  }
+},
+{
+  "model": "website.donationmethod",
+  "pk": 2,
+  "fields": {
+    "name": "Mobile Money (M-Pesa)",
+    "account_number": "0744000000",
+    "bank_name": "",
+    "description": "Name: Al Hadid Foundation",
+    "is_active": true,
+    "order": 2
+  }
+}
+]

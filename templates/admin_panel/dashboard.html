@@ -1,0 +1,144 @@
+{% extends "admin_panel/base.html" %}
+{% load static %}
+{% block title %}Dashboard — Al-Hadid{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex items-center justify-between">
+  <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Dashboard</h1>
+</div>
+
+<!-- Stats: 2 cols on mobile, 3 cols on md+ (iPad/Desktop) -->
+<div class="grid gap-4 grid-cols-2 md:grid-cols-3 mb-6">
+  <a href="{% url 'admin_panel:programs_list' %}" class="rounded-2xl border border-slate-200 dark:border-slate-800 p-4 bg-white dark:bg-slate-900 shadow-sm">
+    <div class="text-sm text-slate-500 dark:text-slate-400">Programs</div>
+    <div class="mt-1 text-3xl font-bold text-emerald-600">{{ programs_count|default:0 }}</div>
+  </a>
+
+  <a href="{% url 'admin_panel:news_list' %}" class="rounded-2xl border border-slate-200 dark:border-slate-800 p-4 bg-white dark:bg-slate-900 shadow-sm">
+    <div class="text-sm text-slate-500 dark:text-slate-400">News</div>
+    <div class="mt-1 text-3xl font-bold text-emerald-600">{{ news_count|default:0 }}</div>
+  </a>
+
+  <a href="{% url 'admin_panel:events_list' %}" class="rounded-2xl border border-slate-200 dark:border-slate-800 p-4 bg-white dark:bg-slate-900 shadow-sm">
+    <div class="text-sm text-slate-500 dark:text-slate-400">Events</div>
+    <div class="mt-1 text-3xl font-bold text-emerald-600">{{ events_count|default:0 }}</div>
+  </a>
+
+  <a href="{% url 'admin_panel:messages_list' %}" class="rounded-2xl border border-slate-200 dark:border-slate-800 p-4 bg-white dark:bg-slate-900 shadow-sm">
+    <div class="text-sm text-slate-500 dark:text-slate-400">Unread Messages</div>
+    <div class="mt-1 text-3xl font-bold text-emerald-600">{{ messages_count|default:0 }}</div>
+    <div class="text-xs text-slate-400 mt-1">Total: {{ messages_total_count|default:0 }}</div>
+  </a>
+
+  <a href="{% url 'admin_panel:gallery_list' %}" class="rounded-2xl border border-slate-200 dark:border-slate-800 p-4 bg-white dark:bg-slate-900 shadow-sm">
+    <div class="text-sm text-slate-500 dark:text-slate-400">Gallery</div>
+    <div class="mt-1 text-3xl font-bold text-emerald-600">{{ gallery_count|default:0 }}</div>
+  </a>
+</div>
+
+<div class="grid gap-6 xl:grid-cols-3">
+  <!-- Recent News -->
+  <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm xl:col-span-2">
+    <div class="px-4 py-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+      <h2 class="text-sm font-semibold text-slate-700 dark:text-slate-200">Recent News</h2>
+      <a href="{% url 'admin_panel:news_list' %}" class="text-emerald-700 dark:text-emerald-300 text-sm">View all</a>
+    </div>
+    <ul class="divide-y divide-slate-100 dark:divide-slate-800">
+      {% for n in recent_news %}
+        <li class="px-4 py-3 flex items-center justify-between">
+          <div>
+            <div class="font-medium text-slate-800 dark:text-slate-100">{{ n.title }}</div>
+            <div class="text-xs text-slate-500 dark:text-slate-400">
+              Updated {{ n.updated_at|date:"M d, Y H:i" }}
+              {% if not n.is_published %} • <span class="text-amber-600">Draft</span>{% endif %}
+            </div>
+          </div>
+          <a href="{% url 'admin_panel:news_edit' n.id %}" class="text-sm rounded-lg border px-3 py-1 dark:border-slate-700">Edit</a>
+        </li>
+      {% empty %}
+        <li class="px-4 py-6 text-sm text-slate-500 dark:text-slate-400">No news yet.</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <!-- Recent Events -->
+  <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+    <div class="px-4 py-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+      <h2 class="text-sm font-semibold text-slate-700 dark:text-slate-200">Upcoming / Recent Events</h2>
+      <a href="{% url 'admin_panel:events_list' %}" class="text-emerald-700 dark:text-emerald-300 text-sm">View all</a>
+    </div>
+    <ul class="divide-y divide-slate-100 dark:divide-slate-800">
+      {% for e in recent_events %}
+        <li class="px-4 py-3">
+          <div class="font-medium text-slate-800 dark:text-slate-100">{{ e.title }}</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400">
+            {{ e.event_date|date:"M d, Y" }}{% if e.location %} • {{ e.location }}{% endif %}
+          </div>
+        </li>
+      {% empty %}
+        <li class="px-4 py-6 text-sm text-slate-500 dark:text-slate-400">No events yet.</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<!-- Users snapshot -->
+<div class="mt-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+  <div class="px-4 py-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+    <h2 class="text-sm font-semibold text-slate-700 dark:text-slate-200">Admin Users</h2>
+    <a href="{% url 'admin_panel:admin_users_list' %}" class="text-emerald-700 dark:text-emerald-300 text-sm">Manage users</a>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full text-sm">
+      <thead class="bg-slate-50 dark:bg-slate-800">
+        <tr>
+          <th class="text-left px-4 py-2 font-semibold">User</th>
+          <th class="text-left px-4 py-2 font-semibold">Email</th>
+          <th class="text-left px-4 py-2 font-semibold">Status</th>
+          <th class="text-left px-4 py-2 font-semibold">Last login</th>
+          <th class="text-left px-4 py-2 font-semibold">Joined</th>
+          <th class="text-right px-4 py-2 font-semibold">Action</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+        {% for u in staff_users %}
+          <tr>
+            <td class="px-4 py-2">
+              <div class="font-medium text-slate-800 dark:text-slate-100">
+                {{ u.get_full_name|default:u.username }}
+              </div>
+              <div class="text-xs text-slate-500 dark:text-slate-400">@{{ u.username }}</div>
+            </td>
+            <td class="px-4 py-2 text-slate-700 dark:text-slate-200">{{ u.email|default:"—" }}</td>
+            <td class="px-4 py-2">
+              {% if u.is_active %}
+                <span class="inline-flex items-center rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 px-2 py-0.5 text-xs">Active</span>
+              {% else %}
+                <span class="inline-flex items-center rounded-full bg-rose-50 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300 px-2 py-0.5 text-xs">Inactive</span>
+              {% endif %}
+              {% if u.is_superuser %}
+                <span class="ml-2 inline-flex items-center rounded-full bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300 px-2 py-0.5 text-xs">Superuser</span>
+              {% endif %}
+            </td>
+            <td class="px-4 py-2 text-slate-600 dark:text-slate-300">
+              {% if u.last_login %}{{ u.last_login|date:"M d, Y H:i" }}{% else %}—{% endif %}
+            </td>
+            <td class="px-4 py-2 text-slate-600 dark:text-slate-300">{{ u.date_joined|date:"M d, Y" }}</td>
+            <td class="px-4 py-2 text-right">
+              <a href="{% url 'admin_panel:admin_users_update' u.id %}"
+                 class="inline-flex items-center rounded-lg border px-3 py-1.5 text-sm dark:border-slate-700">
+                Edit
+              </a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td class="px-4 py-6 text-center text-slate-500 dark:text-slate-400" colspan="6">No admin users found.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

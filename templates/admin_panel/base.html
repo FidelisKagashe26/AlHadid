@@ -1,0 +1,238 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{% block title %}Admin — {{ site_settings.site_name|default:"Al-Hadid Foundation" }}{% endblock %}</title>
+
+  <link rel="stylesheet" href="{% static 'css/tw.css' %}">
+  <script src="{% static 'js/theme.js' %}" defer></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="min-h-screen">
+  <div class="flex">
+    <!-- Desktop Sidebar -->
+    <aside class="hidden lg:flex flex-col w-64 bg-[#0f2418] text-gray-200 min-h-screen p-4 gap-1">
+      <div class="flex items-center gap-3 pb-4 mb-3 border-b border-white/10">
+        {% if site_settings and site_settings.logo %}
+          <img src="{{ site_settings.logo.url }}" alt="{{ site_settings.site_name|default:'Al-Hadid' }} Logo" class="h-6 w-auto object-contain rounded shrink-0">
+        {% else %}
+          <img src="{% static 'images/logo.png' %}" alt="Al-Hadid Logo" class="h-6 w-auto object-contain rounded shrink-0">
+        {% endif %}
+        <div class="font-cairo font-semibold tracking-wide">Al-Hadid Admin</div>
+      </div>
+
+      <a class="sidebar-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'admin_panel:dashboard' %}">
+        <i class="fa-solid fa-gauge-high w-5 text-gold"></i> <span>Dashboard</span>
+      </a>
+      <a class="sidebar-link {% if 'settings' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:site_settings' %}">
+        <i class="fa-solid fa-gear w-5 text-gold"></i> <span>Site Settings</span>
+      </a>
+
+      <div class="h-px bg-white/10 my-2"></div>
+
+      <a class="sidebar-link {% if 'program' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:programs_list' %}">
+        <i class="fa-solid fa-project-diagram w-5 text-gold"></i> <span>Programs</span>
+      </a>
+      <a class="sidebar-link {% if 'news' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:news_list' %}">
+        <i class="fa-solid fa-newspaper w-5 text-gold"></i> <span>News</span>
+      </a>
+      <a class="sidebar-link {% if 'event' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:events_list' %}">
+        <i class="fa-solid fa-calendar-days w-5 text-gold"></i> <span>Events</span>
+      </a>
+      <a class="sidebar-link {% if 'gallery' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:gallery_list' %}">
+        <i class="fa-solid fa-images w-5 text-gold"></i> <span>Gallery</span>
+      </a>
+      <a class="sidebar-link {% if 'donation' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:donations_list' %}">
+        <i class="fa-solid fa-hand-holding-heart w-5 text-gold"></i> <span>Donations</span>
+      </a>
+      <a class="sidebar-link {% if 'messages' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:messages_list' %}">
+        <i class="fa-solid fa-envelope w-5 text-gold"></i> <span>Messages</span>
+      </a>
+
+      <div class="h-px bg-white/10 my-2"></div>
+
+      <a class="sidebar-link {% if 'users' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_users_list' %}">
+        <i class="fa-solid fa-users-gear w-5 text-gold"></i> <span>Users & Roles</span>
+      </a>
+      <a class="sidebar-link {% if 'password_change' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_password_change' %}">
+        <i class="fa-solid fa-key w-5 text-gold"></i> <span>Change Password</span>
+      </a>
+      <a class="sidebar-link {% if 'password_reset' in request.resolver_match.url_name or 'reset' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'password_reset' %}">
+        <i class="fa-solid fa-unlock-keyhole w-5 text-gold"></i> <span>Forgot Password</span>
+      </a>
+
+      <div class="mt-auto pt-2 border-t border-white/10"></div>
+      <a class="sidebar-link" href="{% url 'website:home' %}" target="_blank">
+        <i class="fa-solid fa-earth-africa w-5 text-gold"></i> <span>View Website</span>
+      </a>
+      <a class="sidebar-link" href="{% url 'admin_panel:logout' %}">
+        <i class="fa-solid fa-right-from-bracket w-5 text-gold"></i> <span>Logout</span>
+      </a>
+    </aside>
+
+    <!-- Main -->
+    <main class="flex-1 min-h-screen">
+      <!-- Top bar (desktop logo smaller; mobile hamburger) -->
+      <div class="sticky top-0 z-20 bg-white/80 dark:bg-darksurface/80 backdrop-blur border-b border-gray-200 dark:border-darkborder">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+          <!-- Mobile hamburger -->
+          <button id="openDrawerBtn" class="lg:hidden btn btn-outline" type="button" aria-controls="mDrawer" aria-expanded="false" aria-label="Open menu">
+            <i class="fa-solid fa-bars"></i><span class="ml-2">Menu</span>
+          </button>
+
+          <!-- Desktop logo (small) -->
+          <div class="hidden lg:flex items-center gap-3">
+            {% if site_settings and site_settings.logo %}
+              <img src="{{ site_settings.logo.url }}" alt="{{ site_settings.site_name|default:'Al-Hadid' }} Logo" class="h-6 w-auto object-contain rounded shrink-0">
+            {% else %}
+              <img src="{% static 'images/logo.png' %}" alt="Al-Hadid Logo" class="h-6 w-auto object-contain rounded shrink-0">
+            {% endif %}
+            <span class="font-semibold">{{ site_settings.site_name|default:"Al-Hadid Foundation" }}</span>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button class="btn btn-outline" data-theme-toggle></button>
+            <div class="chip"><i class="fa-solid fa-user text-gold"></i> {{ user.first_name|default:user.username }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto p-4">
+        {% if messages %}
+          <div class="space-y-2 mb-4">
+            {% for message in messages %}
+              <div class="card p-3 border border-gold/40">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+  </div>
+
+  <!-- Mobile Drawer (off-canvas sidebar) -->
+  <div id="mDrawer" class="fixed inset-0 z-40 hidden" aria-hidden="true">
+    <div id="mDrawerOverlay" class="absolute inset-0 bg-black/50"></div>
+
+    <aside id="mDrawerPanel"
+           class="absolute inset-y-0 left-0 w-72 max-w-[85%] bg-[#0f2418] text-gray-200 transform -translate-x-full transition-transform duration-300 ease-out will-change-transform p-4 flex flex-col gap-1">
+      <div class="flex items-center justify-between pb-4 mb-3 border-b border-white/10">
+        <div class="flex items-center gap-2">
+          {% if site_settings and site_settings.logo %}
+            <img src="{{ site_settings.logo.url }}" alt="{{ site_settings.site_name|default:'Al-Hadid' }} Logo" class="h-6 w-auto object-contain rounded shrink-0">
+          {% else %}
+            <img src="{% static 'images/logo.png' %}" alt="Al-Hadid Logo" class="h-6 w-auto object-contain rounded shrink-0">
+          {% endif %}
+          <span class="font-cairo font-semibold tracking-wide">Al-Hadid Admin</span>
+        </div>
+        <button id="closeDrawerBtn" class="btn btn-outline" type="button" aria-label="Close menu">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Same links as desktop -->
+      <a class="sidebar-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'admin_panel:dashboard' %}">
+        <i class="fa-solid fa-gauge-high w-5 text-gold"></i> <span>Dashboard</span>
+      </a>
+      <a class="sidebar-link {% if 'settings' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:site_settings' %}">
+        <i class="fa-solid fa-gear w-5 text-gold"></i> <span>Site Settings</span>
+      </a>
+
+      <div class="h-px bg-white/10 my-2"></div>
+
+      <a class="sidebar-link {% if 'program' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:programs_list' %}">
+        <i class="fa-solid fa-project-diagram w-5 text-gold"></i> <span>Programs</span>
+      </a>
+      <a class="sidebar-link {% if 'news' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:news_list' %}">
+        <i class="fa-solid fa-newspaper w-5 text-gold"></i> <span>News</span>
+      </a>
+      <a class="sidebar-link {% if 'event' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:events_list' %}">
+        <i class="fa-solid fa-calendar-days w-5 text-gold"></i> <span>Events</span>
+      </a>
+      <a class="sidebar-link {% if 'gallery' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:gallery_list' %}">
+        <i class="fa-solid fa-images w-5 text-gold"></i> <span>Gallery</span>
+      </a>
+      <a class="sidebar-link {% if 'donation' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:donations_list' %}">
+        <i class="fa-solid fa-hand-holding-heart w-5 text-gold"></i> <span>Donations</span>
+      </a>
+      <a class="sidebar-link {% if 'messages' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:messages_list' %}">
+        <i class="fa-solid fa-envelope w-5 text-gold"></i> <span>Messages</span>
+      </a>
+
+      <div class="h-px bg-white/10 my-2"></div>
+
+      <a class="sidebar-link {% if 'users' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_users_list' %}">
+        <i class="fa-solid fa-users-gear w-5 text-gold"></i> <span>Users & Roles</span>
+      </a>
+      <a class="sidebar-link {% if 'password_change' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_password_change' %}">
+        <i class="fa-solid fa-key w-5 text-gold"></i> <span>Change Password</span>
+      </a>
+      <a class="sidebar-link {% if 'password_reset' in request.resolver_match.url_name or 'reset' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'password_reset' %}">
+        <i class="fa-solid fa-unlock-keyhole w-5 text-gold"></i> <span>Forgot Password</span>
+      </a>
+
+      <div class="mt-auto pt-2 border-t border-white/10"></div>
+      <a class="sidebar-link" href="{% url 'website:home' %}" target="_blank">
+        <i class="fa-solid fa-earth-africa w-5 text-gold"></i> <span>View Website</span>
+      </a>
+      <a class="sidebar-link" href="{% url 'admin_panel:logout' %}">
+        <i class="fa-solid fa-right-from-bracket w-5 text-gold"></i> <span>Logout</span>
+      </a>
+    </aside>
+  </div>
+
+  {% block extra_js %}{% endblock %}
+
+  <!-- safelist: keep translate-x-0 in production -->
+  <span class="hidden translate-x-0"></span>
+
+  <!-- Minimal JS to toggle the mobile drawer -->
+  <script>
+    (function () {
+      const drawer   = document.getElementById('mDrawer');
+      const panel    = document.getElementById('mDrawerPanel');
+      const overlay  = document.getElementById('mDrawerOverlay');
+      const openBtn  = document.getElementById('openDrawerBtn');
+      const closeBtn = document.getElementById('closeDrawerBtn');
+
+      function openDrawer() {
+        if (!drawer || !panel) return;
+        drawer.classList.remove('hidden');
+        requestAnimationFrame(() => {
+          panel.classList.remove('-translate-x-full');
+          panel.classList.add('translate-x-0');
+        });
+        document.body.classList.add('overflow-hidden');
+        openBtn?.setAttribute('aria-expanded', 'true');
+        drawer?.setAttribute('aria-hidden', 'false');
+      }
+
+      function closeDrawer() {
+        if (!drawer || !panel) return;
+        panel.classList.remove('translate-x-0');
+        panel.classList.add('-translate-x-full');
+        setTimeout(() => drawer.classList.add('hidden'), 300);
+        document.body.classList.remove('overflow-hidden');
+        openBtn?.setAttribute('aria-expanded', 'false');
+        drawer?.setAttribute('aria-hidden', 'true');
+      }
+
+      openBtn?.addEventListener('click', openDrawer);
+      closeBtn?.addEventListener('click', closeDrawer);
+      overlay?.addEventListener('click', closeDrawer);
+
+      // Close when a menu link is clicked
+      panel?.querySelectorAll('a.sidebar-link').forEach(a => a.addEventListener('click', closeDrawer));
+
+      // Escape to close
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !drawer?.classList.contains('hidden')) closeDrawer();
+      });
+    })();
+  </script>
+</body>
+</html>

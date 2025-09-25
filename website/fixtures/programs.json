@@ -1,0 +1,38 @@
+[
+{
+  "model": "website.program",
+  "pk": 1,
+  "fields": {
+    "title": "Education Support",
+    "description": "Scholarships, school supplies, and mentorship for students.",
+    "image": "",
+    "is_active": true,
+    "created_at": "2025-01-10T08:00:00Z",
+    "updated_at": "2025-09-24T11:54:05.408Z"
+  }
+},
+{
+  "model": "website.program",
+  "pk": 2,
+  "fields": {
+    "title": "Health Outreach",
+    "description": "Periodic free clinics and health awareness campaigns.",
+    "image": "",
+    "is_active": true,
+    "created_at": "2025-02-14T08:00:00Z",
+    "updated_at": "2025-09-24T11:54:05.415Z"
+  }
+},
+{
+  "model": "website.program",
+  "pk": 3,
+  "fields": {
+    "title": "Community Development",
+    "description": "Small infrastructure projects and community training.",
+    "image": "",
+    "is_active": true,
+    "created_at": "2025-03-01T08:00:00Z",
+    "updated_at": "2025-09-24T11:54:05.421Z"
+  }
+}
+]
