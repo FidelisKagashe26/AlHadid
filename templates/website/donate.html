@@ -1,12 +1,26 @@
 {% extends "base.html" %}
 {% block title %}Donate — Al-Hadid Foundation{% endblock %}
 {% block content %}
-<section class="bg-amber-50/50 dark:bg-slate-900/40 border-b border-amber-100 dark:border-slate-800">
+
+<style>
+  .gold-underline::after{
+    content:""; display:block; width:72px; height:3px; margin-top:12px; border-radius:999px;
+    background:linear-gradient(90deg,#cab26b,#d1ad51);
+  }
+  .method-card{ border:1px solid rgba(209,173,81,.18); border-radius:1rem; }
+  .method-card::before{
+    content:""; display:block; height:4px; border-radius:1rem 1rem 0 0;
+    background:linear-gradient(90deg,#d1ad51,var(--tw-primary,#10b981));
+  }
+</style>
+
+<section class="bg-gold/5 dark:bg-slate-900/40 border-b border-gold/10 dark:border-slate-800">
   <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <h1 class="text-3xl font-semibold mb-3">Support Our Work</h1>
+    <h1 class="text-3xl font-semibold mb-2">Support Our Work</h1>
+    <div class="gold-underline mb-4"></div>
     <p class="text-slate-600 dark:text-slate-300 max-w-3xl">
       Your donation enables us to care for orphans, empower women, develop mosques, and support premature babies.
-      <span class="font-medium">Every contribution counts — Allah akubarie sadaka yako.</span>
+      <span class="font-medium">Every contribution counts — May Allah accept your charity.</span>
     </p>
   </div>
 </section>
@@ -15,26 +29,35 @@
   {% if methods %}
     <div class="grid md:grid-cols-2 gap-6">
       {% for m in methods %}
-        <div class="rounded-2xl border dark:border-slate-800 p-5">
-          <h3 class="font-semibold text-lg mb-1">{{ m.name }}</h3>
-          {% if m.bank_name or m.account_number %}
-            <p class="text-sm text-slate-500 mb-2">{{ m.bank_name }} — {{ m.account_number }}</p>
+        <div class="method-card p-5">
+          <h3 class="font-semibold text-lg mb-1">
+            {% firstof m.name "Donation Method" as m_name %}{{ m_name }}
+          </h3>
+
+          {% if m.bank_name or m.account_number or m.account_name %}
+            <p class="text-sm text-slate-500 mb-2">
+              {% firstof m.bank_name m.provider "" as m_bank %}{% if m_bank %}{{ m_bank }} — {% endif %}
+              {% firstof m.account_number m.reference "" as m_acc %}{{ m_acc }}
+            </p>
           {% endif %}
-          <p class="text-sm text-slate-600 dark:text-slate-300">{{ m.description }}</p>
+
+          <p class="text-sm text-slate-600 dark:text-slate-300">
+            {% firstof m.description m.details m.note "" as m_desc %}{{ m_desc }}
+          </p>
         </div>
       {% endfor %}
     </div>
   {% else %}
-    <div class="rounded-2xl border dark:border-slate-800 p-6">
-      <h3 class="font-semibold mb-2">Mobile Money (M-Pesa/TigoPesa/Airtel Money)</h3>
-      <p class="text-sm">Namba: <b>0758 150 976</b> — Jina: <b>Zuberi Daffa</b></p>
-      <p class="text-sm mt-2">Akaunti ya benki: <b>1627779677</b> (Zuberi Daffa)</p>
+    <div class="method-card p-6">
+      <h3 class="font-semibold mb-2">Mobile Money (M-Pesa / TigoPesa / Airtel Money)</h3>
+      <p class="text-sm">Number: <b>0758 150 976</b> — Name: <b>Zuberi Daffa</b></p>
+      <p class="text-sm mt-2">Bank account: <b>1627779677</b> (Zuberi Daffa)</p>
     </div>
   {% endif %}
 
   <a href="https://wa.me/255758150976" target="_blank"
-     class="inline-flex items-center rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-3 font-semibold">
-    Uliza jinsi ya kuchangia moja kwa moja kwenye WhatsApp
+     class="inline-flex items-center rounded-xl bg-primary hover:opacity-90 text-white px-5 py-3 font-semibold">
+    Ask how to donate directly on WhatsApp
   </a>
 </section>
 {% endblock %}

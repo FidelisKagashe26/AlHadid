@@ -283,7 +283,7 @@
 </section>
 
 <!-- ===================== SUCCESS STORIES / TESTIMONIALS ===================== -->
-<section class="section bg-gradient-to-br from-gray-50 to-white dark:from-darksurface dark:to-gray-900">
+{% comment %} <section class="section bg-gradient-to-br from-gray-50 to-white dark:from-darksurface dark:to-gray-900">
   <div class="max-w-7xl mx-auto px-4">
     <h2 class="text-2xl md:text-3xl font-semibold gold-underline">Stories of Hope & Transformation</h2>
     
@@ -337,7 +337,7 @@
       </article>
     </div>
   </div>
-</section>
+</section> {% endcomment %}
 
 <!-- ===================== PROGRAMS & ACTIVITIES (DETAILED) ===================== -->
 <section class="section bg-white dark:bg-darksurface border-y border-gray-100 dark:border-darkborder">
@@ -437,7 +437,7 @@
 </section>
 
 <!-- ===================== IMPACT STRIP ===================== -->
-<section class="section pattern-lines">
+{% comment %} <section class="section pattern-lines">
   <div class="max-w-7xl mx-auto px-4 grid sm:grid-cols-2 md:grid-cols-4 gap-8 text-center">
     <div class="transform hover:scale-105 transition-transform duration-300">
       <div class="text-4xl md:text-5xl font-extrabold text-primary mb-2">1,200+</div>
@@ -460,7 +460,7 @@
       <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">Lives saved</div>
     </div>
   </div>
-</section>
+</section> {% endcomment %}
 
 <!-- ===================== RECENT NEWS & UPDATES ===================== -->
 <section class="section bg-white dark:bg-darksurface border-y border-gray-100 dark:border-darkborder">
@@ -619,7 +619,7 @@
       
       <div class="card-ghost rounded-xl2 px-6">
         <h3 class="text-xl font-semibold my-6 text-center">Get Involved Today</h3>
-        <div class="space-y-4 space-x-4">
+        <div class="space-y-4">
           <a href="{% url 'website:contact' %}" class="block w-full btn btn-primary text-center">
             <i class="fa-solid fa-user-plus mr-2"></i>Become a Volunteer
           </a>
@@ -632,7 +632,7 @@
         </div>
         
         <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-600">
-          <p class="text-xs text-center text-gray-600 dark:text-gray-400">
+          <p class="text-xs pb-4 text-center text-gray-600 dark:text-gray-400">
             <i class="fa-solid fa-shield-alt text-primary mr-1"></i>
             100% of donations go directly to our programs
           </p>
@@ -652,22 +652,23 @@
       </p>
       <ul class="text-gray-700 dark:text-gray-300 space-y-3">
         <li class="flex items-start">
-          <i class="fa-solid fa-check-circle text-gold mr-3 mt-1 flex-shrink-0"></i>
-          <span>Donations from individuals, businesses and international partners committed to Islamic philanthropy</span>
+          <i class="bi bi-check-circle-fill text-gold mr-3 mt-1 flex-shrink-0"></i>
+          <span>Donations from individuals, businesses and international partners committed to Islamic philanthropy.</span>
         </li>
         <li class="flex items-start">
-          <i class="fa-solid fa-check-circle text-gold mr-3 mt-1 flex-shrink-0"></i>
-          <span>Community fundraising events and charity drives during blessed occasions</span>
+          <i class="bi bi-check-circle-fill text-gold mr-3 mt-1 flex-shrink-0"></i>
+          <span>Community fundraising events and charity drives during blessed occasions.</span>
         </li>
         <li class="flex items-start">
-          <i class="fa-solid fa-check-circle text-gold mr-3 mt-1 flex-shrink-0"></i>
-          <span>Strategic partnerships with Islamic organizations for amplified impact</span>
+          <i class="bi bi-check-circle-fill text-gold mr-3 mt-1 flex-shrink-0"></i>
+          <span>Strategic partnerships with Islamic organizations for amplified impact.</span>
         </li>
         <li class="flex items-start">
-          <i class="fa-solid fa-check-circle text-gold mr-3 mt-1 flex-shrink-0"></i>
-          <span>Transparent annual reporting that builds long-term donor trust and confidence</span>
+          <i class="bi bi-check-circle-fill text-gold mr-3 mt-1 flex-shrink-0"></i>
+          <span>Transparent annual reporting that builds long-term donor trust and confidence.</span>
         </li>
       </ul>
+
     </div>
     
     <div class="card-ghost rounded-xl2 p-6">
@@ -681,10 +682,10 @@
       <div class="space-y-4 mb-6">
         <div class="flex justify-between items-center">
           <span class="text-sm text-gray-700 dark:text-gray-300">Program Services</span>
-          <span class="font-semibold text-gold">85%</span>
+          <span class="font-semibold text-primary">85%</span>
         </div>
         <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-          <div class="bg-gold h-2 rounded-full" style="width: 85%"></div>
+          <div class="bg-primary h-2 rounded-full" style="width: 85%"></div>
         </div>
         
         <div class="flex justify-between items-center">
@@ -748,19 +749,20 @@
     </div>
     
     <div class="mt-8 flex justify-center gap-4">
-      <a href="#" class="w-10 h-10 border border-primary text-primary hover:bg-primary hover:text-white rounded-full flex items-center justify-center transition-colors">
-        <i class="fa-brands fa-facebook-f"></i>
+      <a href="#" class="w-10 h-10 border border-primary text-primary hover:bg-yellow-200 hover:text-white rounded-full flex items-center justify-center transition-colors">
+        <i class="bi bi-facebook"></i>
       </a>
-      <a href="#" class="w-10 h-10 border border-primary text-primary hover:bg-primary hover:text-white rounded-full flex items-center justify-center transition-colors">
-        <i class="fa-brands fa-twitter"></i>
+      <a href="#" class="w-10 h-10 border border-primary text-primary hover:bg-yellow-200 hover:text-white rounded-full flex items-center justify-center transition-colors">
+        <i class="bi bi-twitter"></i>
       </a>
-      <a href="#" class="w-10 h-10 border border-primary text-primary hover:bg-primary hover:text-white rounded-full flex items-center justify-center transition-colors">
-        <i class="fa-brands fa-whatsapp"></i>
+      <a href="#" class="w-10 h-10 border border-primary text-primary hover:bg-yellow-200 hover:text-white rounded-full flex items-center justify-center transition-colors">
+        <i class="bi bi-whatsapp"></i>
       </a>
-      <a href="#" class="w-10 h-10 border border-primary text-primary hover:bg-primary hover:text-white rounded-full flex items-center justify-center transition-colors">
-        <i class="fa-brands fa-youtube"></i>
+      <a href="#" class="w-10 h-10 border border-primary text-primary hover:bg-yellow-00 hover:text-white rounded-full flex items-center justify-center transition-colors">
+        <i class="bi bi-youtube"></i>
       </a>
     </div>
+
   </div>
 </section>
 
