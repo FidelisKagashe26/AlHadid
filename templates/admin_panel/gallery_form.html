@@ -1,33 +1,32 @@
 {% extends "admin_panel/base.html" %}
-{% block title %}{{ title|default:"Gallery Item" }} — {{ site_settings.site_name|default:"Al-Hadid" }}{% endblock %}
+{% block title %}{{ action }} Gallery Item — Admin{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-semibold mb-4">{{ title|default:"Gallery Item" }}</h1>
-<div class="card p-5">
-  <form method="post" enctype="multipart/form-data">{% csrf_token %}
-    {% if form %}{{ form.as_p }}{% else %}
-      <div class="space-y-3">
-        <label class="block">
-          <span class="text-sm">Title</span>
-          <input name="title" class="w-full rounded-lg" value="{{ item.title }}">
-        </label>
-        <label class="block">
-          <span class="text-sm">Description</span>
-          <textarea name="description" rows="4" class="w-full rounded-lg">{{ item.description }}</textarea>
-        </label>
-        <label class="block">
-          <span class="text-sm">Image</span>
-          <input type="file" name="image">
-        </label>
-        <label class="inline-flex items-center gap-2">
-          <input type="checkbox" name="is_published" {% if item.is_published %}checked{% endif %}>
-          <span>Published</span>
-        </label>
-      </div>
-    {% endif %}
-    <div class="mt-4 flex gap-2">
-      <button class="btn btn-primary">Save</button>
-      <a href="{% url 'admin_panel:gallery_list' %}" class="btn btn-outline">Cancel</a>
+<h1 class="text-2xl font-bold mb-4">{{ action }} Gallery Item</h1>
+<form method="post" enctype="multipart/form-data" class="space-y-5 max-w-3xl">
+  {% csrf_token %}
+  <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm p-5 space-y-4">
+    <div>
+      <label class="block text-sm font-medium mb-1">Title *</label>
+      <input type="text" name="title" required class="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2.5" value="{{ gallery_item.title|default:'' }}">
     </div>
-  </form>
-</div>
+    <div>
+      <label class="block text-sm font-medium mb-1">Image</label>
+      {% if gallery_item.image %}<img src="{{ gallery_item.image.url }}" class="h-24 rounded mb-2" alt="">{% endif %}
+      <input type="file" name="image" accept="image/*" class="w-full">
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1">Description</label>
+      <textarea name="description" rows="5" class="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2.5">{{ gallery_item.description|default:'' }}</textarea>
+    </div>
+    <label class="inline-flex items-center gap-2">
+      <input type="checkbox" name="is_published" {% if gallery_item.is_published %}checked{% endif %}>
+      <span>Published</span>
+    </label>
+  </div>
+
+  <div class="flex gap-2">
+    <button class="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5">Save</button>
+    <a href="{% url 'admin_panel:gallery_list' %}" class="rounded-xl border px-4 py-2.5 dark:border-slate-700">Cancel</a>
+  </div>
+</form>
 {% endblock %}

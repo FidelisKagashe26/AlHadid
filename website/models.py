@@ -116,3 +116,16 @@ class ContactMessage(models.Model):
     
     def __str__(self):
         return f"{self.subject} - {self.name}"
+
+class ContactMessage(models.Model):
+    name = models.CharField(max_length=150)
+    email = models.EmailField()
+    subject = models.CharField(max_length=255)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    is_read = models.BooleanField(default=False)
+    read_at = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.subject} - {self.name}"

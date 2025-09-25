@@ -1,0 +1,39 @@
+{% extends "admin_panel/base.html" %}
+{% block title %}Message — {{ message.subject }}{% endblock %}
+{% block content %}
+<div class="max-w-3xl">
+  <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+    <div class="px-4 py-3 border-b border-slate-100 dark:border-slate-800">
+      <h1 class="text-lg font-semibold">{{ message.subject }}</h1>
+      <p class="text-sm text-slate-500 dark:text-slate-400">
+        From: {{ message.name }} &lt;{{ message.email }}&gt; • {{ message.created_at|date:"M d, Y H:i" }}
+        {% if message.is_read %}<span class="ml-2 inline-block rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 px-2 py-0.5 text-xs">Read</span>{% endif %}
+      </p>
+    </div>
+    <div class="p-4 prose dark:prose-invert max-w-none">
+      <p>{{ message.message|linebreaksbr }}</p>
+    </div>
+    <div class="px-4 py-3 border-t border-slate-100 dark:border-slate-800 flex gap-2">
+      {% if perms.website.change_contactmessage %}
+        {% if not message.is_read %}
+        <form method="post" action="{% url 'admin_panel:messages_mark_read' message.id %}">{% csrf_token %}
+          <button class="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 text-sm">Mark as read</button>
+        </form>
+        {% else %}
+        <form method="post" action="{% url 'admin_panel:messages_mark_unread' message.id %}">{% csrf_token %}
+          <button class="rounded-lg border px-3 py-1.5 text-sm dark:border-slate-700">Mark unread</button>
+        </form>
+        {% endif %}
+      {% endif %}
+
+      <a href="mailto:{{ message.email }}" class="ml-auto inline-flex items-center rounded-lg border px-3 py-1.5 text-sm dark:border-slate-700">Reply</a>
+
+      {% if perms.website.delete_contactmessage %}
+      <form method="post" action="{% url 'admin_panel:message_delete' message.id %}" onsubmit="return confirm('Delete this message?')">{% csrf_token %}
+        <button class="rounded-lg border px-3 py-1.5 text-sm dark:border-slate-700">Delete</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

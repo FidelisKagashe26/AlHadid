@@ -1,27 +1,64 @@
 {% extends "admin_panel/base.html" %}
-{% block title %}Messages — {{ site_settings.site_name|default:"Al-Hadid" }}{% endblock %}
+{% block title %}Messages — Admin{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-semibold mb-4">Messages</h1>
-<div class="card overflow-x-auto">
-  <table class="min-w-full divide-y divide-gray-200 dark:divide-darkborder">
-    <thead class="bg-gray-50 dark:bg-neutral-800">
+<div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+  <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">
+    Messages <span class="text-sm font-normal text-slate-500 dark:text-slate-400">({{ unread_count }} unread)</span>
+  </h1>
+  <form method="get" class="flex items-center gap-2">
+    <input type="text" name="q" value="{{ q }}" placeholder="Search name, email, subject..."
+           class="w-64 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm">
+    {% if q %}
+    <a href="{% url 'admin_panel:messages_list' %}" class="text-sm underline">Clear</a>
+    {% endif %}
+    <button class="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 text-sm">Search</button>
+  </form>
+</div>
+
+<div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-x-auto">
+  <table class="min-w-full text-sm">
+    <thead class="bg-slate-50 dark:bg-slate-800/60">
       <tr>
-        <th class="px-4 py-2 text-left text-sm font-semibold">Name</th>
-        <th class="px-4 py-2 text-left text-sm font-semibold">Email</th>
-        <th class="px-4 py-2 text-left text-sm font-semibold">Subject</th>
-        <th class="px-4 py-2 text-left text-sm font-semibold">Date</th>
+        <th class="px-4 py-2 text-left font-semibold">Name</th>
+        <th class="px-4 py-2 text-left font-semibold">Email</th>
+        <th class="px-4 py-2 text-left font-semibold">Subject</th>
+        <th class="px-4 py-2 text-left font-semibold">Date</th>
+        <th class="px-4 py-2 text-left font-semibold">Status</th>
+        <th class="px-4 py-2 text-right font-semibold">Action</th>
       </tr>
     </thead>
-    <tbody class="divide-y divide-gray-100 dark:divide-darkborder">
-      {% for m in contact_messages %}
-      <tr>
-        <td class="px-4 py-2">{{ m.name }}</td>
-        <td class="px-4 py-2">{{ m.email }}</td>
-        <td class="px-4 py-2">{{ m.subject }}</td>
-        <td class="px-4 py-2">{{ m.created_at|date:"M d, Y H:i" }}</td>
+    <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+      {% for m in inbox %}
+      <tr class="{% if not m.is_read %}bg-emerald-50/50 dark:bg-emerald-900/10{% endif %}">
+        <td class="px-4 py-2 font-medium text-slate-800 dark:text-slate-100">{{ m.name }}</td>
+        <td class="px-4 py-2"><a class="text-emerald-700 hover:underline dark:text-emerald-300" href="mailto:{{ m.email }}">{{ m.email }}</a></td>
+        <td class="px-4 py-2 text-slate-700 dark:text-slate-200">{{ m.subject }}</td>
+        <td class="px-4 py-2 text-slate-600 dark:text-slate-300">{{ m.created_at|date:"M d, Y H:i" }}</td>
+        <td class="px-4 py-2">
+          {% if m.is_read %}
+            <span class="inline-flex items-center rounded-full bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 px-2 py-0.5 text-xs">Read</span>
+          {% else %}
+            <span class="inline-flex items-center rounded-full bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300 px-2 py-0.5 text-xs">Unread</span>
+          {% endif %}
+        </td>
+        <td class="px-4 py-2 text-right">
+          <a href="{% url 'admin_panel:messages_detail' m.id %}" class="inline-flex items-center rounded-lg border px-3 py-1.5 text-sm dark:border-slate-700">View</a>
+          {% if not m.is_read %}
+            <form method="post" action="{% url 'admin_panel:messages_mark_read' m.id %}" class="inline">{% csrf_token %}
+              <button class="ml-2 inline-flex items-center rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 text-sm">Mark read</button>
+            </form>
+          {% else %}
+            <form method="post" action="{% url 'admin_panel:messages_mark_unread' m.id %}" class="inline">{% csrf_token %}
+              <button class="ml-2 inline-flex items-center rounded-lg border px-3 py-1.5 text-sm dark:border-slate-700">Mark unread</button>
+            </form>
+          {% endif %}
+          <form method="post" action="{% url 'admin_panel:message_delete' m.id %}" class="inline" onsubmit="return confirm('Delete this message?')">{% csrf_token %}
+            <button class="ml-2 inline-flex items-center rounded-lg border px-3 py-1.5 text-sm dark:border-slate-700">Delete</button>
+          </form>
+        </td>
       </tr>
       {% empty %}
-      <tr><td colspan="4" class="px-4 py-6 text-center text-gray-500">No messages yet.</td></tr>
+      <tr><td class="px-4 py-8 text-center text-slate-500 dark:text-slate-400" colspan="6">No messages yet.</td></tr>
       {% endfor %}
     </tbody>
   </table>

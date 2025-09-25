@@ -1,0 +1,42 @@
+{% extends "admin_panel/base.html" %}
+{% block title %}{{ action }} Event — Admin{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">{{ action }} Event</h1>
+<form method="post" enctype="multipart/form-data" class="space-y-5 max-w-3xl">
+  {% csrf_token %}
+  <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm p-5 space-y-4">
+    <div>
+      <label class="block text-sm font-medium mb-1">Title *</label>
+      <input type="text" name="title" required class="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2.5" value="{{ event.title|default:'' }}">
+    </div>
+    <div class="grid sm:grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium mb-1">Date *</label>
+        <input type="date" name="event_date" required class="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2.5" value="{{ event.event_date|date:'Y-m-d' }}">
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Location</label>
+        <input type="text" name="location" class="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2.5" value="{{ event.location|default:'' }}">
+      </div>
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1">Description</label>
+      <textarea name="description" rows="6" class="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2.5">{{ event.description|default:'' }}</textarea>
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1">Image</label>
+      {% if event.image %}<img src="{{ event.image.url }}" class="h-24 rounded mb-2" alt="">{% endif %}
+      <input type="file" name="image" accept="image/*" class="w-full">
+    </div>
+    <label class="inline-flex items-center gap-2">
+      <input type="checkbox" name="is_published" {% if event.is_published %}checked{% endif %}>
+      <span>Published</span>
+    </label>
+  </div>
+
+  <div class="flex gap-2">
+    <button class="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5">Save</button>
+    <a href="{% url 'admin_panel:events_list' %}" class="rounded-xl border px-4 py-2.5 dark:border-slate-700">Cancel</a>
+  </div>
+</form>
+{% endblock %}

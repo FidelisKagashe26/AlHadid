@@ -10,11 +10,41 @@
   <script src="{% static 'js/theme.js' %}" defer></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Minimal CSS: robust drawer state (no reliance on purged classes) -->
+  <style>
+    /* Drawer root is fixed full-screen; hidden by default via data-open attr */
+    #mDrawerRoot {
+      position: fixed; inset: 0; z-index: 9999;
+      opacity: 0; pointer-events: none;
+      transition: opacity .25s ease;
+    }
+    #mDrawerRoot[data-open="true"] {
+      opacity: 1; pointer-events: auto;
+    }
+    /* Overlay fades */
+    #mDrawerOverlay {
+      position: absolute; inset: 0; background: rgba(0,0,0,.6);
+      transition: opacity .25s ease;
+    }
+    /* Panel slides from the left; FULL SCREEN on mobile */
+    #mDrawerPanel {
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      transform: translateX(-100%);
+      transition: transform .25s ease;
+      overflow-y: auto;
+    }
+    #mDrawerRoot[data-open="true"] #mDrawerPanel {
+      transform: translateX(0);
+    }
+  </style>
+
   {% block extra_head %}{% endblock %}
 </head>
 <body class="min-h-screen">
   <div class="flex">
-    <!-- Desktop Sidebar -->
+    <!-- Desktop Sidebar (unchanged) -->
     <aside class="hidden lg:flex flex-col w-64 bg-[#0f2418] text-gray-200 min-h-screen p-4 gap-1">
       <div class="flex items-center gap-3 pb-4 mb-3 border-b border-white/10">
         {% if site_settings and site_settings.logo %}
@@ -61,9 +91,6 @@
       <a class="sidebar-link {% if 'password_change' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_password_change' %}">
         <i class="fa-solid fa-key w-5 text-gold"></i> <span>Change Password</span>
       </a>
-      <a class="sidebar-link {% if 'password_reset' in request.resolver_match.url_name or 'reset' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'password_reset' %}">
-        <i class="fa-solid fa-unlock-keyhole w-5 text-gold"></i> <span>Forgot Password</span>
-      </a>
 
       <div class="mt-auto pt-2 border-t border-white/10"></div>
       <a class="sidebar-link" href="{% url 'website:home' %}" target="_blank">
@@ -76,11 +103,10 @@
 
     <!-- Main -->
     <main class="flex-1 min-h-screen">
-      <!-- Top bar (desktop logo smaller; mobile hamburger) -->
       <div class="sticky top-0 z-20 bg-white/80 dark:bg-darksurface/80 backdrop-blur border-b border-gray-200 dark:border-darkborder">
         <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <!-- Mobile hamburger -->
-          <button id="openDrawerBtn" class="lg:hidden btn btn-outline" type="button" aria-controls="mDrawer" aria-expanded="false" aria-label="Open menu">
+          <button id="openDrawerBtn" class="lg:hidden btn btn-outline" type="button" aria-controls="mDrawerRoot" aria-expanded="false" aria-label="Open menu">
             <i class="fa-solid fa-bars"></i><span class="ml-2">Menu</span>
           </button>
 
@@ -114,125 +140,124 @@
     </main>
   </div>
 
-  <!-- Mobile Drawer (off-canvas sidebar) -->
-  <div id="mDrawer" class="fixed inset-0 z-40 hidden" aria-hidden="true">
-    <div id="mDrawerOverlay" class="absolute inset-0 bg-black/50"></div>
+  <!-- MOBILE DRAWER (FULL SCREEN) -->
+  <div id="mDrawerRoot" class="lg:hidden" data-open="false" aria-hidden="true" role="dialog" aria-modal="true">
+    <div id="mDrawerOverlay"></div>
 
-    <aside id="mDrawerPanel"
-           class="absolute inset-y-0 left-0 w-72 max-w-[85%] bg-[#0f2418] text-gray-200 transform -translate-x-full transition-transform duration-300 ease-out will-change-transform p-4 flex flex-col gap-1">
-      <div class="flex items-center justify-between pb-4 mb-3 border-b border-white/10">
-        <div class="flex items-center gap-2">
-          {% if site_settings and site_settings.logo %}
-            <img src="{{ site_settings.logo.url }}" alt="{{ site_settings.site_name|default:'Al-Hadid' }} Logo" class="h-6 w-auto object-contain rounded shrink-0">
-          {% else %}
-            <img src="{% static 'images/logo.png' %}" alt="Al-Hadid Logo" class="h-6 w-auto object-contain rounded shrink-0">
-          {% endif %}
-          <span class="font-cairo font-semibold tracking-wide">Al-Hadid Admin</span>
+    <aside id="mDrawerPanel" class="bg-[#0f2418] text-gray-200">
+      <div class="p-4">
+        <div class="flex items-center justify-between pb-4 mb-3 border-b border-white/10">
+          <div class="flex items-center gap-2">
+            {% if site_settings and site_settings.logo %}
+              <img src="{{ site_settings.logo.url }}" alt="{{ site_settings.site_name|default:'Al-Hadid' }} Logo" class="h-6 w-auto object-contain rounded shrink-0">
+            {% else %}
+              <img src="{% static 'images/logo.png' %}" alt="Al-Hadid Logo" class="h-6 w-auto object-contain rounded shrink-0">
+            {% endif %}
+            <span class="font-cairo font-semibold tracking-wide">Al-Hadid Admin</span>
+          </div>
+          <button id="closeDrawerBtn" class="btn btn-outline" type="button" aria-label="Close menu">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
         </div>
-        <button id="closeDrawerBtn" class="btn btn-outline" type="button" aria-label="Close menu">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+
+        <nav class="flex flex-col gap-1">
+          <a class="sidebar-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'admin_panel:dashboard' %}">
+            <i class="fa-solid fa-gauge-high w-5 text-gold"></i> <span>Dashboard</span>
+          </a>
+          <a class="sidebar-link {% if 'settings' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:site_settings' %}">
+            <i class="fa-solid fa-gear w-5 text-gold"></i> <span>Site Settings</span>
+          </a>
+
+          <div class="h-px bg-white/10 my-2"></div>
+
+          <a class="sidebar-link {% if 'program' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:programs_list' %}">
+            <i class="fa-solid fa-project-diagram w-5 text-gold"></i> <span>Programs</span>
+          </a>
+          <a class="sidebar-link {% if 'news' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:news_list' %}">
+            <i class="fa-solid fa-newspaper w-5 text-gold"></i> <span>News</span>
+          </a>
+          <a class="sidebar-link {% if 'event' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:events_list' %}">
+            <i class="fa-solid fa-calendar-days w-5 text-gold"></i> <span>Events</span>
+          </a>
+          <a class="sidebar-link {% if 'gallery' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:gallery_list' %}">
+            <i class="fa-solid fa-images w-5 text-gold"></i> <span>Gallery</span>
+          </a>
+          <a class="sidebar-link {% if 'donation' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:donations_list' %}">
+            <i class="fa-solid fa-hand-holding-heart w-5 text-gold"></i> <span>Donations</span>
+          </a>
+          <a class="sidebar-link {% if 'messages' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:messages_list' %}">
+            <i class="fa-solid fa-envelope w-5 text-gold"></i> <span>Messages</span>
+          </a>
+
+          <div class="h-px bg-white/10 my-2"></div>
+
+          <a class="sidebar-link {% if 'users' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_users_list' %}">
+            <i class="fa-solid fa-users-gear w-5 text-gold"></i> <span>Users & Roles</span>
+          </a>
+          <a class="sidebar-link {% if 'password_change' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_password_change' %}">
+            <i class="fa-solid fa-key w-5 text-gold"></i> <span>Change Password</span>
+          </a>
+          <a class="sidebar-link {% if 'password_reset' in request.resolver_match.url_name or 'reset' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'password_reset' %}">
+            <i class="fa-solid fa-unlock-keyhole w-5 text-gold"></i> <span>Forgot Password</span>
+          </a>
+
+          <div class="mt-4 pt-2 border-t border-white/10"></div>
+          <a class="sidebar-link" href="{% url 'website:home' %}" target="_blank">
+            <i class="fa-solid fa-earth-africa w-5 text-gold"></i> <span>View Website</span>
+          </a>
+          <a class="sidebar-link" href="{% url 'admin_panel:logout' %}">
+            <i class="fa-solid fa-right-from-bracket w-5 text-gold"></i> <span>Logout</span>
+          </a>
+        </nav>
       </div>
-
-      <!-- Same links as desktop -->
-      <a class="sidebar-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'admin_panel:dashboard' %}">
-        <i class="fa-solid fa-gauge-high w-5 text-gold"></i> <span>Dashboard</span>
-      </a>
-      <a class="sidebar-link {% if 'settings' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:site_settings' %}">
-        <i class="fa-solid fa-gear w-5 text-gold"></i> <span>Site Settings</span>
-      </a>
-
-      <div class="h-px bg-white/10 my-2"></div>
-
-      <a class="sidebar-link {% if 'program' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:programs_list' %}">
-        <i class="fa-solid fa-project-diagram w-5 text-gold"></i> <span>Programs</span>
-      </a>
-      <a class="sidebar-link {% if 'news' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:news_list' %}">
-        <i class="fa-solid fa-newspaper w-5 text-gold"></i> <span>News</span>
-      </a>
-      <a class="sidebar-link {% if 'event' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:events_list' %}">
-        <i class="fa-solid fa-calendar-days w-5 text-gold"></i> <span>Events</span>
-      </a>
-      <a class="sidebar-link {% if 'gallery' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:gallery_list' %}">
-        <i class="fa-solid fa-images w-5 text-gold"></i> <span>Gallery</span>
-      </a>
-      <a class="sidebar-link {% if 'donation' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:donations_list' %}">
-        <i class="fa-solid fa-hand-holding-heart w-5 text-gold"></i> <span>Donations</span>
-      </a>
-      <a class="sidebar-link {% if 'messages' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:messages_list' %}">
-        <i class="fa-solid fa-envelope w-5 text-gold"></i> <span>Messages</span>
-      </a>
-
-      <div class="h-px bg-white/10 my-2"></div>
-
-      <a class="sidebar-link {% if 'users' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_users_list' %}">
-        <i class="fa-solid fa-users-gear w-5 text-gold"></i> <span>Users & Roles</span>
-      </a>
-      <a class="sidebar-link {% if 'password_change' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_password_change' %}">
-        <i class="fa-solid fa-key w-5 text-gold"></i> <span>Change Password</span>
-      </a>
-      <a class="sidebar-link {% if 'password_reset' in request.resolver_match.url_name or 'reset' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'password_reset' %}">
-        <i class="fa-solid fa-unlock-keyhole w-5 text-gold"></i> <span>Forgot Password</span>
-      </a>
-
-      <div class="mt-auto pt-2 border-t border-white/10"></div>
-      <a class="sidebar-link" href="{% url 'website:home' %}" target="_blank">
-        <i class="fa-solid fa-earth-africa w-5 text-gold"></i> <span>View Website</span>
-      </a>
-      <a class="sidebar-link" href="{% url 'admin_panel:logout' %}">
-        <i class="fa-solid fa-right-from-bracket w-5 text-gold"></i> <span>Logout</span>
-      </a>
     </aside>
   </div>
 
   {% block extra_js %}{% endblock %}
 
-  <!-- safelist: keep translate-x-0 in production -->
-  <span class="hidden translate-x-0"></span>
-
-  <!-- Minimal JS to toggle the mobile drawer -->
+  <!-- Drawer JS (no hidden class; uses data-open) -->
   <script>
     (function () {
-      const drawer   = document.getElementById('mDrawer');
-      const panel    = document.getElementById('mDrawerPanel');
+      const root     = document.getElementById('mDrawerRoot');
       const overlay  = document.getElementById('mDrawerOverlay');
       const openBtn  = document.getElementById('openDrawerBtn');
       const closeBtn = document.getElementById('closeDrawerBtn');
 
+      const html = document.documentElement;
+      const body = document.body;
+
       function openDrawer() {
-        if (!drawer || !panel) return;
-        drawer.classList.remove('hidden');
-        requestAnimationFrame(() => {
-          panel.classList.remove('-translate-x-full');
-          panel.classList.add('translate-x-0');
-        });
-        document.body.classList.add('overflow-hidden');
+        if (!root) return;
+        root.setAttribute('data-open', 'true');
+        root.setAttribute('aria-hidden', 'false');
         openBtn?.setAttribute('aria-expanded', 'true');
-        drawer?.setAttribute('aria-hidden', 'false');
+        html.classList.add('overflow-hidden');
+        body.classList.add('overflow-hidden');
       }
 
       function closeDrawer() {
-        if (!drawer || !panel) return;
-        panel.classList.remove('translate-x-0');
-        panel.classList.add('-translate-x-full');
-        setTimeout(() => drawer.classList.add('hidden'), 300);
-        document.body.classList.remove('overflow-hidden');
+        if (!root) return;
+        root.setAttribute('data-open', 'false');
+        root.setAttribute('aria-hidden', 'true');
         openBtn?.setAttribute('aria-expanded', 'false');
-        drawer?.setAttribute('aria-hidden', 'true');
+        html.classList.remove('overflow-hidden');
+        body.classList.remove('overflow-hidden');
       }
 
       openBtn?.addEventListener('click', openDrawer);
       closeBtn?.addEventListener('click', closeDrawer);
       overlay?.addEventListener('click', closeDrawer);
 
-      // Close when a menu link is clicked
-      panel?.querySelectorAll('a.sidebar-link').forEach(a => a.addEventListener('click', closeDrawer));
-
-      // Escape to close
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !drawer?.classList.contains('hidden')) closeDrawer();
+        if (e.key === 'Escape') closeDrawer();
       });
+
+      // Close on any link click inside the drawer
+      root?.querySelectorAll('a.sidebar-link').forEach(a => a.addEventListener('click', closeDrawer));
     })();
   </script>
+
+  <!-- Safelist helpers (if your Tailwind build is aggressive) -->
+  <span class="hidden translate-x-0 opacity-100 pointer-events-auto"></span>
 </body>
 </html>

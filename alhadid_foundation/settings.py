@@ -18,7 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
 
     'website',
-    'admin_panel',
+    'admin_panel.apps.AdminPanelConfig',
 ]
 
 # === Middleware ===
@@ -32,7 +32,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+CSRF_FAILURE_VIEW = 'django.views.csrf.csrf_failure' 
 ROOT_URLCONF = 'alhadid_foundation.urls'
 
 TEMPLATES = [
