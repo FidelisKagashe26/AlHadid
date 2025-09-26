@@ -7,57 +7,415 @@
     content:""; display:block; width:72px; height:3px; margin-top:12px; border-radius:999px;
     background:linear-gradient(90deg,#cab26b,#d1ad51);
   }
-  .method-card{ border:1px solid rgba(209,173,81,.18); border-radius:1rem; }
+  .method-card{ 
+    border:1px solid rgba(209,173,81,.18); 
+    border-radius:1rem;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .dark .method-card{
+    background: rgba(2,6,23,0.95);
+    border: 1px solid rgba(209,173,81,0.25);
+  }
+  .method-card:hover{
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(16,24,40,.15);
+  }
+  .dark .method-card:hover{
+    box-shadow: 0 20px 40px rgba(0,0,0,.4);
+  }
   .method-card::before{
     content:""; display:block; height:4px; border-radius:1rem 1rem 0 0;
     background:linear-gradient(90deg,#d1ad51,var(--tw-primary,#10b981));
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+  .method-card:hover::before{
+    transform: scaleX(1);
+  }
+
+  .hero-donate{
+    position:relative;
+    overflow:hidden;
+    background: linear-gradient(135deg, rgba(209,173,81,0.08), rgba(16,185,129,0.05));
+  }
+  .hero-donate::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+      repeating-linear-gradient(45deg, rgba(209,173,81,.08) 0 2px, transparent 2px 20px),
+      repeating-linear-gradient(-45deg, rgba(16,185,129,.06) 0 1px, transparent 1px 25px);
+    pointer-events:none;
+  }
+
+  .impact-card{
+    background: linear-gradient(135deg, rgba(209,173,81,0.05), rgba(255,255,255,0.95));
+    border: 1px solid rgba(209,173,81,0.1);
+    transition: all 0.3s ease;
+  }
+  .dark .impact-card{
+    background: linear-gradient(135deg, rgba(209,173,81,0.08), rgba(2,6,23,0.95));
+    border: 1px solid rgba(209,173,81,0.15);
+  }
+  .impact-card:hover{
+    transform: translateY(-4px);
+    box-shadow: 0 15px 30px rgba(16,24,40,.12);
+  }
+
+  .donation-amount{
+    border: 2px solid rgba(209,173,81,0.2);
+    transition: all 0.3s ease;
+  }
+  .donation-amount:hover{
+    border-color: #d1ad51;
+    background: rgba(209,173,81,0.05);
+    transform: scale(1.02);
+  }
+  .donation-amount.selected{
+    border-color: #d1ad51;
+    background: rgba(209,173,81,0.1);
+  }
+
+  .islamic-pattern{
+    background-image:
+      radial-gradient(circle at 25% 25%, rgba(209,173,81,0.1) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(16,185,129,0.08) 0%, transparent 50%);
   }
 </style>
 
-<section class="bg-gold/5 dark:bg-slate-900/40 border-b border-gold/10 dark:border-slate-800">
-  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <h1 class="text-3xl font-semibold mb-2">Support Our Work</h1>
-    <div class="gold-underline mb-4"></div>
-    <p class="text-slate-600 dark:text-slate-300 max-w-3xl">
-      Your donation enables us to care for orphans, empower women, develop mosques, and support premature babies.
-      <span class="font-medium">Every contribution counts — May Allah accept your charity.</span>
-    </p>
+<!-- ===================== HERO SECTION ===================== -->
+<section class="hero-donate border-b border-gold/10 dark:border-slate-800 relative py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="text-center">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold/10 text-gold mb-6">
+        <i class="fa-solid fa-hand-holding-heart"></i> 
+        <span class="text-sm font-medium">Make a Difference</span>
+      </div>
+      
+      <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+        Support Our <span class="text-gold">Mission</span>
+      </h1>
+      
+      <p class="text-lg text-slate-600 dark:text-slate-300 mb-8 max-w-3xl mx-auto leading-relaxed">
+        Your donation enables us to care for orphans, empower women, develop mosques, and support premature babies.
+        <span class="font-medium text-gold">Every contribution counts — May Allah accept your charity.</span>
+      </p>
+      
+      <div class="flex flex-wrap justify-center gap-4">
+        <div class="bg-white/50 dark:bg-slate-800/50 rounded-full px-4 py-2 border border-gold/20">
+          <span class="text-sm font-medium text-slate-800 dark:text-slate-200">
+            <i class="fa-solid fa-shield-check text-emerald-600 mr-2"></i>100% Secure
+          </span>
+        </div>
+        <div class="bg-white/50 dark:bg-slate-800/50 rounded-full px-4 py-2 border border-gold/20">
+          <span class="text-sm font-medium text-slate-800 dark:text-slate-200">
+            <i class="fa-solid fa-eye text-blue-600 mr-2"></i>Transparent
+          </span>
+        </div>
+        <div class="bg-white/50 dark:bg-slate-800/50 rounded-full px-4 py-2 border border-gold/20">
+          <span class="text-sm font-medium text-slate-800 dark:text-slate-200">
+            <i class="fa-solid fa-heart text-gold mr-2"></i>Impactful
+          </span>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
-  {% if methods %}
-    <div class="grid md:grid-cols-2 gap-6">
-      {% for m in methods %}
-        <div class="method-card p-5">
-          <h3 class="font-semibold text-lg mb-1">
-            {% firstof m.name "Donation Method" as m_name %}{{ m_name }}
-          </h3>
-
-          {% if m.bank_name or m.account_number or m.account_name %}
-            <p class="text-sm text-slate-500 mb-2">
-              {% firstof m.bank_name m.provider "" as m_bank %}{% if m_bank %}{{ m_bank }} — {% endif %}
-              {% firstof m.account_number m.reference "" as m_acc %}{{ m_acc }}
-            </p>
-          {% endif %}
-
-          <p class="text-sm text-slate-600 dark:text-slate-300">
-            {% firstof m.description m.details m.note "" as m_desc %}{{ m_desc }}
-          </p>
-        </div>
-      {% endfor %}
+<!-- ===================== ISLAMIC INSPIRATION ===================== -->
+<section class="py-12 islamic-pattern">
+  <div class="max-w-4xl mx-auto px-4 text-center">
+    <div class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-2xl p-8 border border-gold/10">
+      <p class="text-2xl md:text-3xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+        "مَثَلُ الَّذِينَ يُنفِقُونَ أَمْوَالَهُمْ فِي سَبِيلِ اللَّهِ"
+      </p>
+      <p class="text-lg text-slate-700 dark:text-slate-300 mb-3">
+        "The example of those who spend their wealth in the way of Allah..."
+      </p>
+      <p class="text-sm text-gold font-medium">— Quran 2:261</p>
     </div>
-  {% else %}
-    <div class="method-card p-6">
-      <h3 class="font-semibold mb-2">Mobile Money (M-Pesa / TigoPesa / Airtel Money)</h3>
-      <p class="text-sm">Number: <b>0758 150 976</b> — Name: <b>Zuberi Daffa</b></p>
-      <p class="text-sm mt-2">Bank account: <b>1627779677</b> (Zuberi Daffa)</p>
-    </div>
-  {% endif %}
-
-  <a href="https://wa.me/255758150976" target="_blank"
-     class="inline-flex items-center rounded-xl bg-primary hover:opacity-90 text-white px-5 py-3 font-semibold">
-    Ask how to donate directly on WhatsApp
-  </a>
+  </div>
 </section>
+
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <!-- DONATION IMPACT -->
+  <div class="mb-16">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-semibold gold-underline mb-6">Your Impact</h2>
+      <p class="text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
+        See how your generous contributions directly transform lives and strengthen communities across Tanzania.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      <div class="impact-card rounded-2xl p-6 text-center">
+        <div class="w-16 h-16 bg-gold/20 rounded-full mx-auto mb-4 flex items-center justify-center">
+          <i class="fa-solid fa-child-reaching text-gold text-2xl"></i>
+        </div>
+        <div class="text-2xl font-bold text-gold mb-2">$50</div>
+        <h3 class="font-semibold mb-2">Monthly Orphan Support</h3>
+        <p class="text-sm text-slate-600 dark:text-slate-300">
+          Provides food, clothing, and school supplies for one orphan for a month.
+        </p>
+      </div>
+
+      <div class="impact-card rounded-2xl p-6 text-center">
+        <div class="w-16 h-16 bg-emerald-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+          <i class="fa-solid fa-graduation-cap text-emerald-600 text-2xl"></i>
+        </div>
+        <div class="text-2xl font-bold text-emerald-600 mb-2">$100</div>
+        <h3 class="font-semibold mb-2">Women's Training Program</h3>
+        <p class="text-sm text-slate-600 dark:text-slate-300">
+          Sponsors one woman through our complete empowerment program.
+        </p>
+      </div>
+
+      <div class="impact-card rounded-2xl p-6 text-center">
+        <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+          <i class="fa-solid fa-mosque text-blue-600 text-2xl"></i>
+        </div>
+        <div class="text-2xl font-bold text-blue-600 mb-2">$500</div>
+        <h3 class="font-semibold mb-2">Mosque Development</h3>
+        <p class="text-sm text-slate-600 dark:text-slate-300">
+          Contributes to mosque renovation and community facility improvements.
+        </p>
+      </div>
+
+      <div class="impact-card rounded-2xl p-6 text-center">
+        <div class="w-16 h-16 bg-pink-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+          <i class="fa-solid fa-baby text-pink-600 text-2xl"></i>
+        </div>
+        <div class="text-2xl font-bold text-pink-600 mb-2">$1000</div>
+        <h3 class="font-semibold mb-2">Medical Equipment</h3>
+        <p class="text-sm text-slate-600 dark:text-slate-300">
+          Helps purchase life-saving equipment for premature babies.
+        </p>
+      </div>
+    </div>
+
+    <!-- SUGGESTED AMOUNTS -->
+    <div class="bg-gradient-to-br from-slate-50 to-emerald-50/30 dark:from-slate-900 dark:to-slate-800 rounded-2xl p-8 mb-12">
+      <h3 class="text-xl font-semibold text-center mb-6">Choose Your Contribution</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <button class="donation-amount rounded-xl p-4 text-center">
+          <div class="text-2xl font-bold text-gold mb-1">$25</div>
+          <div class="text-xs text-slate-600 dark:text-slate-400">Basic Support</div>
+        </button>
+        <button class="donation-amount rounded-xl p-4 text-center">
+          <div class="text-2xl font-bold text-emerald-600 mb-1">$50</div>
+          <div class="text-xs text-slate-600 dark:text-slate-400">Monthly Care</div>
+        </button>
+        <button class="donation-amount rounded-xl p-4 text-center">
+          <div class="text-2xl font-bold text-blue-600 mb-1">$100</div>
+          <div class="text-xs text-slate-600 dark:text-slate-400">Full Program</div>
+        </button>
+        <button class="donation-amount rounded-xl p-4 text-center">
+          <div class="text-2xl font-bold text-purple-600 mb-1">Custom</div>
+          <div class="text-xs text-slate-600 dark:text-slate-400">Your Amount</div>
+        </button>
+      </div>
+      <div class="text-center">
+        <input type="number" placeholder="Enter custom amount" 
+               class="w-full max-w-xs px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-center font-semibold">
+      </div>
+    </div>
+  </div>
+
+  <!-- DONATION METHODS -->
+  <div class="mb-16">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-semibold gold-underline mb-6">How to Donate</h2>
+      <p class="text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
+        Choose from our secure and convenient donation methods. All transactions are protected and transparent.
+      </p>
+    </div>
+
+    {% if methods %}
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for m in methods %}
+          <div class="method-card p-6 group">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-gold/20 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                <i class="fa-solid fa-credit-card text-gold"></i>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-semibold text-lg mb-2">
+                  {% firstof m.name "Donation Method" as m_name %}{{ m_name }}
+                </h3>
+
+                {% if m.bank_name or m.account_number or m.account_name %}
+                  <div class="bg-slate-50 dark:bg-slate-800 rounded-lg p-3 mb-3">
+                    <p class="text-sm font-medium text-slate-700 dark:text-slate-300">
+                      {% firstof m.bank_name m.provider "" as m_bank %}{% if m_bank %}{{ m_bank }}{% endif %}
+                    </p>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">
+                      Account: {% firstof m.account_number m.reference "" as m_acc %}{{ m_acc }}
+                    </p>
+                  </div>
+                {% endif %}
+
+                <p class="text-sm text-slate-600 dark:text-slate-300">
+                  {% firstof m.description m.details m.note "" as m_desc %}{{ m_desc }}
+                </p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="method-card p-6 group">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-gold/20 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+              <i class="fa-solid fa-mobile-alt text-gold"></i>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-semibold text-lg mb-2">Mobile Money</h3>
+              <div class="bg-slate-50 dark:bg-slate-800 rounded-lg p-3 mb-3">
+                <p class="text-sm font-medium text-slate-700 dark:text-slate-300">M-Pesa / TigoPesa / Airtel Money</p>
+                <p class="text-sm text-slate-600 dark:text-slate-400">Number: <strong>0758 150 976</strong></p>
+                <p class="text-sm text-slate-600 dark:text-slate-400">Name: <strong>Zuberi Daffa</strong></p>
+              </div>
+              <p class="text-sm text-slate-600 dark:text-slate-300">
+                Send your donation directly via mobile money. Quick, secure, and convenient.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="method-card p-6 group">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+              <i class="fa-solid fa-university text-emerald-600"></i>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-semibold text-lg mb-2">Bank Transfer</h3>
+              <div class="bg-slate-50 dark:bg-slate-800 rounded-lg p-3 mb-3">
+                <p class="text-sm font-medium text-slate-700 dark:text-slate-300">Bank Account</p>
+                <p class="text-sm text-slate-600 dark:text-slate-400">Account: <strong>1627779677</strong></p>
+                <p class="text-sm text-slate-600 dark:text-slate-400">Name: <strong>Zuberi Daffa</strong></p>
+              </div>
+              <p class="text-sm text-slate-600 dark:text-slate-300">
+                Transfer directly to our bank account for larger donations and international transfers.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- TRANSPARENCY SECTION -->
+  <div class="mb-16 bg-gradient-to-br from-gold/5 to-emerald-50/30 dark:from-gold/10 dark:to-slate-800 rounded-2xl p-8 md:p-12">
+    <div class="text-center mb-8">
+      <h3 class="text-2xl font-semibold gold-underline mb-4">Our Commitment to Transparency</h3>
+      <p class="text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
+        We believe in complete transparency about how your donations are used. Here's exactly where your money goes.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8 mb-8">
+      <div class="text-center">
+        <div class="text-4xl font-bold text-gold mb-2">85%</div>
+        <div class="font-medium text-slate-800 dark:text-slate-200 mb-1">Direct Programs</div>
+        <div class="text-sm text-slate-600 dark:text-slate-400">Orphan care, women's empowerment, mosque development, baby care</div>
+      </div>
+      <div class="text-center">
+        <div class="text-4xl font-bold text-emerald-600 mb-2">10%</div>
+        <div class="font-medium text-slate-800 dark:text-slate-200 mb-1">Administration</div>
+        <div class="text-sm text-slate-600 dark:text-slate-400">Operations, staff, and organizational management</div>
+      </div>
+      <div class="text-center">
+        <div class="text-4xl font-bold text-blue-600 mb-2">5%</div>
+        <div class="font-medium text-slate-800 dark:text-slate-200 mb-1">Fundraising</div>
+        <div class="text-sm text-slate-600 dark:text-slate-400">Outreach and donor engagement activities</div>
+      </div>
+    </div>
+
+    <div class="text-center">
+      <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">
+        <i class="fa-solid fa-file-alt text-gold mr-2"></i>
+        Annual financial reports available upon request
+      </p>
+    </div>
+  </div>
+
+  <!-- CONTACT FOR DONATIONS -->
+  <div class="text-center">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 border border-gold/20 shadow-lg">
+      <div class="w-16 h-16 bg-emerald-100 rounded-full mx-auto mb-6 flex items-center justify-center">
+        <i class="fa-brands fa-whatsapp text-emerald-600 text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-semibold mb-4">Need Help with Your Donation?</h3>
+      <p class="text-slate-600 dark:text-slate-300 mb-6">
+        Our team is ready to assist you with any questions about donating or to help you set up recurring contributions.
+      </p>
+      <a href="https://wa.me/255758150976" target="_blank"
+         class="inline-flex items-center rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 font-semibold transition-colors">
+        <i class="fa-brands fa-whatsapp mr-2"></i>
+        Ask how to donate directly on WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Enhanced donation page interactions
+  (function(){
+    // Donation amount selection
+    const amountButtons = document.querySelectorAll('.donation-amount');
+    const customInput = document.querySelector('input[type="number"]');
+
+    amountButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        // Remove selected class from all buttons
+        amountButtons.forEach(btn => btn.classList.remove('selected'));
+        
+        // Add selected class to clicked button
+        this.classList.add('selected');
+        
+        // If not custom button, clear custom input
+        if (!this.textContent.includes('Custom')) {
+          customInput.value = '';
+        }
+      });
+    });
+
+    // Custom input focus
+    if (customInput) {
+      customInput.addEventListener('focus', function() {
+        amountButtons.forEach(btn => btn.classList.remove('selected'));
+        amountButtons[amountButtons.length - 1].classList.add('selected');
+      });
+    }
+
+    // Intersection Observer for animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    // Apply animations to cards
+    document.querySelectorAll('.method-card, .impact-card').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+      observer.observe(el);
+    });
+  })();
+</script>
+
 {% endblock %}

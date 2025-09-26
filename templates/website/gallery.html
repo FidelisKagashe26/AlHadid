@@ -7,43 +7,448 @@
     content:""; display:block; width:72px; height:3px; margin-top:12px; border-radius:999px;
     background:linear-gradient(90deg,#cab26b,#d1ad51);
   }
-  .gallery-card{ position:relative; overflow:hidden; transition:transform .25s ease, box-shadow .25s ease }
-  .gallery-card:hover{ transform:translateY(-2px); box-shadow:0 14px 30px rgba(16,24,40,.12) }
+  .gallery-card{ 
+    position:relative; 
+    overflow:hidden; 
+    transition:transform .3s ease, box-shadow .3s ease;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(209,173,81,0.1);
+  }
+  .dark .gallery-card{
+    background: rgba(2,6,23,0.95);
+    border: 1px solid rgba(209,173,81,0.15);
+  }
+  .gallery-card:hover{ 
+    transform:translateY(-8px); 
+    box-shadow:0 20px 40px rgba(16,24,40,.15);
+  }
+  .dark .gallery-card:hover{
+    box-shadow: 0 20px 40px rgba(0,0,0,.4);
+  }
   .gallery-card::before{
     content:""; position:absolute; inset:0 0 auto 0; height:4px;
     background:linear-gradient(90deg,#d1ad51,var(--tw-primary,#10b981));
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+  .gallery-card:hover::before{
+    transform: scaleX(1);
+  }
+
+  .hero-gallery{
+    position:relative;
+    overflow:hidden;
+    background: linear-gradient(135deg, rgba(209,173,81,0.05), rgba(16,185,129,0.05));
+  }
+  .hero-gallery::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+      repeating-linear-gradient(45deg, rgba(209,173,81,.08) 0 2px, transparent 2px 20px),
+      repeating-linear-gradient(-45deg, rgba(16,185,129,.06) 0 1px, transparent 1px 25px);
+    pointer-events:none;
+  }
+
+  .category-filter{
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(209,173,81,0.1);
+    transition: all 0.3s ease;
+  }
+  .dark .category-filter{
+    background: rgba(2,6,23,0.8);
+    border: 1px solid rgba(209,173,81,0.15);
+  }
+  .category-filter:hover, .category-filter.active{
+    background: rgba(209,173,81,0.1);
+    border-color: #d1ad51;
+    transform: translateY(-2px);
+  }
+
+  .gallery-overlay{
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .gallery-card:hover .gallery-overlay{
+    opacity: 1;
+  }
+
+  .gallery-info{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    color: white;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+  }
+  .gallery-card:hover .gallery-info{
+    transform: translateY(0);
+  }
+
+  .islamic-pattern{
+    background-image:
+      radial-gradient(circle at 25% 25%, rgba(209,173,81,0.1) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(16,185,129,0.08) 0%, transparent 50%);
+  }
+
+  .masonry-grid{
+    column-count: 1;
+    column-gap: 1rem;
+  }
+  @media (min-width: 640px) {
+    .masonry-grid { column-count: 2; }
+  }
+  @media (min-width: 1024px) {
+    .masonry-grid { column-count: 3; }
+  }
+  @media (min-width: 1280px) {
+    .masonry-grid { column-count: 4; }
+  }
+  .masonry-item{
+    break-inside: avoid;
+    margin-bottom: 1rem;
   }
 </style>
 
-<section class="max-w-7xl mx-auto px-4 py-10">
-  <h1 class="text-3xl font-semibold mb-2">Gallery</h1>
-  <div class="gold-underline mb-6"></div>
-
-  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-    {% if gallery %}
-      {% for item in gallery %}
-      <figure class="card gallery-card overflow-hidden">
-        {% if item.image %}<img src="{{ item.image.url }}" class="h-56 w-full object-cover" alt="">{% endif %}
-        <figcaption class="p-4">
-          <h3 class="font-semibold">
-            {% firstof item.title "Untitled" as g_title %}{{ g_title }}
-          </h3>
-
-          {% firstof item.created_at item.date "" as g_dt %}
-          {% if g_dt %}
-            <div class="text-xs text-gray-500">{{ g_dt }}</div>
-          {% endif %}
-
-          <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
-            {% firstof item.description item.caption item.text "" as g_txt %}
-            {{ g_txt|striptags|truncatewords:24 }}
-          </p>
-        </figcaption>
-      </figure>
-      {% endfor %}
-    {% else %}
-      <div class="text-gray-500">No gallery items published yet.</div>
-    {% endif %}
+<!-- ===================== HERO SECTION ===================== -->
+<section class="hero-gallery border-b border-emerald-100 dark:border-slate-800 relative py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="text-center">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold/10 text-gold mb-6">
+        <i class="fa-solid fa-images"></i> 
+        <span class="text-sm font-medium">Visual Stories</span>
+      </div>
+      
+      <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+        Our <span class="text-gold">Gallery</span>
+      </h1>
+      
+      <p class="text-lg text-slate-600 dark:text-slate-300 mb-8 max-w-3xl mx-auto">
+        Witness the impact of our work through powerful images that tell stories of hope, transformation, 
+        and community building across Tanzania. Every picture represents lives touched and communities strengthened.
+      </p>
+      
+      <div class="flex flex-wrap justify-center gap-4">
+        <div class="bg-white/50 dark:bg-slate-800/50 rounded-full px-4 py-2 border border-gold/20">
+          <span class="text-sm font-medium text-slate-800 dark:text-slate-200">
+            <i class="fa-solid fa-child-reaching text-gold mr-2"></i>Orphan Care
+          </span>
+        </div>
+        <div class="bg-white/50 dark:bg-slate-800/50 rounded-full px-4 py-2 border border-gold/20">
+          <span class="text-sm font-medium text-slate-800 dark:text-slate-200">
+            <i class="fa-solid fa-graduation-cap text-emerald-600 mr-2"></i>Women's Empowerment
+          </span>
+        </div>
+        <div class="bg-white/50 dark:bg-slate-800/50 rounded-full px-4 py-2 border border-gold/20">
+          <span class="text-sm font-medium text-slate-800 dark:text-slate-200">
+            <i class="fa-solid fa-mosque text-blue-600 mr-2"></i>Mosque Development
+          </span>
+        </div>
+        <div class="bg-white/50 dark:bg-slate-800/50 rounded-full px-4 py-2 border border-gold/20">
+          <span class="text-sm font-medium text-slate-800 dark:text-slate-200">
+            <i class="fa-solid fa-baby text-pink-600 mr-2"></i>Baby Care
+          </span>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
+
+<!-- ===================== ISLAMIC INSPIRATION ===================== -->
+<section class="py-12 islamic-pattern">
+  <div class="max-w-4xl mx-auto px-4 text-center">
+    <div class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-2xl p-8 border border-gold/10">
+      <p class="text-2xl md:text-3xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+        "وَجَعَلْنَا مِنْهُمْ أَئِمَّةً يَهْدُونَ بِأَمْرِنَا"
+      </p>
+      <p class="text-lg text-slate-700 dark:text-slate-300 mb-3">
+        "And We made from among them leaders guiding by Our command"
+      </p>
+      <p class="text-sm text-gold font-medium">— Quran 32:24</p>
+    </div>
+  </div>
+</section>
+
+<section class="max-w-7xl mx-auto px-4 py-16">
+  <!-- GALLERY FILTERS -->
+  <div class="mb-12">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-semibold gold-underline mb-6">Explore Our Work</h2>
+      <p class="text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
+        Browse through our collection of impactful moments, community events, and program highlights.
+      </p>
+    </div>
+
+    <div class="flex flex-wrap justify-center gap-4">
+      <button class="category-filter active rounded-full px-6 py-3 text-sm font-medium transition-all" data-filter="all">
+        <i class="fa-solid fa-grid-2 mr-2"></i>All Photos
+      </button>
+      <button class="category-filter rounded-full px-6 py-3 text-sm font-medium transition-all" data-filter="orphans">
+        <i class="fa-solid fa-child-reaching mr-2 text-gold"></i>Orphan Support
+      </button>
+      <button class="category-filter rounded-full px-6 py-3 text-sm font-medium transition-all" data-filter="women">
+        <i class="fa-solid fa-graduation-cap mr-2 text-emerald-600"></i>Women's Programs
+      </button>
+      <button class="category-filter rounded-full px-6 py-3 text-sm font-medium transition-all" data-filter="mosques">
+        <i class="fa-solid fa-mosque mr-2 text-blue-600"></i>Mosque Projects
+      </button>
+      <button class="category-filter rounded-full px-6 py-3 text-sm font-medium transition-all" data-filter="healthcare">
+        <i class="fa-solid fa-baby mr-2 text-pink-600"></i>Healthcare
+      </button>
+      <button class="category-filter rounded-full px-6 py-3 text-sm font-medium transition-all" data-filter="events">
+        <i class="fa-solid fa-calendar-days mr-2 text-purple-600"></i>Events
+      </button>
+    </div>
+  </div>
+
+  <!-- GALLERY GRID -->
+  <div class="gallery-container">
+    {% if gallery %}
+      <div class="masonry-grid">
+        {% for item in gallery %}
+        <figure class="masonry-item gallery-card rounded-2xl overflow-hidden group" data-category="{% cycle 'orphans' 'women' 'mosques' 'healthcare' 'events' %}">
+          <div class="relative">
+            {% if item.image %}
+              <img src="{{ item.image.url }}" class="w-full object-cover group-hover:scale-105 transition-transform duration-500" alt="{{ item.title|default:'Gallery Image' }}" style="height: {% cycle '300px' '250px' '350px' '280px' '320px' %};">
+            {% else %}
+              <div class="w-full bg-gradient-to-br from-gold/20 to-emerald-100 flex items-center justify-center" style="height: {% cycle '300px' '250px' '350px' '280px' '320px' %};">
+                <i class="fa-solid fa-image text-4xl text-gold/50"></i>
+              </div>
+            {% endif %}
+            
+            <div class="gallery-overlay"></div>
+            
+            <div class="gallery-info">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="bg-white/20 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs">
+                  {% cycle 'Orphan Care' 'Women Empowerment' 'Mosque Development' 'Healthcare' 'Community Event' %}
+                </span>
+              </div>
+              <h3 class="font-semibold text-lg mb-1">
+                {% firstof item.title "Impactful Moment" as g_title %}{{ g_title }}
+              </h3>
+              {% firstof item.created_at item.date "" as g_dt %}
+              {% if g_dt %}
+                <div class="text-xs text-white/80 mb-2">{{ g_dt }}</div>
+              {% endif %}
+              <p class="text-sm text-white/90 leading-relaxed">
+                {% firstof item.description item.caption item.text "A moment capturing our mission in action, serving communities with compassion and dedication." as g_txt %}
+                {{ g_txt|striptags|truncatewords:15 }}
+              </p>
+            </div>
+
+            <!-- View button -->
+            <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <button class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors">
+                <i class="fa-solid fa-expand"></i>
+              </button>
+            </div>
+          </div>
+        </figure>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="text-center py-16">
+        <div class="w-32 h-32 bg-gold/20 rounded-full mx-auto mb-8 flex items-center justify-center">
+          <i class="fa-solid fa-images text-5xl text-gold/50"></i>
+        </div>
+        <h3 class="text-2xl font-semibold text-slate-800 dark:text-slate-200 mb-4">Gallery Coming Soon</h3>
+        <p class="text-slate-600 dark:text-slate-300 mb-8 max-w-md mx-auto">
+          We're preparing an inspiring collection of photos showcasing our community impact. 
+          Check back soon to see the amazing work we're doing together.
+        </p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
+          <div class="bg-gradient-to-br from-gold/20 to-emerald-100 rounded-xl h-32 flex items-center justify-center">
+            <i class="fa-solid fa-child-reaching text-2xl text-gold/50"></i>
+          </div>
+          <div class="bg-gradient-to-br from-emerald-100 to-blue-100 rounded-xl h-32 flex items-center justify-center">
+            <i class="fa-solid fa-graduation-cap text-2xl text-emerald-600/50"></i>
+          </div>
+          <div class="bg-gradient-to-br from-blue-100 to-purple-100 rounded-xl h-32 flex items-center justify-center">
+            <i class="fa-solid fa-mosque text-2xl text-blue-600/50"></i>
+          </div>
+          <div class="bg-gradient-to-br from-pink-100 to-gold/20 rounded-xl h-32 flex items-center justify-center">
+            <i class="fa-solid fa-baby text-2xl text-pink-600/50"></i>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- IMPACT STATISTICS -->
+  <div class="mt-16 bg-gradient-to-br from-gold/5 to-emerald-50/30 dark:from-gold/10 dark:to-slate-800 rounded-2xl p-8 md:p-12">
+    <div class="text-center mb-8">
+      <h3 class="text-2xl font-semibold gold-underline mb-4">Stories Behind the Images</h3>
+      <p class="text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
+        Every photograph in our gallery represents real lives transformed and communities strengthened through our programs.
+      </p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div class="text-center">
+        <div class="w-16 h-16 bg-gold/20 rounded-full mx-auto mb-4 flex items-center justify-center">
+          <i class="fa-solid fa-camera text-gold text-2xl"></i>
+        </div>
+        <div class="text-3xl font-bold text-gold mb-2">500+</div>
+        <div class="font-medium text-slate-800 dark:text-slate-200 mb-1">Photos Captured</div>
+        <div class="text-sm text-slate-600 dark:text-slate-400">Documenting our journey</div>
+      </div>
+
+      <div class="text-center">
+        <div class="w-16 h-16 bg-emerald-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+          <i class="fa-solid fa-heart text-emerald-600 text-2xl"></i>
+        </div>
+        <div class="text-3xl font-bold text-emerald-600 mb-2">2,400+</div>
+        <div class="font-medium text-slate-800 dark:text-slate-200 mb-1">Lives Touched</div>
+        <div class="text-sm text-slate-600 dark:text-slate-400">Across all programs</div>
+      </div>
+
+      <div class="text-center">
+        <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+          <i class="fa-solid fa-map-marker-alt text-blue-600 text-2xl"></i>
+        </div>
+        <div class="text-3xl font-bold text-blue-600 mb-2">25+</div>
+        <div class="font-medium text-slate-800 dark:text-slate-200 mb-1">Regions Served</div>
+        <div class="text-sm text-slate-600 dark:text-slate-400">Throughout Tanzania</div>
+      </div>
+
+      <div class="text-center">
+        <div class="w-16 h-16 bg-purple-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+          <i class="fa-solid fa-calendar-days text-purple-600 text-2xl"></i>
+        </div>
+        <div class="text-3xl font-bold text-purple-600 mb-2">7+</div>
+        <div class="font-medium text-slate-800 dark:text-slate-200 mb-1">Years of Service</div>
+        <div class="text-sm text-slate-600 dark:text-slate-400">Building communities</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALL TO ACTION -->
+  <div class="mt-16 text-center">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 border border-gold/20 shadow-lg">
+      <div class="w-16 h-16 bg-gold/20 rounded-full mx-auto mb-6 flex items-center justify-center">
+        <i class="fa-solid fa-share-alt text-gold text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-semibold mb-4">Share Our Story</h3>
+      <p class="text-slate-600 dark:text-slate-300 mb-6 max-w-2xl mx-auto">
+        Help us spread awareness about our mission by sharing these powerful images with your network. 
+        Together, we can inspire more people to join our cause.
+      </p>
+      <div class="flex justify-center gap-4">
+        <a href="#" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl transition-colors">
+          <i class="fa-brands fa-facebook-f"></i>
+          <span class="text-sm">Share</span>
+        </a>
+        <a href="#" class="inline-flex items-center gap-2 bg-blue-400 hover:bg-blue-500 text-white px-4 py-2 rounded-xl transition-colors">
+          <i class="fa-brands fa-twitter"></i>
+          <span class="text-sm">Tweet</span>
+        </a>
+        <a href="#" class="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl transition-colors">
+          <i class="fa-brands fa-whatsapp"></i>
+          <span class="text-sm">WhatsApp</span>
+        </a>
+        <a href="#" class="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-4 py-2 rounded-xl transition-colors">
+          <i class="fa-brands fa-instagram"></i>
+          <span class="text-sm">Instagram</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Enhanced gallery interactions
+  (function(){
+    // Category filtering
+    const filterButtons = document.querySelectorAll('.category-filter');
+    const galleryItems = document.querySelectorAll('.gallery-card');
+
+    filterButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const filter = this.dataset.filter;
+        
+        // Update active button
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        
+        // Filter gallery items
+        galleryItems.forEach(item => {
+          if (filter === 'all' || item.dataset.category === filter) {
+            item.style.display = 'block';
+            item.style.opacity = '0';
+            setTimeout(() => {
+              item.style.opacity = '1';
+            }, 100);
+          } else {
+            item.style.opacity = '0';
+            setTimeout(() => {
+              item.style.display = 'none';
+            }, 300);
+          }
+        });
+      });
+    });
+
+    // Image modal/lightbox functionality
+    const galleryImages = document.querySelectorAll('.gallery-card img');
+    
+    galleryImages.forEach(img => {
+      img.addEventListener('click', function() {
+        // Create modal overlay
+        const modal = document.createElement('div');
+        modal.className = 'fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4';
+        modal.innerHTML = `
+          <div class="relative max-w-4xl max-h-full">
+            <img src="${this.src}" class="max-w-full max-h-full object-contain rounded-lg" alt="${this.alt}">
+            <button class="absolute top-4 right-4 w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors">
+              <i class="fa-solid fa-times"></i>
+            </button>
+          </div>
+        `;
+        
+        document.body.appendChild(modal);
+        document.body.style.overflow = 'hidden';
+        
+        // Close modal
+        modal.addEventListener('click', function(e) {
+          if (e.target === modal || e.target.querySelector('.fa-times')) {
+            document.body.removeChild(modal);
+            document.body.style.overflow = '';
+          }
+        });
+      });
+    });
+
+    // Intersection Observer for animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    // Apply animations to gallery cards
+    galleryItems.forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+      observer.observe(el);
+    });
+  })();
+</script>
+
 {% endblock %}

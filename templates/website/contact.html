@@ -21,6 +21,7 @@
     background: #ffffff;                 /* white */
     color: #0f172a;                      /* slate-900 */
     line-height: 1.5;
+    transition: all 0.3s ease;
   }
   .dark .ah-form input[type="text"],
   .dark .ah-form input[type="email"],
@@ -42,59 +43,190 @@
   .ah-form input:focus,
   .ah-form select:focus,
   .ah-form textarea:focus {
-    outline: 2px solid #059669;          /* emerald-600 */
+    outline: 2px solid #d1ad51;          /* gold */
     outline-offset: 2px;
-    border-color: #059669;
-    box-shadow: 0 0 0 3px rgba(5,150,105,0.15);
+    border-color: #d1ad51;
+    box-shadow: 0 0 0 3px rgba(209,173,81,0.15);
+    transform: translateY(-2px);
   }
 
   /* Error state (Django messages + field errors) */
   .ah-form .error-text { color: #dc2626; }            /* red-600 */
   .dark .ah-form .error-text { color: #fca5a5; }      /* red-300 */
+
+  .hero-contact{
+    position:relative;
+    overflow:hidden;
+    background: linear-gradient(135deg, rgba(209,173,81,0.05), rgba(16,185,129,0.05));
+  }
+  .hero-contact::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+      repeating-linear-gradient(45deg, rgba(209,173,81,.08) 0 2px, transparent 2px 20px),
+      repeating-linear-gradient(-45deg, rgba(16,185,129,.06) 0 1px, transparent 1px 25px);
+    pointer-events:none;
+  }
+
+  .contact-card{
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(209,173,81,0.1);
+    transition: all 0.3s ease;
+  }
+  .dark .contact-card{
+    background: rgba(2,6,23,0.95);
+    border: 1px solid rgba(209,173,81,0.15);
+  }
+  .contact-card:hover{
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(16,24,40,.15);
+  }
+  .dark .contact-card:hover{
+    box-shadow: 0 20px 40px rgba(0,0,0,.4);
+  }
+
+  .contact-method{
+    background: linear-gradient(135deg, rgba(209,173,81,0.05), rgba(255,255,255,0.95));
+    border: 1px solid rgba(209,173,81,0.1);
+    transition: all 0.3s ease;
+  }
+  .dark .contact-method{
+    background: linear-gradient(135deg, rgba(209,173,81,0.08), rgba(2,6,23,0.95));
+    border: 1px solid rgba(209,173,81,0.15);
+  }
+  .contact-method:hover{
+    transform: translateY(-2px);
+    border-color: #d1ad51;
+  }
+
+  .gold-underline::after{
+    content:""; display:block; width:72px; height:3px; margin-top:12px; border-radius:999px;
+    background:linear-gradient(90deg,#cab26b,#d1ad51);
+  }
+
+  .islamic-pattern{
+    background-image:
+      radial-gradient(circle at 25% 25%, rgba(209,173,81,0.1) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(16,185,129,0.08) 0%, transparent 50%);
+  }
+
+  .faq-item{
+    transition: all 0.3s ease;
+  }
+  .faq-item:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(16,24,40,.1);
+  }
 </style>
 
-<!-- Hero / Page Header (neutral like home page) -->
-<section class="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
-  <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-    <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl">Contact Us</h1>
-    <p class="mt-2 text-slate-600 dark:text-slate-400">Get in touch with us — we’d love to hear from you.</p>
+<!-- ===================== HERO SECTION ===================== -->
+<section class="hero-contact border-b border-slate-200 dark:border-slate-800 relative py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="text-center">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold/10 text-gold mb-6">
+        <i class="fa-solid fa-envelope"></i> 
+        <span class="text-sm font-medium">Get in Touch</span>
+      </div>
+      
+      <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+        Contact <span class="text-gold">Us</span>
+      </h1>
+      
+      <p class="text-lg text-slate-600 dark:text-slate-300 mb-8 max-w-3xl mx-auto">
+        We'd love to hear from you. Whether you want to volunteer, partner with us, or learn more about our programs, 
+        we're here to connect and collaborate for positive change.
+      </p>
+      
+      <div class="flex flex-wrap justify-center gap-4">
+        <div class="bg-white/50 dark:bg-slate-800/50 rounded-full px-4 py-2 border border-gold/20">
+          <span class="text-sm font-medium text-slate-800 dark:text-slate-200">
+            <i class="fa-solid fa-handshake text-gold mr-2"></i>Partnership
+          </span>
+        </div>
+        <div class="bg-white/50 dark:bg-slate-800/50 rounded-full px-4 py-2 border border-gold/20">
+          <span class="text-sm font-medium text-slate-800 dark:text-slate-200">
+            <i class="fa-solid fa-hands-helping text-emerald-600 mr-2"></i>Volunteer
+          </span>
+        </div>
+        <div class="bg-white/50 dark:bg-slate-800/50 rounded-full px-4 py-2 border border-gold/20">
+          <span class="text-sm font-medium text-slate-800 dark:text-slate-200">
+            <i class="fa-solid fa-question-circle text-blue-600 mr-2"></i>Questions
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ISLAMIC INSPIRATION ===================== -->
+<section class="py-12 islamic-pattern">
+  <div class="max-w-4xl mx-auto px-4 text-center">
+    <div class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-2xl p-8 border border-gold/10">
+      <p class="text-2xl md:text-3xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+        "وَتَعَاوَنُوا عَلَى الْبِرِّ وَالتَّقْوَىٰ"
+      </p>
+      <p class="text-lg text-slate-700 dark:text-slate-300 mb-3">
+        "And cooperate in righteousness and piety"
+      </p>
+      <p class="text-sm text-gold font-medium">— Quran 5:2</p>
+    </div>
   </div>
 </section>
 
 <!-- Contact Form & Info -->
-<section class="py-12 sm:py-16">
+<section class="py-16">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     {% if messages %}
-      <div class="mb-6 space-y-3">
+      <div class="mb-8 space-y-4">
         {% for message in messages %}
           {% if 'success' in message.tags %}
-            <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-900/30 dark:text-emerald-200">
-              {{ message }}
+            <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-6 py-4 text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-900/30 dark:text-emerald-200">
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-check-circle text-emerald-600"></i>
+                <span>{{ message }}</span>
+              </div>
             </div>
           {% elif 'error' in message.tags %}
-            <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-800 dark:border-red-900/50 dark:bg-red-900/30 dark:text-red-200">
-              {{ message }}
+            <div class="rounded-2xl border border-red-200 bg-red-50 px-6 py-4 text-red-800 dark:border-red-900/50 dark:bg-red-900/30 dark:text-red-200">
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-exclamation-circle text-red-600"></i>
+                <span>{{ message }}</span>
+              </div>
             </div>
           {% elif 'warning' in message.tags %}
-            <div class="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-800 dark:border-amber-900/50 dark:bg-amber-900/30 dark:text-amber-200">
-              {{ message }}
+            <div class="rounded-2xl border border-amber-200 bg-amber-50 px-6 py-4 text-amber-800 dark:border-amber-900/50 dark:bg-amber-900/30 dark:text-amber-200">
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-exclamation-triangle text-amber-600"></i>
+                <span>{{ message }}</span>
+              </div>
             </div>
           {% else %}
-            <div class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200">
-              {{ message }}
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 px-6 py-4 text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200">
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-info-circle text-slate-600"></i>
+                <span>{{ message }}</span>
+              </div>
             </div>
           {% endif %}
         {% endfor %}
       </div>
     {% endif %}
 
-    <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+    <div class="grid grid-cols-1 gap-12 lg:grid-cols-3">
       <!-- Form -->
       <div class="lg:col-span-2">
-        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-8">
-          <h3 class="text-xl font-semibold text-slate-800 dark:text-slate-100">Send us a Message</h3>
+        <div class="contact-card rounded-2xl p-8 md:p-10">
+          <div class="mb-8">
+            <h3 class="text-2xl font-semibold gold-underline mb-4">Send us a Message</h3>
+            <p class="text-slate-600 dark:text-slate-300">
+              Fill out the form below and we'll get back to you as soon as possible. 
+              We value every message and inquiry from our community.
+            </p>
+          </div>
 
-          <form method="post" class="ah-form mt-6 space-y-5">
+          <form method="post" class="ah-form space-y-6">
             {% csrf_token %}
 
             {% if form.non_field_errors %}
@@ -103,43 +235,52 @@
               </div>
             {% endif %}
 
-            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>
-                <label class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Full Name *</label>
+                <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                  <i class="fa-solid fa-user text-gold mr-2"></i>Full Name *
+                </label>
                 {{ form.name }}
                 {% if form.name.errors %}
-                  <p class="mt-1 text-sm error-text">{{ form.name.errors|striptags }}</p>
+                  <p class="mt-2 text-sm error-text">{{ form.name.errors|striptags }}</p>
                 {% endif %}
               </div>
               <div>
-                <label class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Email Address *</label>
+                <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                  <i class="fa-solid fa-envelope text-emerald-600 mr-2"></i>Email Address *
+                </label>
                 {{ form.email }}
                 {% if form.email.errors %}
-                  <p class="mt-1 text-sm error-text">{{ form.email.errors|striptags }}</p>
+                  <p class="mt-2 text-sm error-text">{{ form.email.errors|striptags }}</p>
                 {% endif %}
               </div>
             </div>
 
             <div>
-              <label class="mb-1 mt-3 block text-sm font-medium text-slate-700 dark:text-slate-300">Subject *</label>
+              <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                <i class="fa-solid fa-tag text-blue-600 mr-2"></i>Subject *
+              </label>
               {{ form.subject }}
               {% if form.subject.errors %}
-                <p class="mt-1 text-sm error-text">{{ form.subject.errors|striptags }}</p>
+                <p class="mt-2 text-sm error-text">{{ form.subject.errors|striptags }}</p>
               {% endif %}
             </div>
 
             <div>
-              <label class="mb-1 mt-3 block text-sm font-medium text-slate-700 dark:text-slate-300">Message *</label>
+              <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                <i class="fa-solid fa-message text-purple-600 mr-2"></i>Message *
+              </label>
               {{ form.message }}
               {% if form.message.errors %}
-                <p class="mt-1 text-sm error-text">{{ form.message.errors|striptags }}</p>
+                <p class="mt-2 text-sm error-text">{{ form.message.errors|striptags }}</p>
               {% endif %}
             </div>
 
             {{ form.website }} {# honeypot (hidden) #}
 
             <button type="submit"
-              class="inline-flex mt-3 w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 font-semibold text-white shadow-sm transition hover:bg-emerald-700 sm:w-auto">
+              class="inline-flex w-full items-center justify-center gap-3 rounded-xl bg-gold hover:bg-gold/90 px-8 py-4 font-semibold text-white shadow-lg transition-all hover:shadow-xl hover:scale-105 sm:w-auto">
+              <i class="fa-solid fa-paper-plane"></i>
               Send Message
             </button>
           </form>
@@ -148,93 +289,119 @@
 
       <!-- Contact Info -->
       <div>
-        <div class="flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-8">
-          <h4 class="text-lg font-semibold text-slate-800 dark:text-slate-100">Contact Information</h4>
-
-          {% if site_settings.phone %}
-          <div class="mt-6 flex items-start gap-3">
-            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600/10 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M2 5a2 2 0 0 1 2-2h1.6a2 2 0 0 1 1.94 1.515l.6 2.399a2 2 0 0 1-.52 1.938L6.7 10.774a12.04 12.04 0 0 0 6.526 6.526l1.922-1.92a2 2 0 0 1 1.938-.52l2.4.6A2 2 0 0 1 21 17.4V19a2 2 0 0 1-2 2h-.5C9.596 21 3 14.404 3 6.5V6a2 2 0 0 1-1-1z"/></svg>
-            </div>
-            <div>
-              <div class="text-sm font-medium text-slate-700 dark:text-slate-200">Phone</div>
-              <a class="text-emerald-700 hover:underline dark:text-emerald-300" href="tel:{{ site_settings.phone }}">{{ site_settings.phone }}</a>
-            </div>
+        <div class="contact-card rounded-2xl p-8 h-full">
+          <div class="mb-8">
+            <h4 class="text-xl font-semibold gold-underline mb-4">Contact Information</h4>
+            <p class="text-slate-600 dark:text-slate-300 text-sm">
+              Reach out to us through any of these channels. We're committed to responding promptly to all inquiries.
+            </p>
           </div>
-          {% endif %}
 
-          {% if site_settings.email %}
-          <div class="mt-5 flex items-start gap-3">
-            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600/10 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v.217l-10 6.25L2 6.217V6zm20 2.383-8.84 5.523a2 2 0 0 1-2.32 0L2 8.383V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8.383z"/></svg>
+          <div class="space-y-6">
+            {% if site_settings.phone %}
+            <div class="contact-method rounded-xl p-4">
+              <div class="flex items-start gap-4">
+                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-gold/20 text-gold flex-shrink-0">
+                  <i class="fa-solid fa-phone text-lg"></i>
+                </div>
+                <div>
+                  <div class="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1">Phone</div>
+                  <a class="text-gold hover:text-gold/80 font-medium transition-colors" href="tel:{{ site_settings.phone }}">{{ site_settings.phone }}</a>
+                  <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">Available 9 AM - 6 PM</div>
+                </div>
+              </div>
             </div>
-            <div>
-              <div class="text-sm font-medium text-slate-700 dark:text-slate-200">Email</div>
-              <a class="text-emerald-700 hover:underline dark:text-emerald-300" href="mailto:{{ site_settings.email }}">{{ site_settings.email }}</a>
-            </div>
-          </div>
-          {% endif %}
+            {% endif %}
 
-          {% if site_settings.address %}
-          <div class="mt-5 flex items-start gap-3">
-            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600/10 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z" clip-rule="evenodd"/></svg>
+            {% if site_settings.email %}
+            <div class="contact-method rounded-xl p-4">
+              <div class="flex items-start gap-4">
+                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 flex-shrink-0">
+                  <i class="fa-solid fa-envelope text-lg"></i>
+                </div>
+                <div>
+                  <div class="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1">Email</div>
+                  <a class="text-emerald-600 hover:text-emerald-700 font-medium transition-colors" href="mailto:{{ site_settings.email }}">{{ site_settings.email }}</a>
+                  <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">We reply within 24 hours</div>
+                </div>
+              </div>
             </div>
-            <div>
-              <div class="text-sm font-medium text-slate-700 dark:text-slate-200">Address</div>
-              <p class="text-slate-600 dark:text-slate-400">{{ site_settings.address }}</p>
+            {% endif %}
+
+            {% if site_settings.address %}
+            <div class="contact-method rounded-xl p-4">
+              <div class="flex items-start gap-4">
+                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-blue-600 flex-shrink-0">
+                  <i class="fa-solid fa-map-marker-alt text-lg"></i>
+                </div>
+                <div>
+                  <div class="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1">Address</div>
+                  <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{{ site_settings.address }}</p>
+                  <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">Visit us anytime</div>
+                </div>
+              </div>
             </div>
+            {% endif %}
           </div>
-          {% endif %}
 
           {% if site_settings.whatsapp_number %}
-          <a href="https://wa.me/{{ site_settings.whatsapp_number }}" target="_blank"
-             class="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 font-semibold text-white shadow-sm transition hover:bg-emerald-700">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.48A11.9 11.9 0 0 0 12.06 0C5.47 0 .13 5.35.13 11.95c0 2.1.55 4.16 1.6 5.98L0 24l6.24-1.66a11.91 11.91 0 0 0 5.83 1.53h.01c6.59 0 11.93-5.35 11.93-11.95a11.9 11.9 0 0 0-3.49-8.44zM12.07 21.3c-1.9 0-3.75-.51-5.37-1.48l-.38-.22-3.7.98.99-3.61-.25-.39A9.15 9.15 0 0 1 2.94 12C2.94 6.95 6.99 2.9 12.06 2.9c2.44 0 4.73.95 6.45 2.67a9.06 9.06 0 0 1 2.66 6.41c0 5.07-4.05 9.32-9.1 9.32z"/><path d="M17.18 14.24c-.28-.14-1.64-.8-1.9-.89-.26-.1-.45-.14-.64.14-.19.28-.73.89-.9 1.07-.17.19-.33.21-.61.07-.28-.14-1.18-.43-2.25-1.38-.83-.74-1.39-1.66-1.55-1.94-.16-.28-.02-.43.12-.57.12-.12.28-.33.42-.5.14-.17.19-.28.28-.47.09-.19.05-.36-.02-.5-.07-.14-.64-1.55-.88-2.12-.23-.56-.47-.48-.64-.48h-.54c-.19 0-.5.07-.76.36-.26.28-1 1-1 2.44s1.03 2.83 1.17 3.03c.14.19 2.03 3.1 4.92 4.35.69.3 1.23.48 1.65.61.69.22 1.31.19 1.8.12.55-.08 1.64-.67 1.87-1.3.23-.64.23-1.19.16-1.3-.06-.11-.25-.18-.53-.32z"/></svg>
-            Chat on WhatsApp
-          </a>
+          <div class="mt-8">
+            <a href="https://wa.me/{{ site_settings.whatsapp_number }}" target="_blank"
+               class="inline-flex w-full items-center justify-center gap-3 rounded-xl bg-emerald-600 px-6 py-4 font-semibold text-white shadow-lg transition-all hover:bg-emerald-700 hover:shadow-xl hover:scale-105">
+              <i class="fa-brands fa-whatsapp text-xl"></i>
+              Chat on WhatsApp
+            </a>
+          </div>
           {% endif %}
 
           <!-- Socials -->
           <div class="mt-8">
-            <h6 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-200">Follow Us</h6>
-            <div class="flex gap-2">
+            <h6 class="mb-4 text-sm font-semibold text-slate-700 dark:text-slate-200">Follow Our Journey</h6>
+            <div class="grid grid-cols-2 gap-3">
               {% if site_settings.facebook_url %}
               <a href="{{ site_settings.facebook_url }}" target="_blank"
-                 class="inline-flex items-center justify-center rounded-lg border border-slate-200 px-3 py-2 text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12.06C22 6.477 17.523 2 11.94 2S2 6.477 2 12.06c0 5.018 3.676 9.173 8.484 9.94v-7.03H7.898v-2.91h2.586V9.845c0-2.56 1.523-3.975 3.856-3.975 1.118 0 2.286.2 2.286.2v2.51h-1.289c-1.27 0-1.665.788-1.665 1.595v1.912h2.834l-.453 2.91h-2.38V22c4.808-.767 8.484-4.922 8.484-9.94z"/></svg>
+                 class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-3 text-slate-600 transition hover:bg-blue-50 hover:border-blue-200 hover:text-blue-600 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-blue-900/20">
+                <i class="fa-brands fa-facebook-f"></i>
+                <span class="text-sm">Facebook</span>
               </a>
               {% endif %}
               {% if site_settings.twitter_url %}
               <a href="{{ site_settings.twitter_url }}" target="_blank"
-                 class="inline-flex items-center justify-center rounded-lg border border-slate-200 px-3 py-2 text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 5.92a8.38 8.38 0 0 1-2.36.64 4.12 4.12 0 0 0 1.8-2.27 8.2 8.2 0 0 1-2.6 1 4.1 4.1 0 0 0-7 3.74A11.63 11.63 0 0 1 3 4.78a4.08 4.08 0 0 0 1.27 5.47 4.09 4.09 0 0 1-1.86-.5v.05a4.1 4.1 0 0 0 3.29 4 4.1 4.1 0 0 1-1.85.07 4.1 4.1 0 0 0 3.82 2.84A8.23 8.23 0 0 1 2 18.58a11.62 11.62 0 0 0 6.29 1.84c7.55 0 11.68-6.13 11.68-11.45 0-.17 0-.34-.01-.51A8.2 8.2 0 0 0 22 5.92z"/></svg>
+                 class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-3 text-slate-600 transition hover:bg-blue-50 hover:border-blue-200 hover:text-blue-400 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-blue-900/20">
+                <i class="fa-brands fa-twitter"></i>
+                <span class="text-sm">Twitter</span>
               </a>
               {% endif %}
               {% if site_settings.instagram_url %}
               <a href="{{ site_settings.instagram_url }}" target="_blank"
-                 class="inline-flex items-center justify-center rounded-lg border border-slate-200 px-3 py-2 text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 5a5 5 0 1 0 .001 10.001A5 5 0 0 0 12 7zm0 2.2a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6zM18.3 6.2a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4z"/></svg>
+                 class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-3 text-slate-600 transition hover:bg-pink-50 hover:border-pink-200 hover:text-pink-600 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-pink-900/20">
+                <i class="fa-brands fa-instagram"></i>
+                <span class="text-sm">Instagram</span>
               </a>
               {% endif %}
+              <a href="#" class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-3 text-slate-600 transition hover:bg-red-50 hover:border-red-200 hover:text-red-600 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-red-900/20">
+                <i class="fa-brands fa-youtube"></i>
+                <span class="text-sm">YouTube</span>
+              </a>
             </div>
           </div>
         </div>
       </div>
-      <!-- /Contact Info -->
     </div>
   </div>
 </section>
 
 {% if site_settings.google_maps_embed %}
 <!-- Map -->
-<section class="py-12 sm:py-16">
+<section class="py-16 bg-slate-50 dark:bg-slate-900">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <div class="text-center">
-      <h2 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Find Us</h2>
-      <p class="mt-1 text-slate-600 dark:text-slate-400">Visit us at our location</p>
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-semibold gold-underline mb-6">Find Us</h2>
+      <p class="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+        Visit our office in Morogoro, Tanzania. We welcome visitors and are always happy to show you our work firsthand.
+      </p>
     </div>
-    <div class="mt-6 overflow-hidden rounded-2xl border border-slate-200 shadow-sm dark:border-slate-800">
+    <div class="overflow-hidden rounded-2xl border border-slate-200 shadow-lg dark:border-slate-800">
       <div class="h-96 [&_iframe]:h-full [&_iframe]:w-full">
         {{ site_settings.google_maps_embed|safe }}
       </div>
@@ -244,89 +411,201 @@
 {% endif %}
 
 <!-- FAQ -->
-<section class="bg-slate-50 py-12 dark:bg-slate-950 sm:py-16">
+<section class="py-16">
   <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-    <div class="text-center">
-      <h2 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Frequently Asked Questions</h2>
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-semibold gold-underline mb-6">Frequently Asked Questions</h2>
+      <p class="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+        Find answers to common questions about our programs, volunteering, and how you can get involved.
+      </p>
     </div>
 
-    <div class="mt-8 space-y-3">
-      <details class="group rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+    <div class="space-y-4">
+      <details class="faq-item group rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
         <summary class="flex cursor-pointer list-none items-center justify-between">
-          <span class="font-medium text-slate-800 dark:text-slate-100">
+          <span class="font-semibold text-slate-800 dark:text-slate-100">
+            <i class="fa-solid fa-hands-helping text-gold mr-3"></i>
             How can I volunteer with Al-Hadid Foundation?
           </span>
-          <span class="ml-3 shrink-0 rounded-md bg-slate-100 px-2 py-1 text-xs text-slate-600 transition group-open:rotate-180 dark:bg-slate-800 dark:text-slate-300">▼</span>
+          <span class="ml-3 shrink-0 rounded-full bg-gold/20 p-2 text-gold transition group-open:rotate-180">
+            <i class="fa-solid fa-chevron-down"></i>
+          </span>
         </summary>
-        <div class="mt-3 text-slate-600 dark:text-slate-300">
-          We welcome volunteers from all backgrounds! Contact us through this form or call us directly to discuss opportunities that match your skills and interests.
+        <div class="mt-4 pl-8 text-slate-600 dark:text-slate-300 leading-relaxed">
+          We welcome volunteers from all backgrounds! Contact us through this form, call us directly, or visit our office to discuss opportunities that match your skills and interests. We have roles in education, healthcare support, community outreach, and administrative tasks.
         </div>
       </details>
 
-      <details class="group rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+      <details class="faq-item group rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
         <summary class="flex cursor-pointer list-none items-center justify-between">
-          <span class="font-medium text-slate-800 dark:text-slate-100">
+          <span class="font-semibold text-slate-800 dark:text-slate-100">
+            <i class="fa-solid fa-heart text-emerald-600 mr-3"></i>
             What programs does the foundation currently run?
           </span>
-          <span class="ml-3 shrink-0 rounded-md bg-slate-100 px-2 py-1 text-xs text-slate-600 transition group-open:rotate-180 dark:bg-slate-800 dark:text-slate-300">▼</span>
+          <span class="ml-3 shrink-0 rounded-full bg-gold/20 p-2 text-gold transition group-open:rotate-180">
+            <i class="fa-solid fa-chevron-down"></i>
+          </span>
         </summary>
-        <div class="mt-3 text-slate-600 dark:text-slate-300">
-          We run programs for orphans, women’s Islamic empowerment, mosque development, and premature baby care. Visit our Programs page to learn more.
+        <div class="mt-4 pl-8 text-slate-600 dark:text-slate-300 leading-relaxed">
+          We run four main programs: Orphan Support (providing food, clothing, education, and mentorship), Women's Islamic Empowerment (education and vocational training), Mosque Development (renovation and construction), and Premature Baby Care Support (medical equipment and family assistance). Visit our Programs page to learn more about each initiative.
         </div>
       </details>
 
-      <details class="group rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+      <details class="faq-item group rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
         <summary class="flex cursor-pointer list-none items-center justify-between">
-          <span class="font-medium text-slate-800 dark:text-slate-100">
-            How are donations used?
+          <span class="font-semibold text-slate-800 dark:text-slate-100">
+            <i class="fa-solid fa-dollar-sign text-blue-600 mr-3"></i>
+            How are donations used and can I see financial reports?
           </span>
-          <span class="ml-3 shrink-0 rounded-md bg-slate-100 px-2 py-1 text-xs text-slate-600 transition group-open:rotate-180 dark:bg-slate-800 dark:text-slate-300">▼</span>
+          <span class="ml-3 shrink-0 rounded-full bg-gold/20 p-2 text-gold transition group-open:rotate-180">
+            <i class="fa-solid fa-chevron-down"></i>
+          </span>
         </summary>
-        <div class="mt-3 text-slate-600 dark:text-slate-300">
-          We maintain transparency: the vast majority goes directly to programs, with a small portion to operations and fundraising. Donor reports are shared regularly.
+        <div class="mt-4 pl-8 text-slate-600 dark:text-slate-300 leading-relaxed">
+          We maintain complete transparency: 85% of donations go directly to programs, 10% to administration, and 5% to fundraising. Annual financial reports are available upon request, and we provide regular updates to donors about how their contributions are making an impact in our communities.
         </div>
       </details>
 
-      <details class="group rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+      <details class="faq-item group rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
         <summary class="flex cursor-pointer list-none items-center justify-between">
-          <span class="font-medium text-slate-800 dark:text-slate-100">
-            Can organizations partner with you?
+          <span class="font-semibold text-slate-800 dark:text-slate-100">
+            <i class="fa-solid fa-handshake text-purple-600 mr-3"></i>
+            Can organizations and businesses partner with you?
           </span>
-          <span class="ml-3 shrink-0 rounded-md bg-slate-100 px-2 py-1 text-xs text-slate-600 transition group-open:rotate-180 dark:bg-slate-800 dark:text-slate-300">▼</span>
+          <span class="ml-3 shrink-0 rounded-full bg-gold/20 p-2 text-gold transition group-open:rotate-180">
+            <i class="fa-solid fa-chevron-down"></i>
+          </span>
         </summary>
-        <div class="mt-3 text-slate-600 dark:text-slate-300">
-          Absolutely! We actively seek partnerships with like-minded organizations, businesses, and institutions. Contact us to discuss collaboration.
+        <div class="mt-4 pl-8 text-slate-600 dark:text-slate-300 leading-relaxed">
+          Absolutely! We actively seek partnerships with like-minded organizations, businesses, and institutions. Whether through financial support, in-kind donations, employee volunteer programs, or collaborative projects, we welcome partnerships that amplify our impact. Contact us to discuss how we can work together.
+        </div>
+      </details>
+
+      <details class="faq-item group rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
+        <summary class="flex cursor-pointer list-none items-center justify-between">
+          <span class="font-semibold text-slate-800 dark:text-slate-100">
+            <i class="fa-solid fa-globe text-green-600 mr-3"></i>
+            Do you accept international volunteers and donations?
+          </span>
+          <span class="ml-3 shrink-0 rounded-full bg-gold/20 p-2 text-gold transition group-open:rotate-180">
+            <i class="fa-solid fa-chevron-down"></i>
+          </span>
+        </summary>
+        <div class="mt-4 pl-8 text-slate-600 dark:text-slate-300 leading-relaxed">
+          Yes, we welcome international support! We accept donations from around the world through various secure methods, and we can accommodate international volunteers for both short-term and long-term commitments. Contact us to discuss logistics and requirements for international involvement.
         </div>
       </details>
     </div>
   </div>
 </section>
 
-<!-- CTA (kept emerald accent like home buttons) -->
-<section class="bg-gradient-to-br from-emerald-700 via-emerald-600 to-slate-900 py-12 text-white sm:py-16">
+<!-- CTA -->
+<section class="bg-gradient-to-br from-gold/10 via-emerald-50 to-slate-100 dark:from-gold/20 dark:via-emerald-900/20 dark:to-slate-800 py-16">
   <div class="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-    <h2 class="text-2xl font-bold sm:text-3xl">Ready to Get Involved?</h2>
-    <p class="mt-2 text-emerald-100">There are many ways to support our mission and make a difference.</p>
+    <div class="max-w-3xl mx-auto">
+      <div class="w-20 h-20 bg-gold/20 rounded-full mx-auto mb-8 flex items-center justify-center">
+        <i class="fa-solid fa-hands-praying text-gold text-3xl"></i>
+      </div>
+      <h2 class="text-3xl font-bold mb-6 text-slate-800 dark:text-slate-200">Ready to Make a Difference?</h2>
+      <p class="text-slate-600 dark:text-slate-300 mb-8 text-lg">
+        Join our mission to serve humanity through Islamic values of compassion and service. 
+        There are many ways to support our work and create lasting positive change.
+      </p>
 
-    <div class="mx-auto mt-6 grid max-w-3xl grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-      <a href="{% url 'website:donate' %}" class="inline-flex items-center justify-center rounded-xl bg-white px-4 py-3 font-semibold text-emerald-700 shadow-sm transition hover:bg-emerald-50">
-        <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12.1 4.44c-2.28-2.28-6.1-2.28-8.38 0-2.28 2.28-2.28 5.98 0 8.26l7.27 7.28c.56.56 1.46.56 2.02 0l7.27-7.28c2.28-2.28 2.28-5.98 0-8.26-2.28-2.28-6-2.28-8.28 0l-.3.3-.3-.3z"/></svg>
-        Donate
-      </a>
-      <a href="{% url 'website:programs' %}" class="inline-flex items-center justify-center rounded-xl border border-white/20 bg-white/10 px-4 py-3 font-semibold text-white backdrop-blur transition hover:bg-white/20">
-        <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M3 12a4 4 0 0 1 4-4h3v3H7a1 1 0 1 0 0 2h5l1.5 1.5a3 3 0 0 0 2.12.88H21v3h-5.38a6 6 0 0 1-4.24-1.76L10.62 15H7a4 4 0 0 1-4-4z"/><path d="M21 11a4 4 0 0 0-4-4h-3V4h3a7 7 0 0 1 7 7v1h-3v-1z"/></svg>
-        Volunteer
-      </a>
-      <a href="{% url 'website:about' %}" class="inline-flex items-center justify-center rounded-xl border border-white/20 bg-white/10 px-4 py-3 font-semibold text-white backdrop-blur transition hover:bg-white/20">
-        <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M13 6a3 3 0 0 1 3 3v1h2V9a5 5 0 0 0-5-5H8a5 5 0 0 0-5 5v1h2V9a3 3 0 0 1 3-3h5z"/><path d="M21 12h-6.586l-2 2H10l-2 2H3v2h5.586l2-2H12l2-2H21v-2z"/></svg>
-        Partner
-      </a>
-      <a href="{% url 'website:news_events' %}" class="inline-flex items-center justify-center rounded-xl border border-white/20 bg-white/10 px-4 py-3 font-semibold text-white backdrop-blur transition hover:bg-white/20">
-        <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M7 2h2v2h6V2h2v2h2a2 2 0 0 1 2 2v3H3V6a2 2 0 0 1 2-2h2V2z"/><path d="M3 10h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-8z"/></svg>
-        Events
-      </a>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
+        <a href="{% url 'website:donate' %}" class="inline-flex items-center justify-center gap-2 rounded-xl bg-gold hover:bg-gold/90 px-6 py-4 font-semibold text-white shadow-lg transition-all hover:shadow-xl hover:scale-105">
+          <i class="fa-solid fa-heart"></i>
+          <span>Donate</span>
+        </a>
+        <a href="{% url 'website:about' %}" class="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-emerald-600 bg-emerald-600 hover:bg-emerald-700 px-6 py-4 font-semibold text-white transition-all hover:scale-105">
+          <i class="fa-solid fa-hands-helping"></i>
+          <span>Volunteer</span>
+        </a>
+        <a href="{% url 'website:about' %}" class="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-blue-600 bg-blue-600 hover:bg-blue-700 px-6 py-4 font-semibold text-white transition-all hover:scale-105">
+          <i class="fa-solid fa-handshake"></i>
+          <span>Partner</span>
+        </a>
+        <a href="{% url 'website:news_events' %}" class="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-purple-600 bg-purple-600 hover:bg-purple-700 px-6 py-4 font-semibold text-white transition-all hover:scale-105">
+          <i class="fa-solid fa-calendar-days"></i>
+          <span>Events</span>
+        </a>
+      </div>
     </div>
   </div>
 </section>
+
+<script>
+  // Enhanced contact page interactions
+  (function(){
+    // Form field animations
+    const formFields = document.querySelectorAll('.ah-form input, .ah-form textarea, .ah-form select');
+    
+    formFields.forEach(field => {
+      field.addEventListener('focus', function() {
+        this.parentElement.style.transform = 'translateY(-2px)';
+      });
+      
+      field.addEventListener('blur', function() {
+        this.parentElement.style.transform = 'translateY(0)';
+      });
+    });
+
+    // FAQ smooth animations
+    const faqItems = document.querySelectorAll('.faq-item');
+    
+    faqItems.forEach(item => {
+      const summary = item.querySelector('summary');
+      const content = item.querySelector('div');
+      
+      summary.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        if (item.hasAttribute('open')) {
+          // Closing
+          content.style.maxHeight = content.scrollHeight + 'px';
+          setTimeout(() => {
+            content.style.maxHeight = '0';
+          }, 10);
+          setTimeout(() => {
+            item.removeAttribute('open');
+          }, 300);
+        } else {
+          // Opening
+          item.setAttribute('open', '');
+          content.style.maxHeight = '0';
+          setTimeout(() => {
+            content.style.maxHeight = content.scrollHeight + 'px';
+          }, 10);
+          setTimeout(() => {
+            content.style.maxHeight = 'none';
+          }, 300);
+        }
+      });
+    });
+
+    // Intersection Observer for animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    // Apply animations to contact cards and FAQ items
+    document.querySelectorAll('.contact-card, .contact-method, .faq-item').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+      observer.observe(el);
+    });
+  })();
+</script>
 
 {% endblock %}
