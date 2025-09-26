@@ -1,3 +1,4 @@
+# website/urls.py
 from django.urls import path
 from . import views
 
@@ -12,7 +13,6 @@ urlpatterns = [
     path('news-events/', views.news_events, name='news_events'),
     path('news/<int:pk>/', views.news_detail, name='news_detail'),
     path('events/<int:pk>/', views.event_detail, name='event_detail'),
-    path('donate/', views.donate, name='donate'),
     path('contact/', views.contact, name='contact'),
     path('gallery/', views.gallery_view, name='gallery'),
     path('toggle-theme/', views.toggle_theme, name='toggle_theme'),

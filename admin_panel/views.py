@@ -82,7 +82,6 @@ def dashboard(request):
 @permission_required('website.view_sitesettings', raise_exception=True)
 def site_settings(request):
     settings, _ = SiteSettings.objects.get_or_create(pk=1)
-
     if request.method == 'POST':
         if not request.user.has_perm('website.change_sitesettings'):
             return HttpResponseForbidden("You don't have permission to change settings.")
@@ -97,6 +96,24 @@ def site_settings(request):
         settings.instagram_url = request.POST.get('instagram_url', '')
         settings.whatsapp_number = request.POST.get('whatsapp_number', '')
         settings.google_maps_embed = request.POST.get('google_maps_embed', '')
+
+        # NEW: impact numbers (optional ints)
+        def to_int(val):
+            try:
+                return int(val)
+            except (TypeError, ValueError):
+                return None
+
+        settings.lives_touched = to_int(request.POST.get('lives_touched'))
+        settings.regions_served = to_int(request.POST.get('regions_served'))
+        settings.years_of_service = to_int(request.POST.get('years_of_service'))
+        settings.founded_year = to_int(request.POST.get('founded_year'))
+
+        settings.impact_orphans_supported = to_int(request.POST.get('impact_orphans_supported'))
+        settings.impact_women_empowered = to_int(request.POST.get('impact_women_empowered'))
+        settings.impact_mosques_developed = to_int(request.POST.get('impact_mosques_developed'))
+        settings.impact_babies_assisted = to_int(request.POST.get('impact_babies_assisted'))
+
         settings.save()
         dj_messages.success(request, 'Site settings updated successfully!')
         return redirect('admin_panel:site_settings')
@@ -383,15 +400,16 @@ def messages_list(request):
 @permission_required('website.view_contactmessage', raise_exception=True)
 def message_detail(request, pk):
     message_obj = get_object_or_404(ContactMessage, pk=pk)
-    # NOTE: hatu-mark read automatically; tumia buttons zilizo lindwa na change_contactmessage
     return render(request, 'admin_panel/message_detail.html', {'message': message_obj})
 
 @login_required
 @permission_required('website.change_contactmessage', raise_exception=True)
 def messages_mark_read(request, pk):
     m = get_object_or_404(ContactMessage, pk=pk)
-    m.is_read = True
-    m.save(update_fields=['is_read'])
+    if not m.is_read:
+        m.is_read = True
+        m.read_at = timezone.now()
+        m.save(update_fields=['is_read', 'read_at'])
     dj_messages.success(request, 'Marked as read.')
     return redirect('admin_panel:message_detail', pk=pk)
 
@@ -399,10 +417,19 @@ def messages_mark_read(request, pk):
 @permission_required('website.change_contactmessage', raise_exception=True)
 def messages_mark_unread(request, pk):
     m = get_object_or_404(ContactMessage, pk=pk)
-    m.is_read = False
-    m.save(update_fields=['is_read'])
+    if m.is_read:
+        m.is_read = False
+        m.read_at = None
+        m.save(update_fields=['is_read', 'read_at'])
     dj_messages.success(request, 'Marked as unread.')
     return redirect('admin_panel:message_detail', pk=pk)
+
+@login_required
+@permission_required('website.change_contactmessage', raise_exception=True)
+def messages_mark_all_read(request):
+    ContactMessage.objects.filter(is_read=False).update(is_read=True, read_at=timezone.now())
+    dj_messages.success(request, 'All messages marked as read.')
+    return redirect('admin_panel:messages_list')
 
 @login_required
 @permission_required('website.delete_contactmessage', raise_exception=True)

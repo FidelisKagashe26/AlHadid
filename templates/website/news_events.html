@@ -144,17 +144,16 @@
                 <i class="fa-solid fa-star mr-1"></i>Featured
               </span>
               <span class="text-sm text-slate-500 dark:text-slate-400">
-                {% firstof news.0.published_at news.0.created_at news.0.date news.0.when "" as n_dt %}{{ n_dt }}
+                {% firstof news.0.created_at news.0.updated_at "" as n_dt %}{{ n_dt }}
               </span>
             </div>
             <h3 class="text-2xl md:text-3xl font-bold mb-4 text-slate-800 dark:text-slate-200">
               {{ news.0.title }}
             </h3>
             <p class="text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
-              {% firstof news.0.summary news.0.excerpt news.0.body news.0.content news.0.text "" as n_txt %}
-              {{ n_txt|striptags|truncatewords:40 }}
+              {% firstof news.0.content news.0.body news.0.text "" as n_txt %}{{ n_txt|striptags|truncatewords:40 }}
             </p>
-            <a href="{% url 'website:news_events' %}" class="inline-flex items-center gap-2 bg-gold hover:bg-gold/90 text-white px-6 py-3 rounded-xl font-medium transition-colors">
+            <a href="{% url 'website:news_detail' news.0.pk %}" class="inline-flex items-center gap-2 bg-gold hover:bg-gold/90 text-white px-6 py-3 rounded-xl font-medium transition-colors">
               Read Full Story
               <i class="fa-solid fa-arrow-right"></i>
             </a>
@@ -187,7 +186,7 @@
       </div>
     </div>
     
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div id="newsList" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
       {% if news %}
         {% for n in news %}
         <article class="news-card rounded-2xl overflow-hidden group">
@@ -210,7 +209,7 @@
             <div class="flex items-center gap-2 mb-3">
               <i class="fa-solid fa-calendar-alt text-gold text-sm"></i>
               <span class="text-xs text-slate-500 dark:text-slate-400">
-                {% firstof n.published_at n.created_at n.date n.when "" as n_dt %}{{ n_dt }}
+                {% firstof n.created_at n.updated_at "" as n_dt %}{{ n_dt }}
               </span>
             </div>
             
@@ -219,12 +218,11 @@
             </h3>
             
             <p class="text-sm text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">
-              {% firstof n.summary n.excerpt n.body n.content n.text "" as n_txt %}
-              {{ n_txt|striptags|truncatewords:20 }}
+              {% firstof n.content n.body n.text "" as n_txt %}{{ n_txt|striptags|truncatewords:20 }}
             </p>
             
             <div class="flex items-center justify-between">
-              <a href="{% url 'website:news_events' %}" class="text-primary hover:text-gold font-medium text-sm inline-flex items-center gap-1 transition-colors">
+              <a href="{% url 'website:news_detail' n.pk %}" class="text-primary hover:text-gold font-medium text-sm inline-flex items-center gap-1 transition-colors">
                 Read more 
                 <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
               </a>
@@ -246,6 +244,13 @@
         </div>
       {% endif %}
     </div>
+
+    <!-- minimal pager (client-side chunks 6 per page) -->
+    <div id="newsPager" class="grid grid-flow-col auto-cols-max gap-2 justify-center mt-8">
+      <button id="newsPrev" class="px-3 py-1.5 text-sm rounded-lg border border-slate-300 dark:border-slate-700 disabled:opacity-40">Prev</button>
+      <span id="newsPageIndicator" class="px-2 py-1.5 text-sm text-slate-600 dark:text-slate-300">1/1</span>
+      <button id="newsNext" class="px-3 py-1.5 text-sm rounded-lg border border-slate-300 dark:border-slate-700 disabled:opacity-40">Next</button>
+    </div>
   </div>
 
   <!-- EVENTS SECTION -->
@@ -258,7 +263,7 @@
       </div>
     </div>
     
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div id="eventsList" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
       {% if events %}
         {% for e in events %}
         <article class="news-card rounded-2xl overflow-hidden group">
@@ -288,8 +293,7 @@
             <div class="flex items-center gap-2 mb-3">
               <i class="fa-solid fa-clock text-emerald-600 text-sm"></i>
               <span class="text-xs text-slate-500 dark:text-slate-400">
-                {% firstof e.start_datetime e.event_date e.date e.starts_on e.start_time e.starts_at e.when e.created_at "" as e_dt %}
-                {{ e_dt }}
+                {% firstof e.event_date e.created_at "" as e_dt %}{{ e_dt }}
               </span>
             </div>
             
@@ -298,12 +302,11 @@
             </h3>
             
             <p class="text-sm text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">
-              {% firstof e.description e.summary e.body e.content e.text "" as e_txt %}
-              {{ e_txt|striptags|truncatewords:20 }}
+              {% firstof e.description e.summary e.body e.content e.text "" as e_txt %}{{ e_txt|striptags|truncatewords:20 }}
             </p>
             
             <div class="flex items-center justify-between">
-              <a href="{% url 'website:news_events' %}" class="text-emerald-600 hover:text-emerald-700 font-medium text-sm inline-flex items-center gap-1 transition-colors">
+              <a href="{% url 'website:event_detail' e.pk %}" class="text-emerald-600 hover:text-emerald-700 font-medium text-sm inline-flex items-center gap-1 transition-colors">
                 View details 
                 <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
               </a>
@@ -324,6 +327,13 @@
           <p class="text-slate-600 dark:text-slate-300">We're planning exciting events for our community. Stay tuned!</p>
         </div>
       {% endif %}
+    </div>
+
+    <!-- minimal pager (client-side chunks 6 per page) -->
+    <div id="eventsPager" class="grid grid-flow-col auto-cols-max gap-2 justify-center mt-8">
+      <button id="eventsPrev" class="px-3 py-1.5 text-sm rounded-lg border border-slate-300 dark:border-slate-700 disabled:opacity-40">Prev</button>
+      <span id="eventsPageIndicator" class="px-2 py-1.5 text-sm text-slate-600 dark:text-slate-300">1/1</span>
+      <button id="eventsNext" class="px-3 py-1.5 text-sm rounded-lg border border-slate-300 dark:border-slate-700 disabled:opacity-40">Next</button>
     </div>
   </div>
 
@@ -353,14 +363,8 @@
 </section>
 
 <script>
-  // Enhanced animations and interactions
   (function(){
-    // Intersection Observer for fade-in animations
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-
+    const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -370,7 +374,6 @@
       });
     }, observerOptions);
 
-    // Apply fade-in to news cards
     document.querySelectorAll('.news-card').forEach(el => {
       el.style.opacity = '0';
       el.style.transform = 'translateY(30px)';
@@ -378,7 +381,6 @@
       observer.observe(el);
     });
 
-    // Category badge hover effects
     document.querySelectorAll('.category-badge').forEach(badge => {
       badge.addEventListener('mouseenter', function() {
         this.style.transform = 'scale(1.05) translateY(-2px)';
@@ -387,6 +389,52 @@
         this.style.transform = 'scale(1) translateY(0)';
       });
     });
+  })();
+</script>
+
+<!-- Minimal pagination (client-side: 6 per page) -->
+<script>
+  (function(){
+    function setupPager(listId, prevId, nextId, labelId, perPage){
+      const list = document.getElementById(listId);
+      if(!list) return;
+      const items = Array.from(list.children);
+      const prev = document.getElementById(prevId);
+      const next = document.getElementById(nextId);
+      const label= document.getElementById(labelId);
+
+      const totalPages = Math.max(1, Math.ceil(items.length / perPage));
+      const pagerWrap = (prev || next || label) ? (prev?.parentElement || next?.parentElement || label?.parentElement) : null;
+      if (pagerWrap && totalPages <= 1) { pagerWrap.style.display = 'none'; }
+
+      let page = 1;
+
+      function render(){
+        items.forEach((el, i) => {
+          const p = Math.floor(i / perPage) + 1;
+          el.style.display = (p === page) ? '' : 'none';
+        });
+        if(prev) prev.disabled = page <= 1;
+        if(next) next.disabled = page >= totalPages;
+        if(label) label.textContent = page + '/' + totalPages;
+      }
+
+      function scrollTop(){
+        list.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+
+      prev && prev.addEventListener('click', function(){
+        if(page > 1){ page--; render(); scrollTop(); }
+      });
+      next && next.addEventListener('click', function(){
+        if(page < totalPages){ page++; render(); scrollTop(); }
+      });
+
+      render();
+    }
+
+    setupPager('newsList',   'newsPrev',   'newsNext',   'newsPageIndicator',   6);
+    setupPager('eventsList', 'eventsPrev', 'eventsNext', 'eventsPageIndicator', 6);
   })();
 </script>
 

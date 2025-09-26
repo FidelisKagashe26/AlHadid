@@ -1,3 +1,4 @@
+# admin_panel/urls.py
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from . import views
@@ -49,31 +50,24 @@ urlpatterns = [
     path('messages/<int:pk>/delete/', views.message_delete, name='message_delete'),
     path('messages/<int:pk>/read/', views.messages_mark_read, name='messages_mark_read'),
     path('messages/<int:pk>/unread/', views.messages_mark_unread, name='messages_mark_unread'),
+    path('messages/read-all/', views.messages_mark_all_read, name='messages_mark_all_read'),  # NEW
 
-    # Users & roles (uliokuwa nao)
+    # Users & roles
     path('', include('admin_panel.users_urls')),
 
-    # Password reset
-    path('password/reset/',
-         auth_views.PasswordResetView.as_view(
-             template_name='admin_panel/auth/password_reset_form.html',
-             email_template_name='admin_panel/auth/password_reset_email.txt',
-             subject_template_name='admin_panel/auth/password_reset_subject.txt',
-         ),
-         name='password_reset'),
-    path('password/reset/done/',
-         auth_views.PasswordResetDoneView.as_view(
-             template_name='admin_panel/auth/password_reset_done.html'
-         ),
-         name='password_reset_done'),
-    path('password/reset/confirm/<uidb64>/<token>/',
-         auth_views.PasswordResetConfirmView.as_view(
-             template_name='admin_panel/auth/password_reset_confirm.html'
-         ),
-         name='password_reset_confirm'),
-    path('password/reset/complete/',
-         auth_views.PasswordResetCompleteView.as_view(
-             template_name='admin_panel/auth/password_reset_complete.html'
-         ),
-         name='password_reset_complete'),
+    # Password reset (unchanged) ...
+    path('password/reset/', auth_views.PasswordResetView.as_view(
+        template_name='admin_panel/auth/password_reset_form.html',
+        email_template_name='admin_panel/auth/password_reset_email.txt',
+        subject_template_name='admin_panel/auth/password_reset_subject.txt',
+    ), name='password_reset'),
+    path('password/reset/done/', auth_views.PasswordResetDoneView.as_view(
+        template_name='admin_panel/auth/password_reset_done.html'
+    ), name='password_reset_done'),
+    path('password/reset/confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(
+        template_name='admin_panel/auth/password_reset_confirm.html'
+    ), name='password_reset_confirm'),
+    path('password/reset/complete/', auth_views.PasswordResetCompleteView.as_view(
+        template_name='admin_panel/auth/password_reset_complete.html'
+    ), name='password_reset_complete'),
 ]

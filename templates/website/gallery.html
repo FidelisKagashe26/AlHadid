@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Gallery — {{ site_settings.site_name|default:"Al-Hadid" }}{% endblock %}
 {% block content %}
-
+{% load humanize %}
 <style>
   .gold-underline::after{
     content:""; display:block; width:72px; height:3px; margin-top:12px; border-radius:999px;
@@ -177,34 +177,42 @@
 </section>
 
 <section class="max-w-7xl mx-auto px-4 py-16">
-  <!-- GALLERY FILTERS -->
+  <!-- FILTERS + SEARCH (server-side, muonekano uleule) -->
   <div class="mb-12">
     <div class="text-center mb-8">
-      <h2 class="text-3xl font-semibold gold-underline mb-6">Explore Our Work</h2>
+      <h2 class="text-3xl font-semibold mb-6">Explore Our Work</h2>
       <p class="text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
         Browse through our collection of impactful moments, community events, and program highlights.
       </p>
     </div>
 
+    <!-- Search -->
+    <form method="get" class="max-w-xl mx-auto mb-6 flex gap-3">
+      <input type="text" name="q" value="{{ q }}" placeholder="Search photos..."
+             class="flex-1 rounded-full px-4 py-3 border border-gold/20 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
+      {% if category and category != 'all' %}
+        <input type="hidden" name="category" value="{{ category }}">
+      {% endif %}
+      <button class="rounded-full px-6 py-3 text-sm font-medium category-filter">Search</button>
+      {% if q %}
+        <a href="{% url 'website:gallery' %}{% if category and category != 'all' %}?category={{ category }}{% endif %}"
+           class="rounded-full px-6 py-3 text-sm font-medium category-filter">Clear</a>
+      {% endif %}
+    </form>
+
+    <!-- Category pills as links (active state by server param) -->
     <div class="flex flex-wrap justify-center gap-4">
-      <button class="category-filter active rounded-full px-6 py-3 text-sm font-medium transition-all" data-filter="all">
-        <i class="fa-solid fa-grid-2 mr-2"></i>All Photos
-      </button>
-      <button class="category-filter rounded-full px-6 py-3 text-sm font-medium transition-all" data-filter="orphans">
-        <i class="fa-solid fa-child-reaching mr-2 text-gold"></i>Orphan Support
-      </button>
-      <button class="category-filter rounded-full px-6 py-3 text-sm font-medium transition-all" data-filter="women">
-        <i class="fa-solid fa-graduation-cap mr-2 text-emerald-600"></i>Women's Programs
-      </button>
-      <button class="category-filter rounded-full px-6 py-3 text-sm font-medium transition-all" data-filter="mosques">
-        <i class="fa-solid fa-mosque mr-2 text-blue-600"></i>Mosque Projects
-      </button>
-      <button class="category-filter rounded-full px-6 py-3 text-sm font-medium transition-all" data-filter="healthcare">
-        <i class="fa-solid fa-baby mr-2 text-pink-600"></i>Healthcare
-      </button>
-      <button class="category-filter rounded-full px-6 py-3 text-sm font-medium transition-all" data-filter="events">
-        <i class="fa-solid fa-calendar-days mr-2 text-purple-600"></i>Events
-      </button>
+      {% for val,label in categories %}
+        {% if q %}
+          {% if forloop.first %}
+            {% comment %} preserve q while changing category {% endcomment %}
+          {% endif %}
+        {% endif %}
+        <a href="{% url 'website:gallery' %}?category={{ val }}{% if q %}&q={{ q|urlencode }}{% endif %}"
+           class="category-filter rounded-full px-6 py-3 text-sm font-medium transition-all {% if category == val %}active{% endif %}">
+          {% if val == 'all' %}All Photos{% elif val == 'orphans' %}Orphan Support{% elif val == 'women' %}Women's Programs{% elif val == 'mosques' %}Mosque Projects{% elif val == 'healthcare' %}Healthcare{% elif val == 'events' %}Events{% else %}Other{% endif %}
+        </a>
+      {% endfor %}
     </div>
   </div>
 
@@ -213,7 +221,7 @@
     {% if gallery %}
       <div class="masonry-grid">
         {% for item in gallery %}
-        <figure class="masonry-item gallery-card rounded-2xl overflow-hidden group" data-category="{% cycle 'orphans' 'women' 'mosques' 'healthcare' 'events' %}">
+        <figure class="masonry-item gallery-card rounded-2xl overflow-hidden group" data-category="{{ item.category }}">
           <div class="relative">
             {% if item.image %}
               <img src="{{ item.image.url }}" class="w-full object-cover group-hover:scale-105 transition-transform duration-500" alt="{{ item.title|default:'Gallery Image' }}" style="height: {% cycle '300px' '250px' '350px' '280px' '320px' %};">
@@ -228,15 +236,14 @@
             <div class="gallery-info">
               <div class="flex items-center gap-2 mb-2">
                 <span class="bg-white/20 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs">
-                  {% cycle 'Orphan Care' 'Women Empowerment' 'Mosque Development' 'Healthcare' 'Community Event' %}
+                  {{ item.get_category_display|default:"Gallery" }}
                 </span>
               </div>
               <h3 class="font-semibold text-lg mb-1">
                 {% firstof item.title "Impactful Moment" as g_title %}{{ g_title }}
               </h3>
-              {% firstof item.created_at item.date "" as g_dt %}
-              {% if g_dt %}
-                <div class="text-xs text-white/80 mb-2">{{ g_dt }}</div>
+              {% if item.created_at %}
+                <div class="text-xs text-white/80 mb-2">{{ item.created_at }}</div>
               {% endif %}
               <p class="text-sm text-white/90 leading-relaxed">
                 {% firstof item.description item.caption item.text "A moment capturing our mission in action, serving communities with compassion and dedication." as g_txt %}
@@ -246,7 +253,7 @@
 
             <!-- View button -->
             <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <button class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors">
+              <button class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors" aria-label="View">
                 <i class="fa-solid fa-expand"></i>
               </button>
             </div>
@@ -254,6 +261,25 @@
         </figure>
         {% endfor %}
       </div>
+
+      <!-- Server pagination -->
+      {% if gallery.has_other_pages %}
+        <nav class="grid grid-flow-col auto-cols-max gap-2 justify-center mt-10">
+          {% if gallery.has_previous %}
+            <a class="px-3 py-1.5 border rounded-lg" href="?{% if q %}q={{ q|urlencode }}&amp;{% endif %}{% if category %}category={{ category }}&amp;{% endif %}page={{ gallery.previous_page_number }}">Prev</a>
+          {% else %}
+            <span class="px-3 py-1.5 border rounded-lg opacity-40">Prev</span>
+          {% endif %}
+
+          <span class="px-3 py-1.5 text-sm">Page {{ gallery.number }} / {{ gallery.paginator.num_pages }}</span>
+
+          {% if gallery.has_next %}
+            <a class="px-3 py-1.5 border rounded-lg" href="?{% if q %}q={{ q|urlencode }}&amp;{% endif %}{% if category %}category={{ category }}&amp;{% endif %}page={{ gallery.next_page_number }}">Next</a>
+          {% else %}
+            <span class="px-3 py-1.5 border rounded-lg opacity-40">Next</span>
+          {% endif %}
+        </nav>
+      {% endif %}
     {% else %}
       <div class="text-center py-16">
         <div class="w-32 h-32 bg-gold/20 rounded-full mx-auto mb-8 flex items-center justify-center">
@@ -282,9 +308,9 @@
     {% endif %}
   </div>
 
-  <!-- IMPACT STATISTICS -->
+  <!-- IMPACT STATISTICS (dynamic; zinaonekana tu kama zipo) -->
   <div class="mt-16 bg-gradient-to-br from-gold/5 to-emerald-50/30 dark:from-gold/10 dark:to-slate-800 rounded-2xl p-8 md:p-12">
-    <div class="text-center mb-8">
+    <div class="mb-8">
       <h3 class="text-2xl font-semibold gold-underline mb-4">Stories Behind the Images</h3>
       <p class="text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
         Every photograph in our gallery represents real lives transformed and communities strengthened through our programs.
@@ -292,133 +318,75 @@
     </div>
 
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-      <div class="text-center">
-        <div class="w-16 h-16 bg-gold/20 rounded-full mx-auto mb-4 flex items-center justify-center">
-          <i class="fa-solid fa-camera text-gold text-2xl"></i>
+      {% if photos_count %}
+        <div class="text-center">
+          <div class="w-16 h-16 bg-gold/20 rounded-full mx-auto mb-4 flex items-center justify-center">
+            <i class="fa-solid fa-camera text-gold text-2xl"></i>
+          </div>
+          <div class="text-3xl font-bold text-gold mb-2">{{ photos_count|intcomma }}</div>
+          <div class="font-medium text-slate-800 dark:text-slate-200 mb-1">Photos Captured</div>
+          <div class="text-sm text-slate-600 dark:text-slate-400">Documenting our journey</div>
         </div>
-        <div class="text-3xl font-bold text-gold mb-2">500+</div>
-        <div class="font-medium text-slate-800 dark:text-slate-200 mb-1">Photos Captured</div>
-        <div class="text-sm text-slate-600 dark:text-slate-400">Documenting our journey</div>
-      </div>
+      {% endif %}
 
-      <div class="text-center">
-        <div class="w-16 h-16 bg-emerald-100 rounded-full mx-auto mb-4 flex items-center justify-center">
-          <i class="fa-solid fa-heart text-emerald-600 text-2xl"></i>
+      {% if site_settings and site_settings.lives_touched %}
+        <div class="text-center">
+          <div class="w-16 h-16 bg-emerald-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+            <i class="fa-solid fa-heart text-emerald-600 text-2xl"></i>
+          </div>
+          <div class="text-3xl font-bold text-emerald-600 mb-2">{{ site_settings.lives_touched|intcomma }}+</div>
+          <div class="font-medium text-slate-800 dark:text-slate-200 mb-1">Lives Touched</div>
+          <div class="text-sm text-slate-600 dark:text-slate-400">Across all programs</div>
         </div>
-        <div class="text-3xl font-bold text-emerald-600 mb-2">2,400+</div>
-        <div class="font-medium text-slate-800 dark:text-slate-200 mb-1">Lives Touched</div>
-        <div class="text-sm text-slate-600 dark:text-slate-400">Across all programs</div>
-      </div>
+      {% endif %}
 
-      <div class="text-center">
-        <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4 flex items-center justify-center">
-          <i class="fa-solid fa-map-marker-alt text-blue-600 text-2xl"></i>
+      {% if site_settings and site_settings.regions_served %}
+        <div class="text-center">
+          <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+            <i class="fa-solid fa-map-marker-alt text-blue-600 text-2xl"></i>
+          </div>
+          <div class="text-3xl font-bold text-blue-600 mb-2">{{ site_settings.regions_served|intcomma }}+</div>
+          <div class="font-medium text-slate-800 dark:text-slate-200 mb-1">Regions Served</div>
+          <div class="text-sm text-slate-600 dark:text-slate-400">Throughout Tanzania</div>
         </div>
-        <div class="text-3xl font-bold text-blue-600 mb-2">25+</div>
-        <div class="font-medium text-slate-800 dark:text-slate-200 mb-1">Regions Served</div>
-        <div class="text-sm text-slate-600 dark:text-slate-400">Throughout Tanzania</div>
-      </div>
+      {% endif %}
 
-      <div class="text-center">
-        <div class="w-16 h-16 bg-purple-100 rounded-full mx-auto mb-4 flex items-center justify-center">
-          <i class="fa-solid fa-calendar-days text-purple-600 text-2xl"></i>
+      {% if site_settings and site_settings.years_of_service %}
+        <div class="text-center">
+          <div class="w-16 h-16 bg-purple-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+            <i class="fa-solid fa-calendar-days text-purple-600 text-2xl"></i>
+          </div>
+          <div class="text-3xl font-bold text-purple-600 mb-2">{{ site_settings.years_of_service|intcomma }}</div>
+          <div class="font-medium text-slate-800 dark:text-slate-200 mb-1">Years of Service</div>
+          <div class="text-sm text-slate-600 dark:text-slate-400">Building communities</div>
         </div>
-        <div class="text-3xl font-bold text-purple-600 mb-2">7+</div>
-        <div class="font-medium text-slate-800 dark:text-slate-200 mb-1">Years of Service</div>
-        <div class="text-sm text-slate-600 dark:text-slate-400">Building communities</div>
-      </div>
+      {% endif %}
     </div>
   </div>
 
-  <!-- CALL TO ACTION -->
-  <div class="mt-16 text-center">
-    <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 border border-gold/20 shadow-lg">
-      <div class="w-16 h-16 bg-gold/20 rounded-full mx-auto mb-6 flex items-center justify-center">
-        <i class="fa-solid fa-share-alt text-gold text-2xl"></i>
-      </div>
-      <h3 class="text-xl font-semibold mb-4">Share Our Story</h3>
-      <p class="text-slate-600 dark:text-slate-300 mb-6 max-w-2xl mx-auto">
-        Help us spread awareness about our mission by sharing these powerful images with your network. 
-        Together, we can inspire more people to join our cause.
-      </p>
-      <div class="flex justify-center gap-4">
-        <a href="#" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl transition-colors">
-          <i class="fa-brands fa-facebook-f"></i>
-          <span class="text-sm">Share</span>
-        </a>
-        <a href="#" class="inline-flex items-center gap-2 bg-blue-400 hover:bg-blue-500 text-white px-4 py-2 rounded-xl transition-colors">
-          <i class="fa-brands fa-twitter"></i>
-          <span class="text-sm">Tweet</span>
-        </a>
-        <a href="#" class="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl transition-colors">
-          <i class="fa-brands fa-whatsapp"></i>
-          <span class="text-sm">WhatsApp</span>
-        </a>
-        <a href="#" class="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-4 py-2 rounded-xl transition-colors">
-          <i class="fa-brands fa-instagram"></i>
-          <span class="text-sm">Instagram</span>
-        </a>
-      </div>
-    </div>
-  </div>
 </section>
 
 <script>
-  // Enhanced gallery interactions
+  // Lightbox + animations (filtering imehamia server-side; muonekano unabaki)
   (function(){
-    // Category filtering
-    const filterButtons = document.querySelectorAll('.category-filter');
-    const galleryItems = document.querySelectorAll('.gallery-card');
-
-    filterButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        const filter = this.dataset.filter;
-        
-        // Update active button
-        filterButtons.forEach(btn => btn.classList.remove('active'));
-        this.classList.add('active');
-        
-        // Filter gallery items
-        galleryItems.forEach(item => {
-          if (filter === 'all' || item.dataset.category === filter) {
-            item.style.display = 'block';
-            item.style.opacity = '0';
-            setTimeout(() => {
-              item.style.opacity = '1';
-            }, 100);
-          } else {
-            item.style.opacity = '0';
-            setTimeout(() => {
-              item.style.display = 'none';
-            }, 300);
-          }
-        });
-      });
-    });
-
-    // Image modal/lightbox functionality
+    // Image modal/lightbox
     const galleryImages = document.querySelectorAll('.gallery-card img');
-    
     galleryImages.forEach(img => {
       img.addEventListener('click', function() {
-        // Create modal overlay
         const modal = document.createElement('div');
         modal.className = 'fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4';
         modal.innerHTML = `
           <div class="relative max-w-4xl max-h-full">
             <img src="${this.src}" class="max-w-full max-h-full object-contain rounded-lg" alt="${this.alt}">
-            <button class="absolute top-4 right-4 w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors">
+            <button class="absolute top-4 right-4 w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors" aria-label="Close">
               <i class="fa-solid fa-times"></i>
             </button>
           </div>
         `;
-        
         document.body.appendChild(modal);
         document.body.style.overflow = 'hidden';
-        
-        // Close modal
         modal.addEventListener('click', function(e) {
-          if (e.target === modal || e.target.querySelector('.fa-times')) {
+          if (e.target === modal || e.target.closest('.fa-times')) {
             document.body.removeChild(modal);
             document.body.style.overflow = '';
           }
@@ -426,12 +394,7 @@
       });
     });
 
-    // Intersection Observer for animations
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-
+    // Fade-in animations
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -439,10 +402,9 @@
           entry.target.style.transform = 'translateY(0)';
         }
       });
-    }, observerOptions);
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-    // Apply animations to gallery cards
-    galleryItems.forEach(el => {
+    document.querySelectorAll('.gallery-card').forEach(el => {
       el.style.opacity = '0';
       el.style.transform = 'translateY(30px)';
       el.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';

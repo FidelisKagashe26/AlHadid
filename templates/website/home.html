@@ -182,7 +182,7 @@
   <div class="max-w-5xl mx-auto px-4">
     <div class="islamic-quote rounded-xl2">
       <div class="text-center">
-        <p class="text-xl md:text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-3">
+        <p class="text-xl md:text-2xl font-semibold text-primary dark:text-gray-50 mb-3">
           "وَمَن أَحْيَاهَا فَكَأَنَّمَا أَحْيَا النَّاسَ جَمِيعًا"
         </p>
         <p class="text-lg text-gray-700 dark:text-gray-300 mb-2">
@@ -211,16 +211,35 @@
       </p>
       <div class="mt-6 flex flex-wrap gap-4">
         <div class="volunteer-badge rounded-full px-4 py-2">
-          <span class="text-sm font-medium text-gray-800 dark:text-gray-200">
-            <i class="fa-solid fa-heart text-gold mr-2"></i>Established 2018
+          <span class="text-sm font-medium text-gray-800 dark:text-primary inline-flex items-center gap-2">
+            <!-- Heart -->
+            <svg class="h-5 w-5 md:h-6 md:w-6 text-gold" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M11.645 20.46a1 1 0 0 0 .71 0C15.9 19.13 21 15.77 21 10.6A5.1 5.1 0 0 0 15.9 5.5c-1.72 0-3.14.78-3.9 2.01C11.24 6.28 9.82 5.5 8.1 5.5A5.1 5.1 0 0 0 3 10.6c0 5.17 5.1 8.53 8.645 9.86Z"/>
+            </svg>
+            Established 2025
           </span>
         </div>
+
         <div class="volunteer-badge rounded-full px-4 py-2">
-          <span class="text-sm font-medium text-gray-800 dark:text-gray-200">
-            <i class="fa-solid fa-globe text-primary mr-2"></i>Serving Tanzania
+          <span class="text-sm font-medium text-gray-800 dark:text-gray-200 inline-flex items-center gap-2">
+            <!-- Globe -->
+            <svg class="h-5 w-5 md:h-6 md:w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <!-- Equator -->
+              <path d="M3 12h18"></path>
+              <!-- Meridians -->
+              <path d="M12 3c-3 3.5-3 14.5 0 18"></path>
+              <path d="M12 3c3 3.5 3 14.5 0 18"></path>
+              <!-- Parallels -->
+              <path d="M5 8.5c4.5 1.5 9.5 1.5 14 0"></path>
+              <path d="M5 15.5c4.5-1.5 9.5-1.5 14 0"></path>
+            </svg>
+            Serving Tanzania
           </span>
         </div>
       </div>
+
     </div>
 
     <div class="card-ghost rounded-xl2 overflow-hidden">
@@ -239,9 +258,15 @@
     <h2 class="text-2xl md:text-3xl mb-6 font-semibold gold-underline">What We Focus On</h2>
 
     <div class="grid md:grid-cols-4 gap-7 mt-8">
+      <!-- Supporting Orphans -->
       <article class="card p-6 hover:shadow-lg transition-all duration-300">
-        <div class="w-12 h-12 bg-gold/10 rounded-full flex items-center justify-center mb-4">
-          <i class="fa-solid fa-child-reaching text-gold text-xl"></i>
+        <div class="w-12 h-12 bg-gold/10 rounded-full flex items-center justify-center mb-4 text-gold">
+          <svg viewBox="0 0 24 24" class="h-8 w-8 md:h-9 md:w-9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="7" r="3"></circle>
+            <path d="M5 9l4 2m10-2-4 2"></path>
+            <path d="M12 10v4"></path>
+            <path d="M9 21l3-7 3 7"></path>
+          </svg>
         </div>
         <h3 class="font-semibold text-lg mb-2">Supporting Orphans</h3>
         <p class="text-sm text-gray-600 dark:text-gray-300">
@@ -249,9 +274,14 @@
         </p>
       </article>
 
+      <!-- Empowering Women -->
       <article class="card p-6 hover:shadow-lg transition-all duration-300">
-        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-          <i class="fa-solid fa-graduation-cap text-primary text-xl"></i>
+        <div class="w-12 h-12 bg-gold/10 rounded-full flex items-center justify-center mb-4 text-primary">
+          <svg viewBox="0 0 24 24" class="h-8 w-8 md:h-9 md:w-9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 4 21 9 12 14 3 9 12 4z"></path>
+            <path d="M19 10v3"></path>
+            <path d="M6 12v3a10 3 0 0 0 12 0v-3"></path>
+          </svg>
         </div>
         <h3 class="font-semibold text-lg mb-2">Empowering Women</h3>
         <p class="text-sm text-gray-600 dark:text-gray-300">
@@ -259,9 +289,15 @@
         </p>
       </article>
 
+      <!-- Developing Mosques -->
       <article class="card p-6 hover:shadow-lg transition-all duration-300">
-        <div class="w-12 h-12 bg-gold/10 rounded-full flex items-center justify-center mb-4">
-          <i class="fa-solid fa-mosque text-gold text-xl"></i>
+        <div class="w-12 h-12 bg-gold/10 rounded-full flex items-center justify-center mb-4 text-gold">
+          <svg viewBox="0 0 24 24" class="h-8 w-8 md:h-9 md:w-9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 6v12"></path>
+            <path d="M5 6c0-1 .8-2 2-2s2 1 2 2v12H5z" fill="currentColor" opacity=".15"></path>
+            <path d="M19 20H9v-6a5 5 0 0 1 10 0v6z"></path>
+            <path d="M13.5 20v-3a1.5 1.5 0 0 1 3 0v3"></path>
+          </svg>
         </div>
         <h3 class="font-semibold text-lg mb-2">Developing Mosques</h3>
         <p class="text-sm text-gray-600 dark:text-gray-300">
@@ -269,9 +305,16 @@
         </p>
       </article>
 
+      <!-- Caring for Preemies -->
       <article class="card p-6 hover:shadow-lg transition-all duration-300">
-        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-          <i class="fa-solid fa-baby text-primary text-xl"></i>
+        <div class="w-12 h-12 bg-gold/10 rounded-full flex items-center justify-center mb-4 text-primary">
+          <svg viewBox="0 0 24 24" class="h-8 w-8 md:h-9 md:w-9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="6"></circle>
+            <path d="M9.5 12.5h.01M14.5 12.5h.01"></path>
+            <path d="M10 8c1-1.2 2.5-1.2 3.5 0"></path>
+            <circle cx="12" cy="15" r="1.6"></circle>
+            <path d="M9.8 17h4.4"></path>
+          </svg>
         </div>
         <h3 class="font-semibold text-lg mb-2">Caring for Preemies</h3>
         <p class="text-sm text-gray-600 dark:text-gray-300">
@@ -281,6 +324,7 @@
     </div>
   </div>
 </section>
+
 
 <!-- ===================== SUCCESS STORIES / TESTIMONIALS ===================== -->
 {% comment %} <section class="section bg-gradient-to-br from-gray-50 to-white dark:from-darksurface dark:to-gray-900">
@@ -575,7 +619,7 @@
 
 <!-- ===================== VOLUNTEER & PARTNERSHIP ===================== -->
 <section class="section bg-gradient-to-br from-gold/5 to-emerald-50/50 dark:from-gold/10 dark:to-emerald-900/10">
-  <div class="max-w-7xl mx-auto px-4">
+  <div class="max-w-7xl mx-auto px-8">
     <div class="grid md:grid-cols-2 gap-12 items-center">
       <div>
         <h2 class="text-2xl md:text-3xl font-semibold gold-underline mb-6">Join Our Mission</h2>
@@ -585,9 +629,14 @@
         </p>
         
         <div class="space-y-4">
+          <!-- Volunteer Opportunities -->
           <div class="flex items-center gap-4">
-            <div class="w-10 h-10 bg-gold/20 rounded-full flex items-center justify-center flex-shrink-0">
-              <i class="fa-solid fa-hands-helping text-gold"></i>
+            <div class="w-10 h-10 bg-gold/20 rounded-full flex items-center justify-center flex-shrink-0 text-gold">
+              <!-- hands/helping -->
+              <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M8 13l3 3a2 2 0 0 0 3 0l4-4a2 2 0 0 0-3-3l-1 1"></path>
+                <path d="M10 11l-1 1a2 2 0 0 1-3 0l-1-1a2 2 0 1 1 3-3l1 1"></path>
+              </svg>
             </div>
             <div>
               <h4 class="font-semibold text-gray-800 dark:text-gray-200">Volunteer Opportunities</h4>
@@ -595,9 +644,15 @@
             </div>
           </div>
           
+          <!-- Corporate Partnerships -->
           <div class="flex items-center gap-4">
-            <div class="w-10 h-10 bg-primary/15 rounded-full flex items-center justify-center flex-shrink-0">
-              <i class="fa-solid fa-handshake text-primary"></i>
+            <div class="w-10 h-10 bg-primary/15 rounded-full flex items-center justify-center flex-shrink-0 text-primary">
+              <!-- handshake -->
+              <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M7 14l3 3a3 3 0 0 0 4.24 0L21 10"></path>
+                <path d="M12 13l3-3"></path>
+                <path d="M3 12l5-5a3 3 0 0 1 4.24 0l1.76 1.76"></path>
+              </svg>
             </div>
             <div>
               <h4 class="font-semibold text-gray-800 dark:text-gray-200">Corporate Partnerships</h4>
@@ -605,9 +660,15 @@
             </div>
           </div>
           
+          <!-- Skill-Based Volunteering -->
           <div class="flex items-center gap-4">
-            <div class="w-10 h-10 bg-primary/15 rounded-full flex items-center justify-center flex-shrink-0">
-              <i class="fa-solid fa-graduation-cap text-primary"></i>
+            <div class="w-10 h-10 bg-primary/15 rounded-full flex items-center justify-center flex-shrink-0 text-primary">
+              <!-- graduation cap -->
+              <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 4 21 9 12 14 3 9 12 4z"></path>
+                <path d="M19 10v3"></path>
+                <path d="M6 12v3a10 3 0 0 0 12 0v-3"></path>
+              </svg>
             </div>
             <div>
               <h4 class="font-semibold text-gray-800 dark:text-gray-200">Skill-Based Volunteering</h4>
@@ -620,20 +681,45 @@
       <div class="card-ghost rounded-xl2 px-6">
         <h3 class="text-xl font-semibold my-6 text-center">Get Involved Today</h3>
         <div class="space-y-4">
-          <a href="{% url 'website:contact' %}" class="block w-full btn btn-primary text-center">
-            <i class="fa-solid fa-user-plus mr-2"></i>Become a Volunteer
+          <!-- Become a Volunteer -->
+          <a href="{% url 'website:contact' %}" class="block w-full btn btn-primary text-center inline-flex items-center justify-center">
+            <svg class="h-5 w-5 md:h-6 md:w-6 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="9" cy="8" r="3"></circle>
+              <path d="M14 19a5 5 0 0 0-10 0"></path>
+              <path d="M19 8v6"></path>
+              <path d="M22 11h-6"></path>
+            </svg>
+            Become a Volunteer
           </a>
-          <a href="{% url 'website:donate' %}" class="block w-full btn btn-outline text-center">
-            <i class="fa-solid fa-heart mr-2"></i>Make a Donation
+
+          <!-- Make a Donation -->
+          <a href="{% url 'website:donate' %}" class="block w-full btn btn-outline text-center inline-flex items-center justify-center">
+            <svg class="h-5 w-5 md:h-6 md:w-6 mr-2 text-primary" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M11.645 20.46a1 1 0 0 0 .71 0C15.9 19.13 21 15.77 21 10.6A5.1 5.1 0 0 0 15.9 5.5c-1.72 0-3.14.78-3.9 2.01C11.24 6.28 9.82 5.5 8.1 5.5A5.1 5.1 0 0 0 3 10.6c0 5.17 5.1 8.53 8.645 9.86Z"/>
+            </svg>
+            Make a Donation
           </a>
-          <a href="{% url 'website:contact' %}" class="block w-full btn btn-outline text-center">
-            <i class="fa-solid fa-building mr-2"></i>Partner With Us
+
+          <!-- Partner With Us -->
+          <a href="{% url 'website:contact' %}" class="block w-full btn btn-outline text-center inline-flex items-center justify-center">
+            <svg class="h-5 w-5 md:h-6 md:w-6 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="7" width="18" height="13" rx="1.5"></rect>
+              <path d="M7 7V4h4v3"></path>
+              <path d="M7 11h2M11 11h2M15 11h2M7 15h2M11 15h2M15 15h2"></path>
+            </svg>
+            Partner With Us
           </a>
         </div>
         
         <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-600">
-          <p class="text-xs pb-4 text-center text-gray-600 dark:text-gray-400">
-            <i class="fa-solid fa-shield-alt text-primary mr-1"></i>
+          <p class="text-xs pb-4 text-center text-gray-600 dark:text-gray-400 inline-flex items-center justify-center">
+            <svg class="h-4 w-4 mr-1 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V7l-8-4-8 4v5c0 6 8 10 8 10z"></path>
+              <path d="M9.5 12.5l1.5 1.5 3.5-3.5"></path>
+            </svg>
             100% of donations go directly to our programs
           </p>
         </div>

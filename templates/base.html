@@ -41,14 +41,36 @@
       </a>
 
       <!-- Desktop nav -->
-      <nav class="hidden md:flex items-center gap-6 text-sm">
-        <a href="{% url 'website:home' %}" class="hover:text-emerald-600">Home</a>
-        <a href="{% url 'website:news_events' %}" class="hover:text-emerald-600">News & Events</a>
-        <a href="{% url 'website:gallery' %}" class="hover:text-emerald-600">Gallery</a>
-        <a href="{% url 'website:about' %}" class="hover:text-emerald-600">About</a>
-        <a href="{% url 'website:donate' %}" class="hover:text-emerald-600">Donate</a>
-        <a href="{% url 'website:contact' %}" class="hover:text-emerald-600">Contact</a>
+      {% with current=active|default:request.resolver_match.url_name|default:'' %}
+      <nav class="hidden md:grid md:auto-cols-max md:grid-flow-col md:gap-6 text-sm justify-center">
+        <a href="{% url 'website:home' %}"
+          class="hover:text-emerald-600 dark:hover:text-emerald-400 {% if current == 'home' %}text-emerald-700 dark:text-emerald-400 font-semibold border-b-2 border-emerald-600 dark:border-emerald-400 pb-0.5{% endif %}"
+          {% if current == 'home' %}aria-current="page"{% endif %}>Home</a>
+
+        <a href="{% url 'website:news_events' %}"
+          class="hover:text-emerald-600 dark:hover:text-emerald-400 {% if current == 'news_events' or current == 'news_detail' or current == 'event_detail' or current == 'news' or current == 'events' %}text-emerald-700 dark:text-emerald-400 font-semibold border-b-2 border-emerald-600 dark:border-emerald-400 pb-0.5{% endif %}"
+          {% if current == 'news_events' or current == 'news_detail' or current == 'event_detail' or current == 'news' or current == 'events' %}aria-current="page"{% endif %}>
+          News & Events
+        </a>
+
+        <a href="{% url 'website:gallery' %}"
+          class="hover:text-emerald-600 dark:hover:text-emerald-400 {% if current == 'gallery' %}text-emerald-700 dark:text-emerald-400 font-semibold border-b-2 border-emerald-600 dark:border-emerald-400 pb-0.5{% endif %}"
+          {% if current == 'gallery' %}aria-current="page"{% endif %}>Gallery</a>
+
+        <a href="{% url 'website:about' %}"
+          class="hover:text-emerald-600 dark:hover:text-emerald-400 {% if current == 'about' %}text-emerald-700 dark:text-emerald-400 font-semibold border-b-2 border-emerald-600 dark:border-emerald-400 pb-0.5{% endif %}"
+          {% if current == 'about' %}aria-current="page"{% endif %}>About</a>
+
+        <a href="{% url 'website:donate' %}"
+          class="hover:text-emerald-600 dark:hover:text-emerald-400 {% if current == 'donate' %}text-emerald-700 dark:text-emerald-400 font-semibold border-b-2 border-emerald-600 dark:border-emerald-400 pb-0.5{% endif %}"
+          {% if current == 'donate' %}aria-current="page"{% endif %}>Donate</a>
+
+        <a href="{% url 'website:contact' %}"
+          class="hover:text-emerald-600 dark:hover:text-emerald-400 {% if current == 'contact' %}text-emerald-700 dark:text-emerald-400 font-semibold border-b-2 border-emerald-600 dark:border-emerald-400 pb-0.5{% endif %}"
+          {% if current == 'contact' %}aria-current="page"{% endif %}>Contact</a>
       </nav>
+      {% endwith %}
+
 
       <!-- Right controls -->
       <div class="flex items-center gap-3">
@@ -68,7 +90,7 @@
         {% if request.user.is_authenticated and request.user.is_staff %}
           <a href="{% url 'admin_panel:dashboard' %}" class="hidden sm:inline-flex items-center rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 text-sm">Dashboard</a>
         {% else %}
-          <a href="{% url 'admin_panel:login' %}" class="hidden sm:inline-flex items-center rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 text-sm">Admin</a>
+          <a href="{% url 'admin_panel:login' %}" class="hidden sm:inline-flex items-center rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 text-sm">Login</a>
         {% endif %}
       </div>
     </div>
@@ -79,7 +101,7 @@
     <div id="mobileNavOverlay"></div>
     <aside id="mobileNavPanel" class="shadow-2xl">
       <div class="h-16 px-4 flex items-center justify-between border-b border-slate-200 dark:border-slate-800">
-        <div class="flex items-center gap-2">
+        <div class="flex items-center">
           <img src="{% static 'images/logo.png' %}" alt=""
                style="width:32px;height:32px;object-fit:contain;border-radius:6px;display:block" />
           <span class="font-semibold leading-none">Al-Hadid Foundation</span>
@@ -91,19 +113,42 @@
         </button>
       </div>
 
+      {% with current=active|default:request.resolver_match.url_name|default:'' %}
       <nav class="px-4 py-4 space-y-1 text-base">
-        <a href="{% url 'website:home' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">Home</a>
-        <a href="{% url 'website:news_events' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">News & Events</a>
-        <a href="{% url 'website:gallery' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">Gallery</a>
-        <a href="{% url 'website:about' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">About</a>
-        <a href="{% url 'website:donate' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">Donate</a>
-        <a href="{% url 'website:contact' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">Contact</a>
+        <a href="{% url 'website:home' %}"
+          class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 {% if current == 'home' %}bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 font-semibold{% endif %}"
+          {% if current == 'home' %}aria-current="page"{% endif %}>Home</a>
+
+        <a href="{% url 'website:news_events' %}"
+          class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 {% if current == 'news_events' or current == 'news_detail' or current == 'event_detail' or current == 'news' or current == 'events' %}bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 font-semibold{% endif %}"
+          {% if current == 'news_events' or current == 'news_detail' or current == 'event_detail' or current == 'news' or current == 'events' %}aria-current="page"{% endif %}>
+          News & Events
+        </a>
+
+        <a href="{% url 'website:gallery' %}"
+          class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 {% if current == 'gallery' %}bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 font-semibold{% endif %}"
+          {% if current == 'gallery' %}aria-current="page"{% endif %}>Gallery</a>
+
+        <a href="{% url 'website:about' %}"
+          class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 {% if current == 'about' %}bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 font-semibold{% endif %}"
+          {% if current == 'about' %}aria-current="page"{% endif %}>About</a>
+
+        <a href="{% url 'website:donate' %}"
+          class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 {% if current == 'donate' %}bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 font-semibold{% endif %}"
+          {% if current == 'donate' %}aria-current="page"{% endif %}>Donate</a>
+
+        <a href="{% url 'website:contact' %}"
+          class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 {% if current == 'contact' %}bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 font-semibold{% endif %}"
+          {% if current == 'contact' %}aria-current="page"{% endif %}>Contact</a>
+
         {% if request.user.is_authenticated and request.user.is_staff %}
           <a href="{% url 'admin_panel:dashboard' %}" class="mt-4 block text-center rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2">Dashboard</a>
         {% else %}
-          <a href="{% url 'admin_panel:login' %}" class="mt-4 block text-center rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2">Admin</a>
+          <a href="{% url 'admin_panel:login' %}" class="mt-4 block text-center rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2">Login</a>
         {% endif %}
       </nav>
+      {% endwith %}
+
     </aside>
   </div>
 
@@ -148,10 +193,13 @@
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-9h3l1-4h-4V7a1 1 0 0 1 1-1h3V2h-3a5 5 0 0 0-5 5v2H6v4h3v9h4z"/></svg>
           </a>
           <a href="#" class="p-2 rounded-xl border dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Instagram">
-            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1 5-5V7a5 5 0 0 1 5-5zm5 5.8A4.2 4.2 0 1 0 16.2 12 4.2 4.2 0 0 0 12 7.8zm6-1.5a1.2 1.2 0 1 0 1.2 1.2 1.2 1.2 0 0 0-1.2-1.2zM12 9a3 3 0 1 1-3 3 3 3 0 0 1 3-3z"/></svg>
+            <i class="bi bi-instagram h-5 w-5" aria-hidden="true"></i>
           </a>
           <a href="#" class="p-2 rounded-xl border dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="X">
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h3l-7 8 8 12h-6l-5-7-6 7H2l8-9L2 2h6l5 7 5-7z"/></svg>
+          </a>
+          <a href="#" class="p-2 rounded-xl border dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="WhatsApp">
+            <i class="bi bi-whatsapp h-5 w-5" aria-hidden="true"></i>
           </a>
         </div>
       </div>

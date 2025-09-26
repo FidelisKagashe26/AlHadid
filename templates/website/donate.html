@@ -142,101 +142,18 @@
 </section>
 
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-  <!-- DONATION IMPACT -->
-  <div class="mb-16">
-    <div class="text-center mb-12">
-      <h2 class="text-3xl font-semibold gold-underline mb-6">Your Impact</h2>
-      <p class="text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
-        See how your generous contributions directly transform lives and strengthen communities across Tanzania.
-      </p>
-    </div>
-
-    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-      <div class="impact-card rounded-2xl p-6 text-center">
-        <div class="w-16 h-16 bg-gold/20 rounded-full mx-auto mb-4 flex items-center justify-center">
-          <i class="fa-solid fa-child-reaching text-gold text-2xl"></i>
-        </div>
-        <div class="text-2xl font-bold text-gold mb-2">$50</div>
-        <h3 class="font-semibold mb-2">Monthly Orphan Support</h3>
-        <p class="text-sm text-slate-600 dark:text-slate-300">
-          Provides food, clothing, and school supplies for one orphan for a month.
-        </p>
-      </div>
-
-      <div class="impact-card rounded-2xl p-6 text-center">
-        <div class="w-16 h-16 bg-emerald-100 rounded-full mx-auto mb-4 flex items-center justify-center">
-          <i class="fa-solid fa-graduation-cap text-emerald-600 text-2xl"></i>
-        </div>
-        <div class="text-2xl font-bold text-emerald-600 mb-2">$100</div>
-        <h3 class="font-semibold mb-2">Women's Training Program</h3>
-        <p class="text-sm text-slate-600 dark:text-slate-300">
-          Sponsors one woman through our complete empowerment program.
-        </p>
-      </div>
-
-      <div class="impact-card rounded-2xl p-6 text-center">
-        <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4 flex items-center justify-center">
-          <i class="fa-solid fa-mosque text-blue-600 text-2xl"></i>
-        </div>
-        <div class="text-2xl font-bold text-blue-600 mb-2">$500</div>
-        <h3 class="font-semibold mb-2">Mosque Development</h3>
-        <p class="text-sm text-slate-600 dark:text-slate-300">
-          Contributes to mosque renovation and community facility improvements.
-        </p>
-      </div>
-
-      <div class="impact-card rounded-2xl p-6 text-center">
-        <div class="w-16 h-16 bg-pink-100 rounded-full mx-auto mb-4 flex items-center justify-center">
-          <i class="fa-solid fa-baby text-pink-600 text-2xl"></i>
-        </div>
-        <div class="text-2xl font-bold text-pink-600 mb-2">$1000</div>
-        <h3 class="font-semibold mb-2">Medical Equipment</h3>
-        <p class="text-sm text-slate-600 dark:text-slate-300">
-          Helps purchase life-saving equipment for premature babies.
-        </p>
-      </div>
-    </div>
-
-    <!-- SUGGESTED AMOUNTS -->
-    <div class="bg-gradient-to-br from-slate-50 to-emerald-50/30 dark:from-slate-900 dark:to-slate-800 rounded-2xl p-8 mb-12">
-      <h3 class="text-xl font-semibold text-center mb-6">Choose Your Contribution</h3>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <button class="donation-amount rounded-xl p-4 text-center">
-          <div class="text-2xl font-bold text-gold mb-1">$25</div>
-          <div class="text-xs text-slate-600 dark:text-slate-400">Basic Support</div>
-        </button>
-        <button class="donation-amount rounded-xl p-4 text-center">
-          <div class="text-2xl font-bold text-emerald-600 mb-1">$50</div>
-          <div class="text-xs text-slate-600 dark:text-slate-400">Monthly Care</div>
-        </button>
-        <button class="donation-amount rounded-xl p-4 text-center">
-          <div class="text-2xl font-bold text-blue-600 mb-1">$100</div>
-          <div class="text-xs text-slate-600 dark:text-slate-400">Full Program</div>
-        </button>
-        <button class="donation-amount rounded-xl p-4 text-center">
-          <div class="text-2xl font-bold text-purple-600 mb-1">Custom</div>
-          <div class="text-xs text-slate-600 dark:text-slate-400">Your Amount</div>
-        </button>
-      </div>
-      <div class="text-center">
-        <input type="number" placeholder="Enter custom amount" 
-               class="w-full max-w-xs px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-center font-semibold">
-      </div>
-    </div>
-  </div>
-
   <!-- DONATION METHODS -->
   <div class="mb-16">
     <div class="text-center mb-12">
-      <h2 class="text-3xl font-semibold gold-underline mb-6">How to Donate</h2>
+      <h2 class="text-3xl font-semibold mb-6">How to Donate</h2>
       <p class="text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
         Choose from our secure and convenient donation methods. All transactions are protected and transparent.
       </p>
     </div>
 
-    {% if methods %}
+    {% if donation_methods %}
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for m in methods %}
+        {% for m in donation_methods %}
           <div class="method-card p-6 group">
             <div class="flex items-start gap-4">
               <div class="w-12 h-12 bg-gold/20 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
@@ -312,7 +229,7 @@
   <!-- TRANSPARENCY SECTION -->
   <div class="mb-16 bg-gradient-to-br from-gold/5 to-emerald-50/30 dark:from-gold/10 dark:to-slate-800 rounded-2xl p-8 md:p-12">
     <div class="text-center mb-8">
-      <h3 class="text-2xl font-semibold gold-underline mb-4">Our Commitment to Transparency</h3>
+      <h3 class="text-2xl font-semibold mb-4">Our Commitment to Transparency</h3>
       <p class="text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
         We believe in complete transparency about how your donations are used. Here's exactly where your money goes.
       </p>

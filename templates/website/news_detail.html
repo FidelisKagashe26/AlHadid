@@ -1,16 +1,42 @@
 {% extends "base.html" %}
 {% block title %}{{ news.title }} — {{ site_settings.site_name|default:"Al-Hadid" }}{% endblock %}
 {% block content %}
-<section class="max-w-3xl mx-auto px-4 py-10">
-  <nav class="text-sm mb-4">
-    <a class="text-primary" href="{% url 'website:home' %}">Home</a> ·
-    <a class="text-primary" href="{% url 'website:news_events' %}">News & Events</a>
-  </nav>
-  <article class="prose dark:prose-invert card p-6">
-    <h1 class="mb-2">{{ news.title }}</h1>
-    <div class="text-xs text-gray-500">{{ news.created_at|date:"M d, Y" }}</div>
-    {% if news.image %}<img src="{{ news.image.url }}" class="rounded-xl2 my-4">{% endif %}
-    <div>{{ news.content|safe }}</div>
-  </article>
+
+<section class="border-b border-emerald-100 dark:border-slate-800 relative py-10 hero-news">
+  <div class="max-w-4xl mx-auto px-4">
+    <nav class="text-sm text-slate-500 dark:text-slate-400 mb-3">
+      <a class="text-primary hover:text-gold" href="{% url 'website:home' %}">Home</a> ·
+      <a class="text-primary hover:text-gold" href="{% url 'website:news_events' %}">News & Events</a>
+    </nav>
+    <h1 class="text-3xl md:text-4xl font-bold leading-tight">{{ news.title }}</h1>
+    <div class="mt-3 text-xs text-slate-500 dark:text-slate-400 flex items-center gap-3">
+      <span><i class="fa-solid fa-calendar-alt text-gold mr-1"></i>{{ news.created_at|date:"M d, Y" }}</span>
+      {% if news.author %}<span>• {{ news.author }}</span>{% endif %}
+    </div>
+  </div>
 </section>
+
+<section class="max-w-3xl mx-auto px-4 py-8">
+  <article class="news-card rounded-2xl overflow-hidden">
+    {% if news.image %}
+      <img src="{{ news.image.url }}" alt="{{ news.title }}" class="w-full max-h-[480px] object-cover">
+    {% endif %}
+    <div class="p-6 prose dark:prose-invert max-w-none">
+      {% firstof news.content news.body news.text "" as n_txt %}
+      {{ n_txt|safe }}
+    </div>
+  </article>
+
+  <div class="flex flex-wrap gap-3 mt-6">
+    <a href="{% url 'website:news_events' %}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-gold/30 hover:bg-gold/10 transition">
+      <i class="fa-solid fa-arrow-left"></i><span>Back to News</span>
+    </a>
+    {% if news.source_url %}
+      <a href="{{ news.source_url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+        <i class="fa-solid fa-link"></i><span>Source</span>
+      </a>
+    {% endif %}
+  </div>
+</section>
+
 {% endblock %}

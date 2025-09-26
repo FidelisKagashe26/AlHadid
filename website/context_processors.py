@@ -1,8 +1,9 @@
-from .models import SiteSettings
+from .models import SiteSettings, Gallery
 
 def site_settings(request):
     try:
         settings = SiteSettings.objects.first()
+        photos_count = Gallery.objects.filter(is_published=True).count()
         if not settings:
             settings = SiteSettings.objects.create()
     except:
@@ -13,4 +14,5 @@ def site_settings(request):
     return {
         'site_settings': settings,
         'current_theme': theme,
+        'photos_count': photos_count,
     }

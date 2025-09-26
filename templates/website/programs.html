@@ -1,176 +1,154 @@
-{% extends 'base.html' %}
-
+{% extends "base.html" %}
+{% block title %}Programs & Projects — {{ site_settings.site_name|default:"Al-Hadid" }}{% endblock %}
 {% block content %}
-<!-- Page Header -->
-<section class="page-header">
-    <div class="container">
-        <h1 class="display-4 fw-bold">Programs & Projects</h1>
-        <p class="lead">Discover our comprehensive programs designed to create lasting positive impact</p>
-    </div>
-</section>
-
-<!-- Programs Grid -->
-<section class="py-5 curved-section bg-light">
-    <div class="container">
-        <div class="row g-4">
-            {% for program in programs %}
-            <div class="col-lg-4 col-md-6">
-                <div class="card h-100 program-card">
-                    {% if program.image %}
-                        <img src="{{ program.image.url }}" class="card-img-top" alt="{{ program.title }}">
-                    {% else %}
-                        <img src="https://images.pexels.com/photos/6646917/pexels-photo-6646917.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&fit=crop" 
-                             class="card-img-top" alt="{{ program.title }}">
-                    {% endif %}
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">{{ program.title }}</h5>
-                        <p class="card-text flex-grow-1">{{ program.description|truncatewords:25 }}</p>
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                            <small class="text-muted">
-                                <i class="fas fa-calendar me-1"></i>{{ program.created_at|date:"M Y" }}
-                            </small>
-                            <a href="{% url 'website:program_detail' program.pk %}" class="btn btn-primary">
-                                Learn More <i class="fas fa-arrow-right ms-1"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% empty %}
-            <div class="col-12 text-center py-5">
-                <i class="fas fa-folder-open fa-4x text-muted mb-4"></i>
-                <h3 class="text-muted">No Programs Available</h3>
-                <p class="text-muted">We're working on exciting new programs. Check back soon!</p>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-
-<!-- Program Categories -->
-<section class="py-5">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="section-title">Our Focus Areas</h2>
-            <p class="section-subtitle">We work across multiple sectors to create comprehensive community development</p>
-        </div>
-        
-        <div class="row g-4">
-            <div class="col-lg-4 col-md-6">
-                <div class="card text-center border-0 shadow-sm h-100">
-                    <div class="card-body p-4">
-                        <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
-                            <i class="fas fa-graduation-cap fa-2x"></i>
-                        </div>
-                        <h5 class="card-title">Education</h5>
-                        <p class="card-text">Providing quality education, scholarships, and learning resources to underserved communities.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-4 col-md-6">
-                <div class="card text-center border-0 shadow-sm h-100">
-                    <div class="card-body p-4">
-                        <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
-                            <i class="fas fa-heartbeat fa-2x"></i>
-                        </div>
-                        <h5 class="card-title">Healthcare</h5>
-                        <p class="card-text">Ensuring access to essential healthcare services, medical camps, and health awareness programs.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-4 col-md-6">
-                <div class="card text-center border-0 shadow-sm h-100">
-                    <div class="card-body p-4">
-                        <div class="bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
-                            <i class="fas fa-hammer fa-2x"></i>
-                        </div>
-                        <h5 class="card-title">Infrastructure</h5>
-                        <p class="card-text">Building essential infrastructure like clean water systems, schools, and community centers.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-4 col-md-6">
-                <div class="card text-center border-0 shadow-sm h-100">
-                    <div class="card-body p-4">
-                        <div class="bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
-                            <i class="fas fa-seedling fa-2x"></i>
-                        </div>
-                        <h5 class="card-title">Environment</h5>
-                        <p class="card-text">Environmental conservation, tree planting, and sustainable development initiatives.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-4 col-md-6">
-                <div class="card text-center border-0 shadow-sm h-100">
-                    <div class="card-body p-4">
-                        <div class="bg-danger text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
-                            <i class="fas fa-hands-helping fa-2x"></i>
-                        </div>
-                        <h5 class="card-title">Emergency Relief</h5>
-                        <p class="card-text">Providing immediate assistance during natural disasters and emergency situations.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-4 col-md-6">
-                <div class="card text-center border-0 shadow-sm h-100">
-                    <div class="card-body p-4">
-                        <div class="bg-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
-                            <i class="fas fa-briefcase fa-2x"></i>
-                        </div>
-                        <h5 class="card-title">Livelihood</h5>
-                        <p class="card-text">Skills training, microfinance, and job creation programs to promote economic empowerment.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Call to Action -->
-<section class="py-5 bg-primary text-white">
-    <div class="container text-center">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <h2 class="mb-4">Support Our Programs</h2>
-                <p class="lead mb-4">Your contribution helps us expand our programs and reach more communities in need.</p>
-                <div class="d-flex justify-content-center gap-3 flex-wrap">
-                    <a href="{% url 'website:donate' %}" class="btn btn-light btn-lg">
-                        <i class="fas fa-heart me-2"></i>Donate Now
-                    </a>
-                    <a href="{% url 'website:contact' %}" class="btn btn-outline-light btn-lg">
-                        Partner With Us
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
 <style>
-.program-card {
-    transition: all 0.3s ease;
-    border: none;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-.program-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-}
-
-.program-card .card-img-top {
-    height: 250px;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
-
-.program-card:hover .card-img-top {
-    transform: scale(1.05);
-}
+  .program-card{
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(209,173,81,0.12);
+    transition: transform .3s ease, box-shadow .3s ease;
+  }
+  .dark .program-card{ background: rgba(2,6,23,0.95); border-color: rgba(209,173,81,0.2); }
+  .program-card:hover{ transform: translateY(-8px); box-shadow: 0 20px 40px rgba(16,24,40,.15); }
+  .program-card::before{
+    content:""; display:block; height:4px; background:linear-gradient(90deg,#d1ad51,#10b981); transform:scaleX(0); transition:transform .3s ease;
+  }
+  .program-card:hover::before{ transform:scaleX(1); }
+  .hero-programs{ background: linear-gradient(135deg, rgba(209,173,81,0.05), rgba(16,185,129,0.05)); position:relative; overflow:hidden; }
+  .hero-programs::before{
+    content:""; position:absolute; inset:0;
+    background-image:repeating-linear-gradient(45deg, rgba(209,173,81,.08) 0 2px, transparent 2px 20px),
+                     repeating-linear-gradient(-45deg, rgba(16,185,129,.06) 0 1px, transparent 1px 25px);
+    pointer-events:none;
+  }
 </style>
+
+<section class="hero-programs border-b border-emerald-100 dark:border-slate-800 py-14">
+  <div class="max-w-7xl mx-auto px-4 text-center">
+    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold/10 text-gold mb-6">
+      <i class="fa-solid fa-diagram-project"></i><span class="text-sm font-medium">Programs & Projects</span>
+    </div>
+    <h1 class="text-4xl md:text-5xl font-bold mb-4">Creating <span class="text-gold">Lasting Impact</span></h1>
+    <p class="text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
+      Discover our comprehensive programs designed to create sustainable, faith-guided community development.
+    </p>
+  </div>
+</section>
+
+<section class="max-w-7xl mx-auto px-4 py-14">
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {% for program in programs %}
+      <article class="program-card rounded-2xl overflow-hidden group">
+        <div class="relative">
+          {% if program.image %}
+            <img src="{{ program.image.url }}" alt="{{ program.title }}" class="h-48 w-full object-cover group-hover:scale-105 transition-transform duration-300">
+          {% else %}
+            <div class="h-48 w-full bg-gradient-to-br from-gold/20 to-emerald-100 flex items-center justify-center">
+              <i class="fa-solid fa-image text-3xl text-gold/50"></i>
+            </div>
+          {% endif %}
+          <div class="absolute top-4 left-4">
+            <span class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm text-gold px-3 py-1 rounded-full text-xs font-medium">
+              {{ program.category|default:"Program" }}
+            </span>
+          </div>
+        </div>
+        <div class="p-6 flex flex-col gap-3">
+          <h3 class="font-semibold text-lg text-slate-800 dark:text-slate-200 group-hover:text-gold transition-colors">
+            {{ program.title }}
+          </h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300 flex-1">
+            {{ program.description|striptags|truncatewords:25 }}
+          </p>
+          <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+            <span><i class="fa-solid fa-calendar mr-1 text-gold"></i>{{ program.created_at|date:"M Y" }}</span>
+            <a href="{% url 'website:program_detail' program.pk %}" class="inline-flex items-center gap-2 text-primary hover:text-gold font-medium">
+              Learn More <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </article>
+    {% empty %}
+      <div class="md:col-span-3 text-center py-16">
+        <div class="w-24 h-24 bg-gold/20 rounded-full mx-auto mb-6 flex items-center justify-center">
+          <i class="fa-solid fa-folder-open text-3xl text-gold/50"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-2">No Programs Available</h3>
+        <p class="text-slate-600 dark:text-slate-300">We're working on exciting new programs. Check back soon!</p>
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- Focus Areas -->
+  <div class="mt-16">
+    <div class="text-center mb-10">
+      <h2 class="text-3xl font-semibold gold-underline mb-6">Our Focus Areas</h2>
+      <p class="text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
+        We work across multiple sectors to create comprehensive community development.
+      </p>
+    </div>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for area in "Education,Healthcare,Infrastructure,Environment,Emergency Relief,Livelihood"|cut:"," %}
+      {% endfor %}
+      <div class="program-card rounded-2xl p-6 text-center">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-600 text-white flex items-center justify-center">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <h3 class="font-semibold mb-2">Education</h3>
+        <p class="text-sm text-slate-600 dark:text-slate-300">Scholarships and learning resources for underserved communities.</p>
+      </div>
+      <div class="program-card rounded-2xl p-6 text-center">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-emerald-600 text-white flex items-center justify-center">
+          <i class="fa-solid fa-heartbeat"></i>
+        </div>
+        <h3 class="font-semibold mb-2">Healthcare</h3>
+        <p class="text-sm text-slate-600 dark:text-slate-300">Essential medical services and awareness programs.</p>
+      </div>
+      <div class="program-card rounded-2xl p-6 text-center">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-amber-500 text-white flex items-center justify-center">
+          <i class="fa-solid fa-hammer"></i>
+        </div>
+        <h3 class="font-semibold mb-2">Infrastructure</h3>
+        <p class="text-sm text-slate-600 dark:text-slate-300">Schools, clean water systems, and community centers.</p>
+      </div>
+      <div class="program-card rounded-2xl p-6 text-center">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-sky-500 text-white flex items-center justify-center">
+          <i class="fa-solid fa-seedling"></i>
+        </div>
+        <h3 class="font-semibold mb-2">Environment</h3>
+        <p class="text-sm text-slate-600 dark:text-slate-300">Conservation and sustainable development initiatives.</p>
+      </div>
+      <div class="program-card rounded-2xl p-6 text-center">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-rose-600 text-white flex items-center justify-center">
+          <i class="fa-solid fa-hands-helping"></i>
+        </div>
+        <h3 class="font-semibold mb-2">Emergency Relief</h3>
+        <p class="text-sm text-slate-600 dark:text-slate-300">Immediate assistance during disasters and crises.</p>
+      </div>
+      <div class="program-card rounded-2xl p-6 text-center">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-600 text-white flex items-center justify-center">
+          <i class="fa-solid fa-briefcase"></i>
+        </div>
+        <h3 class="font-semibold mb-2">Livelihood</h3>
+        <p class="text-sm text-slate-600 dark:text-slate-300">Skills training and microfinance for economic empowerment.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="mt-16 bg-primary/10 dark:bg-primary/20 rounded-2xl p-10 text-center border border-gold/20">
+    <h2 class="text-2xl md:text-3xl font-semibold mb-3">Support Our Programs</h2>
+    <p class="text-slate-600 dark:text-slate-300 mb-6">Your contribution helps us reach more communities in need.</p>
+    <div class="flex justify-center gap-3 flex-wrap">
+      <a href="{% url 'website:donate' %}" class="inline-flex items-center gap-2 bg-gold hover:bg-gold/90 text-white px-6 py-3 rounded-xl font-medium transition">
+        <i class="fa-solid fa-heart"></i> Donate Now
+      </a>
+      <a href="{% url 'website:contact' %}" class="inline-flex items-center gap-2 border border-gold/30 hover:bg-gold/10 px-6 py-3 rounded-xl font-medium transition">
+        Partner With Us
+      </a>
+    </div>
+  </div>
+</section>
+
 {% endblock %}
