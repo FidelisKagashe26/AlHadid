@@ -1,21 +1,32 @@
 {% extends "admin_panel/base.html" %}
 {% block title %}Users & Roles — Al-Hadid{% endblock %}
+
 {% block content %}
 <div class="flex items-center justify-between mb-6">
   <h1 class="text-2xl font-semibold">Users & Roles</h1>
   <a href="{% url 'admin_panel:admin_users_create' %}" class="btn btn-primary"><span class="me-1">＋</span> Add Admin</a>
 </div>
 
-<form method="get" class="mb-4">
-  <input type="text" name="q" value="{{ q }}" placeholder="Search username..."
-         class="input max-w-xs">
-  <button class="btn btn-outline ms-2">Search</button>
-</form>
+<!-- Search Bar (client-side like News/Events) -->
+<div class="card mb-4">
+  <div class="p-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+    <div class="flex items-center gap-2 w-full md:w-auto">
+      <label for="searchInput" class="sr-only">Search users</label>
+      <input id="searchInput" type="text" placeholder="Search username, name, superuser/active (yes/no)…"
+             class="input w-full md:w-80">
+    </div>
+    <div class="flex items-center gap-2">
+      <button id="searchBtn" class="btn btn-primary">Search</button>
+      <button id="clearBtn" class="btn btn-outline">Clear</button>
+    </div>
+  </div>
+</div>
 
 <div class="card overflow-x-auto">
   <table class="min-w-full text-sm">
     <thead class="bg-slate-50 dark:bg-slate-800">
       <tr>
+        <th class="px-4 py-2 text-left">#</th>
         <th class="px-4 py-2 text-left">Username</th>
         <th class="px-4 py-2 text-left">Name</th>
         <th class="px-4 py-2 text-left">Superuser</th>
@@ -23,13 +34,17 @@
         <th class="px-4 py-2 text-right">Actions</th>
       </tr>
     </thead>
-    <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+    <tbody id="usersTbody" class="divide-y divide-slate-100 dark:divide-slate-800">
       {% for u in users %}
-      <tr>
-        <td class="px-4 py-2">{{ u.username }}</td>
-        <td class="px-4 py-2">{{ u.get_full_name|default:"—" }}</td>
-        <td class="px-4 py-2">{{ u.is_superuser|yesno:"Yes,No" }}</td>
-        <td class="px-4 py-2">{{ u.is_active|yesno:"Yes,No" }}</td>
+      <tr data-row>
+        <!-- Row number (filled by JS) -->
+        <td class="px-4 py-2 w-12" data-col="index"></td>
+
+        <td class="px-4 py-2" data-col="username">{{ u.username }}</td>
+        <td class="px-4 py-2" data-col="name">{{ u.get_full_name|default:"—" }}</td>
+        <td class="px-4 py-2" data-col="superuser">{{ u.is_superuser|yesno:"Yes,No" }}</td>
+        <td class="px-4 py-2" data-col="active">{{ u.is_active|yesno:"Yes,No" }}</td>
+
         <td class="px-4 py-2 text-right">
           <a class="btn btn-outline" href="{% url 'admin_panel:admin_users_update' u.pk %}">Edit</a>
           <a class="btn btn-outline" href="{% url 'admin_panel:admin_users_set_password' u.pk %}">Set Password</a>
@@ -40,18 +55,209 @@
         </td>
       </tr>
       {% empty %}
-      <tr><td colspan="5" class="px-4 py-6 text-center text-slate-500">Hakuna users bado.</td></tr>
+      <tr><td colspan="6" class="px-4 py-6 text-center text-slate-500">Hakuna users bado.</td></tr>
       {% endfor %}
+
+      <!-- Client-side "no results" row -->
+      <tr id="noResultsRow" class="hidden">
+        <td colspan="6" class="px-4 py-6 text-center text-slate-500">No matches found.</td>
+      </tr>
     </tbody>
   </table>
+
+  <!-- Pagination Bar -->
+  <div class="p-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+    <!-- Summary -->
+    <div id="pagerSummary" class="text-sm text-slate-600 dark:text-slate-300"></div>
+
+    <!-- Page size -->
+    <div class="flex items-center gap-2">
+      <label for="pageSize" class="text-sm text-slate-600 dark:text-slate-300">Rows per page</label>
+      <select id="pageSize" class="input px-3 py-2">
+        <option value="10" selected>10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+    </div>
+
+    <!-- Pager controls -->
+    <div class="flex items-center justify-between md:justify-end gap-2">
+      <button id="prevBtn" class="btn btn-outline">Prev</button>
+
+      <!-- Numeric page buttons (desktop) -->
+      <div id="pageNumbers" class="hidden md:flex items-center gap-1"></div>
+
+      <!-- Compact label (mobile, table remains table) -->
+      <span id="pageLabel" class="md:hidden text-sm px-2 py-1 rounded">Page 1 of 1</span>
+
+      <button id="nextBtn" class="btn btn-outline">Next</button>
+    </div>
+  </div>
 </div>
 
 <style>
   .card{ @apply bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm; }
-  .input{ @apply rounded-xl border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500; }
+  .input{ @apply rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500; }
   .btn{ @apply inline-flex items-center justify-center rounded-xl px-3 py-2 font-semibold transition; }
   .btn-primary{ @apply bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm; }
   .btn-outline{ @apply border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800; }
   .btn-danger{ @apply border border-rose-300 text-rose-700 dark:border-rose-800 dark:text-rose-300 hover:bg-rose-50 dark:hover:bg-rose-900/30; }
 </style>
+
+<!-- JS: search + pagination + numbering (same pattern as News/Events) -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const tbody        = document.getElementById('usersTbody');
+    const dataRows     = Array.from(tbody.querySelectorAll('tr[data-row]'));
+
+    const searchInput  = document.getElementById('searchInput');
+    const searchBtn    = document.getElementById('searchBtn');
+    const clearBtn     = document.getElementById('clearBtn');
+    const noResultsRow = document.getElementById('noResultsRow');
+
+    const pageSizeSel  = document.getElementById('pageSize');
+    const prevBtn      = document.getElementById('prevBtn');
+    const nextBtn      = document.getElementById('nextBtn');
+    const pageNumbers  = document.getElementById('pageNumbers');
+    const pageLabel    = document.getElementById('pageLabel');
+    const pagerSummary = document.getElementById('pagerSummary');
+
+    let currentPage = 1;
+    let pageSize    = parseInt(pageSizeSel.value, 10) || 10;
+    let filtered    = [...dataRows];
+
+    function setHidden(tr, hidden) {
+      tr.classList.toggle('hidden', hidden);
+    }
+
+    function textOf(tr, sel) {
+      const el = tr.querySelector(sel);
+      return (el ? el.textContent : '').trim().toLowerCase();
+    }
+
+    function applyFilter() {
+      const q = (searchInput.value || '').trim().toLowerCase();
+
+      filtered = dataRows.filter(tr => {
+        const username  = textOf(tr, '[data-col="username"]');
+        const name      = textOf(tr, '[data-col="name"]');
+        const superuser = textOf(tr, '[data-col="superuser"]'); // yes/no
+        const active    = textOf(tr, '[data-col="active"]');    // yes/no
+        return q === '' || username.includes(q) || name.includes(q) || superuser.includes(q) || active.includes(q);
+      });
+
+      currentPage = 1;
+      render();
+    }
+
+    function totalPages() {
+      return Math.max(1, Math.ceil(filtered.length / pageSize));
+    }
+
+    function renderPageNumbers() {
+      const total = totalPages();
+      pageNumbers.innerHTML = '';
+
+      const maxButtons = 7;
+      const addBtn = (label, page, isActive = false, isEllipsis = false) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = label;
+        btn.className = [
+          'px-3 py-1 rounded-xl border text-sm',
+          isEllipsis ? 'cursor-default text-slate-400 dark:text-slate-500 border-transparent' :
+          (isActive ? 'border-emerald-500 text-emerald-700 dark:text-emerald-300' : 'border-slate-300 dark:border-slate-700')
+        ].join(' ');
+        if (!isEllipsis) {
+          btn.addEventListener('click', () => { currentPage = page; render(); });
+        }
+        pageNumbers.appendChild(btn);
+      };
+
+      if (total <= maxButtons) {
+        for (let p = 1; p <= total; p++) addBtn(String(p), p, p === currentPage);
+      } else {
+        const first = 1, last = total, windowSize = 2;
+        const start = Math.max(first + 1, currentPage - windowSize);
+        const end   = Math.min(last - 1,  currentPage + windowSize);
+
+        addBtn(String(first), first, currentPage === first);
+        if (start > first + 1) addBtn('…', null, false, true);
+
+        for (let p = start; p <= end; p++) addBtn(String(p), p, p === currentPage);
+
+        if (end < last - 1) addBtn('…', null, false, true);
+        addBtn(String(last), last, currentPage === last);
+      }
+
+      pageLabel.textContent = `Page ${currentPage} of ${total}`;
+    }
+
+    function renumberVisibleRows(pageStartIndex) {
+      let i = 0;
+      filtered.forEach(tr => {
+        if (!tr.classList.contains('hidden')) {
+          const idxCell = tr.querySelector('[data-col="index"]');
+          if (idxCell) idxCell.textContent = pageStartIndex + (++i);
+        }
+      });
+    }
+
+    function render() {
+      // Hide all rows first
+      dataRows.forEach(tr => setHidden(tr, true));
+
+      // No results
+      if (filtered.length === 0) {
+        noResultsRow.classList.remove('hidden');
+        pagerSummary.textContent = 'Showing 0 of 0';
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
+        pageNumbers.innerHTML = '';
+        pageLabel.textContent = 'Page 1 of 1';
+        return;
+      } else {
+        noResultsRow.classList.add('hidden');
+      }
+
+      const total = totalPages();
+      if (currentPage > total) currentPage = total;
+
+      const start = (currentPage - 1) * pageSize;
+      const end   = Math.min(start + pageSize, filtered.length);
+
+      // Show only rows for the current page
+      for (let i = start; i < end; i++) setHidden(filtered[i], false);
+
+      // Row numbers reflect filtered + paginated view
+      renumberVisibleRows(start);
+
+      // Summary + controls
+      pagerSummary.textContent = `Showing ${start + 1}–${end} of ${filtered.length}`;
+      prevBtn.disabled = currentPage <= 1;
+      nextBtn.disabled = currentPage >= total;
+      renderPageNumbers();
+    }
+
+    function clearFilter() {
+      searchInput.value = '';
+      filtered = [...dataRows];
+      currentPage = 1;
+      render();
+      searchInput.focus();
+    }
+
+    // Events (same as News/Events)
+    searchBtn.addEventListener('click', applyFilter);
+    clearBtn.addEventListener('click', clearFilter);
+    searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); applyFilter(); } });
+    prevBtn.addEventListener('click', () => { if (currentPage > 1) { currentPage -= 1; render(); } });
+    nextBtn.addEventListener('click', () => { if (currentPage < totalPages()) { currentPage += 1; render(); } });
+    pageSizeSel.addEventListener('change', () => { pageSize = parseInt(pageSizeSel.value, 10) || 10; currentPage = 1; render(); });
+
+    // Initial render
+    render();
+  });
+</script>
 {% endblock %}

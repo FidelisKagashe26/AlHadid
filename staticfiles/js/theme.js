@@ -8,7 +8,7 @@
     if (mode === 'dark') root.classList.add('dark'); else root.classList.remove('dark');
     localStorage.setItem(KEY, mode);
     document.querySelectorAll('[data-theme-toggle]').forEach(btn=>{
-      btn.textContent = (mode === 'dark') ? 'Light Mode' : 'Dark Mode';
+      btn.textContent = (mode === 'dark') ? 'Light' : 'Dark';
     });
   }
 

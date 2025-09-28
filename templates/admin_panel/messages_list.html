@@ -1,24 +1,33 @@
 {% extends "admin_panel/base.html" %}
 {% block title %}Messages — Admin{% endblock %}
+
 {% block content %}
 <div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
   <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">
     Messages <span class="text-sm font-normal text-slate-500 dark:text-slate-400">({{ unread_count }} unread)</span>
   </h1>
-  <form method="get" class="flex items-center gap-2">
-    <input type="text" name="q" value="{{ q }}" placeholder="Search name, email, subject..."
+
+  <!-- Client-side Search (button-triggered like other pages) -->
+  <div class="flex items-center gap-2">
+    <label for="searchInput" class="sr-only">Search messages</label>
+    <input id="searchInput" type="text" placeholder="Search name, email, subject, date, status…"
            class="w-64 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm">
-    {% if q %}
-    <a href="{% url 'admin_panel:messages_list' %}" class="text-sm underline">Clear</a>
-    {% endif %}
-    <button class="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 text-sm">Search</button>
-  </form>
+    <button id="searchBtn"
+            class="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 text-sm">
+      Search
+    </button>
+    <button id="clearBtn"
+            class="rounded-xl border border-slate-300 dark:border-slate-700 px-3 py-2 text-sm">
+      Clear
+    </button>
+  </div>
 </div>
 
 <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-x-auto">
   <table class="min-w-full text-sm">
     <thead class="bg-slate-50 dark:bg-slate-800/60">
       <tr>
+        <th class="px-4 py-2 text-left font-semibold">#</th>
         <th class="px-4 py-2 text-left font-semibold">Name</th>
         <th class="px-4 py-2 text-left font-semibold">Email</th>
         <th class="px-4 py-2 text-left font-semibold">Subject</th>
@@ -27,14 +36,21 @@
         <th class="px-4 py-2 text-right font-semibold">Action</th>
       </tr>
     </thead>
-    <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+    <tbody id="messagesTbody" class="divide-y divide-slate-100 dark:divide-slate-800">
       {% for m in inbox %}
-      <tr class="{% if not m.is_read %}bg-emerald-50/50 dark:bg-emerald-900/10{% endif %}">
-        <td class="px-4 py-2 font-medium text-slate-800 dark:text-slate-100">{{ m.name }}</td>
-        <td class="px-4 py-2"><a class="text-emerald-700 hover:underline dark:text-emerald-300" href="mailto:{{ m.email }}">{{ m.email }}</a></td>
-        <td class="px-4 py-2 text-slate-700 dark:text-slate-200">{{ m.subject }}</td>
-        <td class="px-4 py-2 text-slate-600 dark:text-slate-300">{{ m.created_at|date:"M d, Y H:i" }}</td>
-        <td class="px-4 py-2">
+      <tr data-row class="{% if not m.is_read %}bg-emerald-50/50 dark:bg-emerald-900/10{% endif %}">
+        <!-- Row number (filled by JS) -->
+        <td class="px-4 py-2 w-12" data-col="index"></td>
+
+        <td class="px-4 py-2 font-medium text-slate-800 dark:text-slate-100" data-col="name">{{ m.name }}</td>
+        <td class="px-4 py-2" data-col="email">
+          <a class="text-emerald-700 hover:underline dark:text-emerald-300" href="mailto:{% if m.email %}{{ m.email }}{% endif %}">
+            {{ m.email }}
+          </a>
+        </td>
+        <td class="px-4 py-2 text-slate-700 dark:text-slate-200" data-col="subject">{{ m.subject }}</td>
+        <td class="px-4 py-2 text-slate-600 dark:text-slate-300" data-col="date">{{ m.created_at|date:"M d, Y H:i" }}</td>
+        <td class="px-4 py-2" data-col="status">
           {% if m.is_read %}
             <span class="inline-flex items-center rounded-full bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 px-2 py-0.5 text-xs">Read</span>
           {% else %}
@@ -58,9 +74,224 @@
         </td>
       </tr>
       {% empty %}
-      <tr><td class="px-4 py-8 text-center text-slate-500 dark:text-slate-400" colspan="6">No messages yet.</td></tr>
+      <tr><td class="px-4 py-8 text-center text-slate-500 dark:text-slate-400" colspan="7">No messages yet.</td></tr>
       {% endfor %}
+
+      <!-- Client-side "no results" row -->
+      <tr id="noResultsRow" class="hidden">
+        <td colspan="7" class="px-4 py-8 text-center text-slate-500 dark:text-slate-400">No matches found.</td>
+      </tr>
     </tbody>
   </table>
+
+  <!-- Pagination Bar -->
+  <div class="p-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+    <!-- Summary -->
+    <div id="pagerSummary" class="text-sm text-slate-600 dark:text-slate-300"></div>
+
+    <!-- Page size -->
+    <div class="flex items-center gap-2">
+      <label for="pageSize" class="text-sm text-slate-600 dark:text-slate-300">Rows per page</label>
+      <select id="pageSize"
+              class="px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm">
+        <option value="10" selected>10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+    </div>
+
+    <!-- Pager controls -->
+    <div class="flex items-center justify-between md:justify-end gap-2">
+      <button id="prevBtn" class="rounded-xl border border-slate-300 dark:border-slate-700 px-3 py-1.5 text-sm">Prev</button>
+
+      <!-- Numeric page buttons (desktop) -->
+      <div id="pageNumbers" class="hidden md:flex items-center gap-1"></div>
+
+      <!-- Compact label (mobile, table remains table) -->
+      <span id="pageLabel" class="md:hidden text-sm px-2 py-1 rounded">Page 1 of 1</span>
+
+      <button id="nextBtn" class="rounded-xl border border-slate-300 dark:border-slate-700 px-3 py-1.5 text-sm">Next</button>
+    </div>
+  </div>
 </div>
+
+<!-- JS: search + pagination + numbering -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const tbody        = document.getElementById('messagesTbody');
+    const dataRows     = Array.from(tbody.querySelectorAll('tr[data-row]'));
+
+    const searchInput  = document.getElementById('searchInput');
+    const searchBtn    = document.getElementById('searchBtn');
+    const clearBtn     = document.getElementById('clearBtn');
+    const noResultsRow = document.getElementById('noResultsRow');
+
+    const pageSizeSel  = document.getElementById('pageSize');
+    const prevBtn      = document.getElementById('prevBtn');
+    const nextBtn      = document.getElementById('nextBtn');
+    const pageNumbers  = document.getElementById('pageNumbers');
+    const pageLabel    = document.getElementById('pageLabel');
+    const pagerSummary = document.getElementById('pagerSummary');
+
+    let currentPage = 1;
+    let pageSize    = parseInt(pageSizeSel.value, 10) || 10;
+    let filtered    = [...dataRows];
+
+    function setHidden(tr, hidden) {
+      tr.classList.toggle('hidden', hidden);
+    }
+
+    function textOf(tr, selector) {
+      const el = tr.querySelector(selector);
+      return (el ? el.textContent : '').trim().toLowerCase();
+    }
+
+    function applyFilter() {
+      const q = (searchInput.value || '').trim().toLowerCase();
+
+      filtered = dataRows.filter(tr => {
+        const name    = textOf(tr, '[data-col="name"]');
+        const email   = textOf(tr, '[data-col="email"]');
+        const subject = textOf(tr, '[data-col="subject"]');
+        const date    = textOf(tr, '[data-col="date"]');
+        const status  = textOf(tr, '[data-col="status"]'); // "read"/"unread"
+        return q === '' || name.includes(q) || email.includes(q) || subject.includes(q) || date.includes(q) || status.includes(q);
+      });
+
+      currentPage = 1;
+      render();
+    }
+
+    function totalPages() {
+      return Math.max(1, Math.ceil(filtered.length / pageSize));
+    }
+
+    function renderPageNumbers() {
+      const total = totalPages();
+      pageNumbers.innerHTML = '';
+
+      const maxButtons = 7;
+      const addBtn = (label, page, isActive = false, isEllipsis = false) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = label;
+        btn.className = [
+          'px-3 py-1.5 rounded-xl border text-sm',
+          isEllipsis ? 'cursor-default text-slate-400 dark:text-slate-500 border-transparent' :
+          (isActive ? 'border-emerald-500 text-emerald-700 dark:text-emerald-300' : 'border-slate-300 dark:border-slate-700')
+        ].join(' ');
+        if (!isEllipsis) {
+          btn.addEventListener('click', () => {
+            currentPage = page;
+            render();
+          });
+        }
+        pageNumbers.appendChild(btn);
+      };
+
+      if (total <= maxButtons) {
+        for (let p = 1; p <= total; p++) addBtn(String(p), p, p === currentPage);
+      } else {
+        const first = 1, last = total, windowSize = 2;
+        const start = Math.max(first + 1, currentPage - windowSize);
+        const end   = Math.min(last - 1,  currentPage + windowSize);
+
+        addBtn(String(first), first, currentPage === first);
+        if (start > first + 1) addBtn('…', null, false, true);
+
+        for (let p = start; p <= end; p++) addBtn(String(p), p, p === currentPage);
+
+        if (end < last - 1) addBtn('…', null, false, true);
+        addBtn(String(last), last, currentPage === last);
+      }
+
+      pageLabel.textContent = `Page ${currentPage} of ${total}`;
+    }
+
+    function renumberVisibleRows(pageStartIndex) {
+      let i = 0;
+      filtered.forEach(tr => {
+        if (!tr.classList.contains('hidden')) {
+          const idxCell = tr.querySelector('[data-col="index"]');
+          if (idxCell) idxCell.textContent = pageStartIndex + (++i);
+        }
+      });
+    }
+
+    function render() {
+      // Hide all rows first
+      dataRows.forEach(tr => setHidden(tr, true));
+
+      if (filtered.length === 0) {
+        noResultsRow.classList.remove('hidden');
+        pagerSummary.textContent = 'Showing 0 of 0';
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
+        pageNumbers.innerHTML = '';
+        pageLabel.textContent = 'Page 1 of 1';
+        return;
+      } else {
+        noResultsRow.classList.add('hidden');
+      }
+
+      const total = totalPages();
+      if (currentPage > total) currentPage = total;
+
+      const start = (currentPage - 1) * pageSize;
+      const end   = Math.min(start + pageSize, filtered.length);
+
+      for (let i = start; i < end; i++) {
+        setHidden(filtered[i], false);
+      }
+
+      renumberVisibleRows(start);
+
+      pagerSummary.textContent = `Showing ${start + 1}–${end} of ${filtered.length}`;
+      prevBtn.disabled = currentPage <= 1;
+      nextBtn.disabled = currentPage >= total;
+      renderPageNumbers();
+    }
+
+    function clearFilter() {
+      searchInput.value = '';
+      filtered = [...dataRows];
+      currentPage = 1;
+      render();
+      searchInput.focus();
+    }
+
+    // Events
+    searchBtn.addEventListener('click', applyFilter);
+    clearBtn.addEventListener('click', clearFilter);
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        applyFilter();
+      }
+    });
+
+    prevBtn.addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage -= 1;
+        render();
+      }
+    });
+    nextBtn.addEventListener('click', () => {
+      if (currentPage < totalPages()) {
+        currentPage += 1;
+        render();
+      }
+    });
+
+    pageSizeSel.addEventListener('change', () => {
+      pageSize = parseInt(pageSizeSel.value, 10) || 10;
+      currentPage = 1;
+      render();
+    });
+
+    // Initial render
+    render();
+  });
+</script>
 {% endblock %}

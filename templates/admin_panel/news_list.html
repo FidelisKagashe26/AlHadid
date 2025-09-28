@@ -1,35 +1,284 @@
 {% extends "admin_panel/base.html" %}
 {% block title %}News — {{ site_settings.site_name|default:"Al-Hadid" }}{% endblock %}
+
 {% block content %}
 <div class="flex items-center justify-between mb-4">
   <h1 class="text-2xl font-semibold">News</h1>
-  <a href="{% url 'admin_panel:news_create' %}" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add News</a>
+  <a href="{% url 'admin_panel:news_create' %}" class="btn btn-primary">
+    <i class="fa-solid fa-plus"></i> Add News
+  </a>
 </div>
+
+<!-- Search Bar -->
+<div class="card mb-4">
+  <div class="p-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+    <div class="flex items-center gap-2 w-full md:w-auto">
+      <label for="searchInput" class="sr-only">Search news</label>
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="Search by title or published (yes/no)…"
+        class="w-full md:w-80 px-3 py-2 border border-gray-300 dark:border-darkborder rounded-xl bg-white dark:bg-neutral-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+      />
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button id="searchBtn" class="btn btn-primary">
+        <i class="fa-solid fa-magnifying-glass"></i> Search
+      </button>
+      <button id="clearBtn" class="btn btn-outline">
+        Clear
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="card overflow-x-auto">
   <table class="min-w-full divide-y divide-gray-200 dark:divide-darkborder">
     <thead class="bg-gray-50 dark:bg-neutral-800">
       <tr>
+        <th class="px-4 py-2 text-left text-sm font-semibold">#</th>
         <th class="px-4 py-2 text-left text-sm font-semibold">Title</th>
         <th class="px-4 py-2 text-left text-sm font-semibold">Published</th>
         <th class="px-4 py-2 text-left text-sm font-semibold">Created</th>
         <th class="px-4 py-2 text-right text-sm font-semibold">Actions</th>
       </tr>
     </thead>
-    <tbody class="divide-y divide-gray-100 dark:divide-darkborder">
+    <tbody id="newsTbody" class="divide-y divide-gray-100 dark:divide-darkborder">
       {% for n in news %}
-      <tr>
-        <td class="px-4 py-2">{{ n.title }}</td>
-        <td class="px-4 py-2">{% if n.is_published %}<span class="chip bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300">Yes</span>{% else %}<span class="chip">No</span>{% endif %}</td>
+      <tr data-row>
+        <!-- Row number filled by JS -->
+        <td class="px-4 py-2 w-12" data-col="index"></td>
+
+        <td class="px-4 py-2" data-col="title">{{ n.title }}</td>
+
+        <td class="px-4 py-2" data-col="published">
+          {% if n.is_published %}
+            <span class="chip bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300">Yes</span>
+          {% else %}
+            <span class="chip">No</span>
+          {% endif %}
+        </td>
+
         <td class="px-4 py-2">{{ n.created_at|date:"M d, Y" }}</td>
+
         <td class="px-4 py-2 text-right">
           <a href="{% url 'admin_panel:news_update' n.pk %}" class="btn btn-outline">Edit</a>
           <a href="{% url 'admin_panel:news_delete' n.pk %}" class="btn btn-danger" onclick="return confirm('Delete this item?')">Delete</a>
         </td>
       </tr>
       {% empty %}
-      <tr><td colspan="4" class="px-4 py-6 text-center text-gray-500">No news yet.</td></tr>
+      <tr>
+        <td colspan="5" class="px-4 py-6 text-center text-gray-500">No news yet.</td>
+      </tr>
       {% endfor %}
+
+      <!-- Client-side "no results" row -->
+      <tr id="noResultsRow" class="hidden">
+        <td colspan="5" class="px-4 py-6 text-center text-gray-500">No matches found.</td>
+      </tr>
     </tbody>
   </table>
+
+  <!-- Pagination Bar -->
+  <div class="p-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+    <!-- Summary -->
+    <div id="pagerSummary" class="text-sm text-gray-600 dark:text-gray-300"></div>
+
+    <!-- Page size -->
+    <div class="flex items-center gap-2">
+      <label for="pageSize" class="text-sm text-gray-600 dark:text-gray-300">Rows per page</label>
+      <select id="pageSize" class="px-3 space-x-3 py-2 border border-gray-300 dark:border-darkborder rounded-xl bg-white dark:bg-neutral-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+        <option value="10" selected>10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+    </div>
+
+    <!-- Pager controls -->
+    <div class="flex items-center justify-between md:justify-end gap-2">
+      <button id="prevBtn" class="btn btn-outline">Prev</button>
+
+      <!-- Numeric page buttons (desktop) -->
+      <div id="pageNumbers" class="hidden md:flex items-center gap-1"></div>
+
+      <!-- Compact label (mobile, just a label; table remains the same) -->
+      <span id="pageLabel" class="md:hidden text-sm px-2 py-1 rounded">Page 1 of 1</span>
+
+      <button id="nextBtn" class="btn btn-outline">Next</button>
+    </div>
+  </div>
 </div>
+
+<!-- JS: search + pagination + numbering -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const tbody        = document.getElementById('newsTbody');
+    const dataRows     = Array.from(tbody.querySelectorAll('tr[data-row]'));
+    const searchInput  = document.getElementById('searchInput');
+    const searchBtn    = document.getElementById('searchBtn');
+    const clearBtn     = document.getElementById('clearBtn');
+    const noResultsRow = document.getElementById('noResultsRow');
+
+    const pageSizeSel  = document.getElementById('pageSize');
+    const prevBtn      = document.getElementById('prevBtn');
+    const nextBtn      = document.getElementById('nextBtn');
+    const pageNumbers  = document.getElementById('pageNumbers');
+    const pageLabel    = document.getElementById('pageLabel');
+    const pagerSummary = document.getElementById('pagerSummary');
+
+    let currentPage = 1;
+    let pageSize    = parseInt(pageSizeSel.value, 10) || 10;
+    let filtered    = [...dataRows];
+
+    function setHidden(tr, hidden) {
+      tr.classList.toggle('hidden', hidden);
+    }
+
+    function applyFilter() {
+      const q = (searchInput.value || '').trim().toLowerCase();
+
+      filtered = dataRows.filter(tr => {
+        const titleEl     = tr.querySelector('[data-col="title"]');
+        const publishedEl = tr.querySelector('[data-col="published"]');
+        const titleTxt     = (titleEl ? titleEl.textContent : '').toLowerCase();
+        const publishedTxt = (publishedEl ? publishedEl.textContent : '').toLowerCase(); // "yes"/"no"
+        return q === '' || titleTxt.includes(q) || publishedTxt.includes(q);
+      });
+
+      currentPage = 1;
+      render();
+    }
+
+    function totalPages() {
+      return Math.max(1, Math.ceil(filtered.length / pageSize));
+    }
+
+    function renderPageNumbers() {
+      const total = totalPages();
+      pageNumbers.innerHTML = '';
+
+      const maxButtons = 7;
+      const addBtn = (label, page, isActive = false, isEllipsis = false) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = label;
+        btn.className = [
+          'px-3 py-1 rounded-xl border',
+          isEllipsis ? 'cursor-default text-gray-400 dark:text-gray-500 border-transparent' :
+          (isActive ? 'border-emerald-500 text-emerald-700 dark:text-emerald-300' : 'border-gray-300 dark:border-darkborder')
+        ].join(' ');
+        if (!isEllipsis) {
+          btn.addEventListener('click', () => {
+            currentPage = page;
+            render();
+          });
+        }
+        pageNumbers.appendChild(btn);
+      };
+
+      if (total <= maxButtons) {
+        for (let p = 1; p <= total; p++) addBtn(String(p), p, p === currentPage);
+      } else {
+        const first = 1, last = total, windowSize = 2;
+        const start = Math.max(first + 1, currentPage - windowSize);
+        const end   = Math.min(last - 1,  currentPage + windowSize);
+
+        addBtn(String(first), first, currentPage === first);
+        if (start > first + 1) addBtn('…', null, false, true);
+
+        for (let p = start; p <= end; p++) addBtn(String(p), p, p === currentPage);
+
+        if (end < last - 1) addBtn('…', null, false, true);
+        addBtn(String(last), last, currentPage === last);
+      }
+
+      pageLabel.textContent = `Page ${currentPage} of ${total}`;
+    }
+
+    function renumberVisibleRows(pageStartIndex) {
+      let i = 0;
+      filtered.forEach(tr => {
+        if (!tr.classList.contains('hidden')) {
+          const idxCell = tr.querySelector('[data-col="index"]');
+          if (idxCell) idxCell.textContent = pageStartIndex + (++i);
+        }
+      });
+    }
+
+    function render() {
+      dataRows.forEach(tr => setHidden(tr, true));
+
+      if (filtered.length === 0) {
+        noResultsRow.classList.remove('hidden');
+        pagerSummary.textContent = 'Showing 0 of 0';
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
+        pageNumbers.innerHTML = '';
+        pageLabel.textContent = 'Page 1 of 1';
+        return;
+      } else {
+        noResultsRow.classList.add('hidden');
+      }
+
+      const total = totalPages();
+      if (currentPage > total) currentPage = total;
+
+      const start = (currentPage - 1) * pageSize;
+      const end   = Math.min(start + pageSize, filtered.length);
+
+      for (let i = start; i < end; i++) {
+        setHidden(filtered[i], false);
+      }
+
+      renumberVisibleRows(start);
+
+      pagerSummary.textContent = `Showing ${start + 1}–${end} of ${filtered.length}`;
+      prevBtn.disabled = currentPage <= 1;
+      nextBtn.disabled = currentPage >= total;
+      renderPageNumbers();
+    }
+
+    function clearFilter() {
+      searchInput.value = '';
+      filtered = [...dataRows];
+      currentPage = 1;
+      render();
+      searchInput.focus();
+    }
+
+    // Events
+    searchBtn.addEventListener('click', applyFilter);
+    clearBtn.addEventListener('click', clearFilter);
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        applyFilter();
+      }
+    });
+
+    prevBtn.addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage -= 1;
+        render();
+      }
+    });
+    nextBtn.addEventListener('click', () => {
+      if (currentPage < totalPages()) {
+        currentPage += 1;
+        render();
+      }
+    });
+
+    pageSizeSel.addEventListener('change', () => {
+      pageSize = parseInt(pageSizeSel.value, 10) || 10;
+      currentPage = 1;
+      render();
+    });
+
+    // Initial render
+    render();
+  });
+</script>
 {% endblock %}
