@@ -2,7 +2,7 @@
 {% load static %}
 {% block title %}Home — {{ site_settings.site_name|default:"Al-Hadid Foundation" }}{% endblock %}
 {% block content %}
-
+{% load form_extras %}
 <style>
   /* ===== HERO BG (pattern + tint) ===== */
   .hero{position:relative;overflow:hidden}
@@ -682,7 +682,7 @@
         <h3 class="text-xl font-semibold my-6 text-center">Get Involved Today</h3>
         <div class="space-y-4">
           <!-- Become a Volunteer -->
-          <a href="{% url 'website:contact' %}" class="block w-full btn btn-primary text-center inline-flex items-center justify-center">
+          <a href="{% url 'website:contact' %}" class="block w-full btn btn-primary text-center items-center justify-center">
             <svg class="h-5 w-5 md:h-6 md:w-6 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="9" cy="8" r="3"></circle>
@@ -694,7 +694,7 @@
           </a>
 
           <!-- Make a Donation -->
-          <a href="{% url 'website:donate' %}" class="block w-full btn btn-outline text-center inline-flex items-center justify-center">
+          <a href="{% url 'website:donate' %}" class="block w-full btn btn-outline text-center items-center justify-center">
             <svg class="h-5 w-5 md:h-6 md:w-6 mr-2 text-primary" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M11.645 20.46a1 1 0 0 0 .71 0C15.9 19.13 21 15.77 21 10.6A5.1 5.1 0 0 0 15.9 5.5c-1.72 0-3.14.78-3.9 2.01C11.24 6.28 9.82 5.5 8.1 5.5A5.1 5.1 0 0 0 3 10.6c0 5.17 5.1 8.53 8.645 9.86Z"/>
             </svg>
@@ -702,7 +702,7 @@
           </a>
 
           <!-- Partner With Us -->
-          <a href="{% url 'website:contact' %}" class="block w-full btn btn-outline text-center inline-flex items-center justify-center">
+          <a href="{% url 'website:contact' %}" class="block w-full btn btn-outline text-center items-center justify-center">
             <svg class="h-5 w-5 md:h-6 md:w-6 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="3" y="7" width="18" height="13" rx="1.5"></rect>
@@ -816,39 +816,78 @@
       Join our mission to serve humanity with compassion and Islamic values. Every act of kindness, 
       every contribution, and every prayer brings us closer to building stronger, more caring communities.
     </p>
-    
+
+    <!-- CONTACT ROW -->
+    {% if site_settings.address or site_settings.phone or site_settings.email %}
     <div class="flex flex-wrap justify-center items-center gap-6 text-sm">
+      {% if site_settings.address %}
       <div class="flex items-center gap-2">
         <i class="fa-solid fa-map-marker-alt text-gold"></i>
-        <span class="text-gray-700 dark:text-gray-300">Morogoro, Tanzania</span>
+        <span class="text-gray-700 dark:text-gray-300">
+          {{ site_settings.address }}
+        </span>
       </div>
-      
+      {% endif %}
+
+      {% if site_settings.phone %}
       <div class="flex items-center gap-2">
         <i class="fa-solid fa-phone text-primary"></i>
-        <a class="hover:text-primary transition-colors" href="tel:+255758150976">+255 758 150 976</a>
+        <a class="hover:text-primary transition-colors" href="{{ site_settings.phone|tel_link }}">
+          {{ site_settings.phone }}
+        </a>
       </div>
-      
+      {% endif %}
+
+      {% if site_settings.email %}
       <div class="flex items-center gap-2">
         <i class="fa-solid fa-envelope text-primary"></i>
-        <a class="hover:text-primary transition-colors" href="mailto:info@alhadid.org">info@alhadid.org</a>
+        <a class="hover:text-primary transition-colors" href="mailto:{{ site_settings.email }}">
+          {{ site_settings.email }}
+        </a>
       </div>
+      {% endif %}
     </div>
-    
+    {% endif %}
+
+    <!-- SOCIALS -->
+    {% if site_settings.facebook_url or site_settings.twitter_url or site_settings.whatsapp_number or site_settings.youtube_url %}
     <div class="mt-8 flex justify-center gap-4">
-      <a href="#" class="w-10 h-10 border border-primary text-primary hover:bg-yellow-200 hover:text-white rounded-full flex items-center justify-center transition-colors">
+      {% if site_settings.facebook_url %}
+      <a href="{{ site_settings.facebook_url }}" target="_blank" rel="noopener"
+         class="w-10 h-10 border border-primary text-primary hover:bg-yellow-200 hover:text-white rounded-full flex items-center justify-center transition-colors">
         <i class="bi bi-facebook"></i>
       </a>
-      <a href="#" class="w-10 h-10 border border-primary text-primary hover:bg-yellow-200 hover:text-white rounded-full flex items-center justify-center transition-colors">
-        <i class="bi bi-twitter"></i>
+      {% endif %}
+
+      {% if site_settings.instagram_url %}
+      <a href="{{ site_settings.instagram_url }}" target="_blank" rel="noopener"
+         class="w-10 h-10 border border-primary text-primary hover:bg-yellow-200 hover:text-white rounded-full flex items-center justify-center transition-colors">
+        <i class="bi bi-instagram"></i>
       </a>
-      <a href="#" class="w-10 h-10 border border-primary text-primary hover:bg-yellow-200 hover:text-white rounded-full flex items-center justify-center transition-colors">
+      {% endif %}
+
+      {% if site_settings.twitter_url %}
+      <a href="{{ site_settings.twitter_url }}" target="_blank" rel="noopener"
+         class="w-10 h-10 border border-primary text-primary hover:bg-yellow-200 hover:text-white rounded-full flex items-center justify-center transition-colors">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h3l-7 8 8 12h-6l-5-7-6 7H2l8-9L2 2h6l5 7 5-7z"/></svg>
+      </a>
+      {% endif %}
+
+      {% if site_settings.whatsapp_number %}
+      <a href="{{ site_settings.whatsapp_number|wa_link }}" target="_blank" rel="noopener"
+         class="w-10 h-10 border border-primary text-primary hover:bg-yellow-200 hover:text-white rounded-full flex items-center justify-center transition-colors">
         <i class="bi bi-whatsapp"></i>
       </a>
-      <a href="#" class="w-10 h-10 border border-primary text-primary hover:bg-yellow-00 hover:text-white rounded-full flex items-center justify-center transition-colors">
+      {% endif %}
+
+      {% if site_settings.youtube_url %}
+      <a href="{{ site_settings.youtube_url }}" target="_blank" rel="noopener"
+         class="w-10 h-10 border border-primary text-primary hover:bg-yellow-200 hover:text-white rounded-full flex items-center justify-center transition-colors">
         <i class="bi bi-youtube"></i>
       </a>
+      {% endif %}
     </div>
-
+    {% endif %}
   </div>
 </section>
 

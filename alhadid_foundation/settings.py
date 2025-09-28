@@ -38,16 +38,21 @@ ROOT_URLCONF = 'alhadid_foundation.urls'
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'website.context_processors.site_settings',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [BASE_DIR / "templates"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                "website.context_processors.site_settings",  # <= hii context processor mpya
+            ],
+            "builtins": [
+                "django.templatetags.static",
+                "django.contrib.humanize.templatetags.humanize",  # intcomma n.k. zipatikane kila template
+                "admin_panel.templatetags.form_extras",               # tel_link, wa_link (kama uliweka)
             ],
         },
     },

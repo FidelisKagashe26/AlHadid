@@ -157,7 +157,7 @@
           <div class="method-card p-6 group">
             <div class="flex items-start gap-4">
               <div class="w-12 h-12 bg-gold/20 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-                <i class="fa-solid fa-credit-card text-gold"></i>
+                <i class="bi bi-credit-card text-gold text-lg"></i>
               </div>
               <div class="flex-1">
                 <h3 class="font-semibold text-lg mb-2">
@@ -188,7 +188,7 @@
         <div class="method-card p-6 group">
           <div class="flex items-start gap-4">
             <div class="w-12 h-12 bg-gold/20 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-              <i class="fa-solid fa-mobile-alt text-gold"></i>
+              <i class="bi bi-credit-card text-gold text-lg"></i>
             </div>
             <div class="flex-1">
               <h3 class="font-semibold text-lg mb-2">Mobile Money</h3>
@@ -265,15 +265,15 @@
   <div class="text-center">
     <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 border border-gold/20 shadow-lg">
       <div class="w-16 h-16 bg-emerald-100 rounded-full mx-auto mb-6 flex items-center justify-center">
-        <i class="fa-brands fa-whatsapp text-emerald-600 text-2xl"></i>
+        <i class="bi bi-whatsapp text-emerald-600 text-2xl"></i>
       </div>
       <h3 class="text-xl font-semibold mb-4">Need Help with Your Donation?</h3>
       <p class="text-slate-600 dark:text-slate-300 mb-6">
         Our team is ready to assist you with any questions about donating or to help you set up recurring contributions.
       </p>
-      <a href="https://wa.me/255758150976" target="_blank"
+      <a href="{{ site_settings.whatsapp_number|wa_link }}" target="_blank"
          class="inline-flex items-center rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 font-semibold transition-colors">
-        <i class="fa-brands fa-whatsapp mr-2"></i>
+        <i class="bi bi-whatsapp mr-2"></i>
         Ask how to donate directly on WhatsApp
       </a>
     </div>

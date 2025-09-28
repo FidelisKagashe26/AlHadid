@@ -1,7 +1,7 @@
 from django import template
+import re
 
 register = template.Library()
-
 
 def _merge_attrs(widget, extra):
     base = (widget.attrs or {}).copy()
@@ -48,3 +48,26 @@ def endswith(value, suffix):
     Usage: {% if field.name|endswith:"_perm" %} ... {% endif %}
     """
     return str(value).endswith(str(suffix))
+
+@register.filter
+def tel_link(phone):
+    """
+    Rudisha tel: link iliyosafishwa (inaacha + na nambari).
+    """
+    if not phone:
+        return ""
+    digits = re.sub(r"[^\d+]", "", str(phone))  # ruhusu '+' ya mwanzo
+    return f"tel:{digits}"
+
+@register.filter
+def wa_link(number):
+    """
+    Geuza namba kuwa https://wa.me/255{digits}
+    - huondoa space/dashes/() nk.
+    """
+    if not number:
+        return ""
+    digits = re.sub(r"\D", "", str(number))
+    if not digits:
+        return ""
+    return f"https://wa.me/255{digits}"

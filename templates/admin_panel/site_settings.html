@@ -47,6 +47,10 @@
       <input type="url" name="instagram_url" class="w-full rounded-lg" value="{{ settings.instagram_url }}">
     </label>
     <label class="space-y-1">
+      <span class="text-sm">YouTube URL</span>
+      <input type="url" name="youtube_url" class="w-full rounded-lg" value="{{ settings.youtube_url|default:'' }}">
+    </label>
+    <label class="space-y-1">
       <span class="text-sm">WhatsApp Number</span>
       <input type="text" name="whatsapp_number" class="w-full rounded-lg" value="{{ settings.whatsapp_number }}">
     </label>

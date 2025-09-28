@@ -96,6 +96,7 @@ def site_settings(request):
         settings.instagram_url = request.POST.get('instagram_url', '')
         settings.whatsapp_number = request.POST.get('whatsapp_number', '')
         settings.google_maps_embed = request.POST.get('google_maps_embed', '')
+        settings.youtube_url = request.POST.get('youtube_url', '')
 
         # NEW: impact numbers (optional ints)
         def to_int(val):

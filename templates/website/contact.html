@@ -142,17 +142,19 @@
       <div class="flex flex-wrap justify-center gap-4">
         <div class="bg-white/50 dark:bg-slate-800/50 rounded-full px-4 py-2 border border-gold/20">
           <span class="text-sm font-medium text-slate-800 dark:text-slate-200">
-            <i class="fa-solid fa-handshake text-gold mr-2"></i>Partnership
+            <i class="bi bi-unity text-yellow-300 mr-2" aria-hidden="true"></i>Partnership
           </span>
         </div>
+
         <div class="bg-white/50 dark:bg-slate-800/50 rounded-full px-4 py-2 border border-gold/20">
           <span class="text-sm font-medium text-slate-800 dark:text-slate-200">
-            <i class="fa-solid fa-hands-helping text-emerald-600 mr-2"></i>Volunteer
+            <i class="bi bi-people text-green-600 mr-2" aria-hidden="true"></i>Volunteer
           </span>
         </div>
+
         <div class="bg-white/50 dark:bg-slate-800/50 rounded-full px-4 py-2 border border-gold/20">
           <span class="text-sm font-medium text-slate-800 dark:text-slate-200">
-            <i class="fa-solid fa-question-circle text-blue-600 mr-2"></i>Questions
+            <i class="bi bi-question-circle text-yellow-600 mr-2" aria-hidden="true"></i>Questions
           </span>
         </div>
       </div>
@@ -279,8 +281,8 @@
             {{ form.website }} {# honeypot (hidden) #}
 
             <button type="submit"
-              class="inline-flex w-full items-center justify-center gap-3 rounded-xl bg-gold hover:bg-gold/90 px-8 py-4 font-semibold text-white shadow-lg transition-all hover:shadow-xl hover:scale-105 sm:w-auto">
-              <i class="fa-solid fa-paper-plane"></i>
+              class="inline-flex w-full items-center justify-center gap-3 rounded-xl bg-green-600 hover:bg-green-400/90 px-8 py-4 font-semibold text-white shadow-lg transition-all hover:shadow-xl hover:scale-105 sm:w-auto">
+              <i class="bi bi-send-fill text-lg" aria-hidden="true"></i>
               Send Message
             </button>
           </form>
@@ -301,12 +303,12 @@
             {% if site_settings.phone %}
             <div class="contact-method rounded-xl p-4">
               <div class="flex items-start gap-4">
-                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-gold/20 text-gold flex-shrink-0">
-                  <i class="fa-solid fa-phone text-lg"></i>
+                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-yellow-200 text-yellow-600 flex-shrink-0">
+                  <i class="bi bi-telephone-fill text-lg" aria-hidden="true"></i>
                 </div>
                 <div>
-                  <div class="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1">Phone</div>
-                  <a class="text-gold hover:text-gold/80 font-medium transition-colors" href="tel:{{ site_settings.phone }}">{{ site_settings.phone }}</a>
+                  <div class="text-sm font-semibold text-slate-70 dark:text-slate-200 mb-1">Phone</div>
+                  <a class="text-emerald-600 hover:text-emerald-700 font-medium transition-colors" href="tel:{{ site_settings.phone }}">{{ site_settings.phone }}</a>
                   <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">Available 9 AM - 6 PM</div>
                 </div>
               </div>
@@ -316,8 +318,8 @@
             {% if site_settings.email %}
             <div class="contact-method rounded-xl p-4">
               <div class="flex items-start gap-4">
-                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 flex-shrink-0">
-                  <i class="fa-solid fa-envelope text-lg"></i>
+                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-green-600 flex-shrink-0">
+                  <i class="bi bi-envelope-fill text-lg" aria-hidden="true"></i>
                 </div>
                 <div>
                   <div class="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1">Email</div>
@@ -332,7 +334,7 @@
             <div class="contact-method rounded-xl p-4">
               <div class="flex items-start gap-4">
                 <div class="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-blue-600 flex-shrink-0">
-                  <i class="fa-solid fa-map-marker-alt text-lg"></i>
+                  <i class="bi bi-geo-alt-fill text-lg" aria-hidden="true"></i>
                 </div>
                 <div>
                   <div class="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1">Address</div>
@@ -346,9 +348,9 @@
 
           {% if site_settings.whatsapp_number %}
           <div class="mt-8">
-            <a href="https://wa.me/{{ site_settings.whatsapp_number }}" target="_blank"
-               class="inline-flex w-full items-center justify-center gap-3 rounded-xl bg-emerald-600 px-6 py-4 font-semibold text-white shadow-lg transition-all hover:bg-emerald-700 hover:shadow-xl hover:scale-105">
-              <i class="fa-brands fa-whatsapp text-xl"></i>
+            <a href="{{ site_settings.whatsapp_number|wa_link }}" target="_blank"
+              class="inline-flex w-full items-center justify-center gap-3 rounded-xl bg-emerald-600 px-6 py-4 font-semibold text-white shadow-lg transition-all hover:bg-emerald-700 hover:shadow-xl hover:scale-105">
+              <i class="bi bi-whatsapp text-xl" aria-hidden="true"></i>
               Chat on WhatsApp
             </a>
           </div>
@@ -359,30 +361,36 @@
             <h6 class="mb-4 text-sm font-semibold text-slate-700 dark:text-slate-200">Follow Our Journey</h6>
             <div class="grid grid-cols-2 gap-3">
               {% if site_settings.facebook_url %}
-              <a href="{{ site_settings.facebook_url }}" target="_blank"
-                 class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-3 text-slate-600 transition hover:bg-blue-50 hover:border-blue-200 hover:text-blue-600 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-blue-900/20">
-                <i class="fa-brands fa-facebook-f"></i>
+              <a href="{{ site_settings.facebook_url }}" target="_blank" aria-label="Facebook"
+                class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-3 text-slate-600 transition hover:bg-blue-50 hover:border-blue-200 hover:text-blue-600 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-blue-900/20">
+                <i class="bi bi-facebook text-blue-600 text-lg" aria-hidden="true"></i>
                 <span class="text-sm">Facebook</span>
               </a>
               {% endif %}
+
               {% if site_settings.twitter_url %}
-              <a href="{{ site_settings.twitter_url }}" target="_blank"
-                 class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-3 text-slate-600 transition hover:bg-blue-50 hover:border-blue-200 hover:text-blue-400 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-blue-900/20">
-                <i class="fa-brands fa-twitter"></i>
-                <span class="text-sm">Twitter</span>
+              <a href="{{ site_settings.twitter_url }}" target="_blank" aria-label="Twitter"
+                class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-3 text-slate-600 transition hover:bg-blue-50 hover:border-blue-200 hover:text-blue-400 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-blue-900/20">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h3l-7 8 8 12h-6l-5-7-6 7H2l8-9L2 2h6l5 7 5-7z"/></svg>
+                <span class="text-sm">Twitter (X)</span>
               </a>
               {% endif %}
+
               {% if site_settings.instagram_url %}
-              <a href="{{ site_settings.instagram_url }}" target="_blank"
-                 class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-3 text-slate-600 transition hover:bg-pink-50 hover:border-pink-200 hover:text-pink-600 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-pink-900/20">
-                <i class="fa-brands fa-instagram"></i>
+              <a href="{{ site_settings.instagram_url }}" target="_blank" aria-label="Instagram"
+                class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-3 text-slate-600 transition hover:bg-pink-50 hover:border-pink-200 hover:text-pink-600 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-pink-900/20">
+                <i class="bi bi-instagram text-pink-600 text-lg" aria-hidden="true"></i>
                 <span class="text-sm">Instagram</span>
               </a>
               {% endif %}
-              <a href="#" class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-3 text-slate-600 transition hover:bg-red-50 hover:border-red-200 hover:text-red-600 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-red-900/20">
-                <i class="fa-brands fa-youtube"></i>
+
+              {% if site_settings.youtube_url %}
+              <a href="{{ site_settings.youtube_url }}" target="_blank" aria-label="YouTube"
+                class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-3 text-slate-600 transition hover:bg-red-50 hover:border-red-200 hover:text-red-600 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-red-900/20">
+                <i class="bi bi-youtube text-red-600 text-lg" aria-hidden="true"></i>
                 <span class="text-sm">YouTube</span>
               </a>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -396,13 +404,15 @@
 <section class="py-16 bg-slate-50 dark:bg-slate-900">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-12">
-      <h2 class="text-3xl font-semibold gold-underline mb-6">Find Us</h2>
+      <h2 class="text-3xl font-semibold mb-6">Find Us</h2>
       <p class="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
         Visit our office in Morogoro, Tanzania. We welcome visitors and are always happy to show you our work firsthand.
       </p>
     </div>
+
     <div class="overflow-hidden rounded-2xl border border-slate-200 shadow-lg dark:border-slate-800">
-      <div class="h-96 [&_iframe]:h-full [&_iframe]:w-full">
+      <!-- full viewport height -->
+      <div class="h-screen">
         {{ site_settings.google_maps_embed|safe }}
       </div>
     </div>
@@ -421,14 +431,15 @@
     </div>
 
     <div class="space-y-4">
+      <!-- FAQ Item -->
       <details class="faq-item group rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
         <summary class="flex cursor-pointer list-none items-center justify-between">
           <span class="font-semibold text-slate-800 dark:text-slate-100">
-            <i class="fa-solid fa-hands-helping text-gold mr-3"></i>
+            <i class="bi bi-people text-gold mr-3"></i>
             How can I volunteer with Al-Hadid Foundation?
           </span>
           <span class="ml-3 shrink-0 rounded-full bg-gold/20 p-2 text-gold transition group-open:rotate-180">
-            <i class="fa-solid fa-chevron-down"></i>
+            <i class="bi bi-chevron-down"></i>
           </span>
         </summary>
         <div class="mt-4 pl-8 text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -439,11 +450,11 @@
       <details class="faq-item group rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
         <summary class="flex cursor-pointer list-none items-center justify-between">
           <span class="font-semibold text-slate-800 dark:text-slate-100">
-            <i class="fa-solid fa-heart text-emerald-600 mr-3"></i>
+            <i class="bi bi-heart-fill text-emerald-600 mr-3"></i>
             What programs does the foundation currently run?
           </span>
           <span class="ml-3 shrink-0 rounded-full bg-gold/20 p-2 text-gold transition group-open:rotate-180">
-            <i class="fa-solid fa-chevron-down"></i>
+            <i class="bi bi-chevron-down"></i>
           </span>
         </summary>
         <div class="mt-4 pl-8 text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -454,11 +465,11 @@
       <details class="faq-item group rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
         <summary class="flex cursor-pointer list-none items-center justify-between">
           <span class="font-semibold text-slate-800 dark:text-slate-100">
-            <i class="fa-solid fa-dollar-sign text-blue-600 mr-3"></i>
+            <i class="bi bi-cash-stack text-blue-600 mr-3"></i>
             How are donations used and can I see financial reports?
           </span>
           <span class="ml-3 shrink-0 rounded-full bg-gold/20 p-2 text-gold transition group-open:rotate-180">
-            <i class="fa-solid fa-chevron-down"></i>
+            <i class="bi bi-chevron-down"></i>
           </span>
         </summary>
         <div class="mt-4 pl-8 text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -469,11 +480,11 @@
       <details class="faq-item group rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
         <summary class="flex cursor-pointer list-none items-center justify-between">
           <span class="font-semibold text-slate-800 dark:text-slate-100">
-            <i class="fa-solid fa-handshake text-purple-600 mr-3"></i>
+            <i class="bi bi-unity text-purple-600 mr-3"></i>
             Can organizations and businesses partner with you?
           </span>
           <span class="ml-3 shrink-0 rounded-full bg-gold/20 p-2 text-gold transition group-open:rotate-180">
-            <i class="fa-solid fa-chevron-down"></i>
+            <i class="bi bi-chevron-down"></i>
           </span>
         </summary>
         <div class="mt-4 pl-8 text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -484,11 +495,11 @@
       <details class="faq-item group rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
         <summary class="flex cursor-pointer list-none items-center justify-between">
           <span class="font-semibold text-slate-800 dark:text-slate-100">
-            <i class="fa-solid fa-globe text-green-600 mr-3"></i>
+            <i class="bi bi-globe2 text-green-600 mr-3"></i>
             Do you accept international volunteers and donations?
           </span>
           <span class="ml-3 shrink-0 rounded-full bg-gold/20 p-2 text-gold transition group-open:rotate-180">
-            <i class="fa-solid fa-chevron-down"></i>
+            <i class="bi bi-chevron-down"></i>
           </span>
         </summary>
         <div class="mt-4 pl-8 text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -513,20 +524,23 @@
       </p>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
-        <a href="{% url 'website:donate' %}" class="inline-flex items-center justify-center gap-2 rounded-xl bg-gold hover:bg-gold/90 px-6 py-4 font-semibold text-white shadow-lg transition-all hover:shadow-xl hover:scale-105">
-          <i class="fa-solid fa-heart"></i>
+        <a href="{% url 'website:donate' %}" class="inline-flex items-center justify-center gap-2 rounded-xl bg-yellow-300 hover:bg-yellow-300/90 px-6 py-4 font-semibold text-white shadow-lg transition-all hover:shadow-xl hover:scale-105">
+          <i class="bi bi-heart-fill" aria-hidden="true"></i>
           <span>Donate</span>
         </a>
+
         <a href="{% url 'website:about' %}" class="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-emerald-600 bg-emerald-600 hover:bg-emerald-700 px-6 py-4 font-semibold text-white transition-all hover:scale-105">
-          <i class="fa-solid fa-hands-helping"></i>
+          <i class="bi bi-people-fill" aria-hidden="true"></i>
           <span>Volunteer</span>
         </a>
+
         <a href="{% url 'website:about' %}" class="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-blue-600 bg-blue-600 hover:bg-blue-700 px-6 py-4 font-semibold text-white transition-all hover:scale-105">
-          <i class="fa-solid fa-handshake"></i>
+          <i class="bi bi-handshake" aria-hidden="true"></i>
           <span>Partner</span>
         </a>
+
         <a href="{% url 'website:news_events' %}" class="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-purple-600 bg-purple-600 hover:bg-purple-700 px-6 py-4 font-semibold text-white transition-all hover:scale-105">
-          <i class="fa-solid fa-calendar-days"></i>
+          <i class="bi bi-calendar-event" aria-hidden="true"></i>
           <span>Events</span>
         </a>
       </div>

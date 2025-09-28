@@ -15,7 +15,8 @@ class SiteSettings(models.Model):
     instagram_url = models.URLField(blank=True)
     whatsapp_number = models.CharField(max_length=20, blank=True)
     google_maps_embed = models.TextField(blank=True)
-
+    youtube_url = models.URLField(blank=True)
+    
     # NEW: impact numbers (optional; ukiziacha tupu hazitaoneshwa kwenye templates)
     lives_touched = models.PositiveIntegerField(null=True, blank=True)
     regions_served = models.PositiveIntegerField(null=True, blank=True)
