@@ -201,7 +201,7 @@
       <h2 class="text-2xl md:text-3xl font-semibold gold-underline">Who We Are</h2>
       <p class="lead mt-3 text-gray-700 dark:text-gray-300">
         The <strong>Al-Hadid Foundation</strong> is a faith-driven, non-profit organization founded by
-        <strong>Zuberi Daffa</strong>. Guided by the Islamic values of compassion and service, we work
+        <strong>Zuberi Daffa</strong> in 2025. Guided by the Islamic values of compassion and service, we work
         shoulder-to-shoulder with communities to build hope, nurture faith, and transform lives.
       </p>
       <p class="mt-3 text-gray-700 dark:text-gray-300">
@@ -209,13 +209,11 @@
         and Islamic values guide sustainable community development. We operate transparently and partner with
         individuals, businesses, and organizations to create lasting change.
       </p>
-      <div class="mt-6 flex flex-wrap gap-4">
-        <div class="volunteer-badge rounded-full px-4 py-2">
-          <span class="text-sm font-medium text-gray-800 dark:text-primary inline-flex items-center gap-2">
-            <!-- Heart -->
-            <svg class="h-5 w-5 md:h-6 md:w-6 text-gold" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M11.645 20.46a1 1 0 0 0 .71 0C15.9 19.13 21 15.77 21 10.6A5.1 5.1 0 0 0 15.9 5.5c-1.72 0-3.14.78-3.9 2.01C11.24 6.28 9.82 5.5 8.1 5.5A5.1 5.1 0 0 0 3 10.6c0 5.17 5.1 8.53 8.645 9.86Z"/>
-            </svg>
+      {% comment %} <div class="mt-6 flex flex-wrap gap-4">
+        <div class="volunteer-badge rounded-full px-4 py-2 bg-gray-100 dark:bg-gray-800">
+          <span class="text-sm font-medium text-gray-800 dark:text-green-400 inline-flex items-center gap-2">
+            <!-- Heart (Bootstrap Icon) -->
+            <i class="bi bi-heart-fill text-warning" style="font-size: 1.25rem;"></i>
             Established 2025
           </span>
         </div>
@@ -238,7 +236,7 @@
             Serving Tanzania
           </span>
         </div>
-      </div>
+      </div> {% endcomment %}
 
     </div>
 
@@ -394,18 +392,18 @@
           <img src="{% static 'images/kids.jpeg' %}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" alt="">
           <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
-        <h3 class="mt-4 font-semibold text-lg text-gray-800 dark:text-gray-200">Orphan Support Program</h3>
+        <h3 class="mt-4 font-semibold text-lg">Orphan Support Program</h3>
         <ul class="mt-2 text-sm text-gray-700 dark:text-gray-300 space-y-2 flex-grow">
           <li class="flex items-start">
-            <i class="fa-solid fa-check-circle text-gold mr-2 mt-0.5 flex-shrink-0"></i>
+            <i class="bi bi-check-circle-fill text-warning mr-2 mt-0.5 flex-shrink-0"></i>
             Monthly food, clothing, and school materials
           </li>
           <li class="flex items-start">
-            <i class="fa-solid fa-check-circle text-gold mr-2 mt-0.5 flex-shrink-0"></i>
+            <i class="bi bi-check-circle-fill text-warning mr-2 mt-0.5 flex-shrink-0"></i>
             Mentorship, counseling & after-school support
           </li>
           <li class="flex items-start">
-            <i class="fa-solid fa-check-circle text-gold mr-2 mt-0.5 flex-shrink-0"></i>
+            <i class="bi bi-check-circle-fill text-warning mr-2 mt-0.5 flex-shrink-0"></i>
             Health care and medical assistance
           </li>
         </ul>
@@ -416,18 +414,18 @@
           <img src="{% static 'images/mosque.jpeg' %}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" alt="">
           <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
-        <h3 class="mt-4 font-semibold text-lg text-gray-800 dark:text-gray-200">Women's Islamic Empowerment</h3>
+        <h3 class="mt-4 font-semibold text-lg">Women's Islamic Empowerment</h3>
         <ul class="mt-2 text-sm text-gray-700 dark:text-gray-300 space-y-2 flex-grow">
           <li class="flex items-start">
-            <i class="fa-solid fa-check-circle text-primary mr-2 mt-0.5 flex-shrink-0"></i>
+            <i class="bi bi-check-circle-fill text-warning mr-2 mt-0.5 flex-shrink-0"></i>
             Weekly Islamic study circles and Quran classes
           </li>
           <li class="flex items-start">
-            <i class="fa-solid fa-check-circle text-primary mr-2 mt-0.5 flex-shrink-0"></i>
+            <i class="bi bi-check-circle-fill text-warning mr-2 mt-0.5 flex-shrink-0"></i>
             Vocational training for self-reliance
           </li>
           <li class="flex items-start">
-            <i class="fa-solid fa-check-circle text-primary mr-2 mt-0.5 flex-shrink-0"></i>
+            <i class="bi bi-check-circle-fill text-warning mr-2 mt-0.5 flex-shrink-0"></i>
             Microfinance and business development
           </li>
         </ul>
@@ -438,18 +436,18 @@
           <img src="{% static 'images/mosque.jpeg' %}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" alt="">
           <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
-        <h3 class="mt-4 font-semibold text-lg text-gray-800 dark:text-gray-200">Mosque Development Initiative</h3>
+        <h3 class="mt-4 font-semibold text-lg">Mosque Development Initiative</h3>
         <ul class="mt-2 text-sm text-gray-700 dark:text-gray-300 space-y-2 flex-grow">
           <li class="flex items-start">
-            <i class="fa-solid fa-check-circle text-gold mr-2 mt-0.5 flex-shrink-0"></i>
+            <i class="bi bi-check-circle-fill text-warning mr-2 mt-0.5 flex-shrink-0"></i>
             Complete renovation of aging mosques
           </li>
           <li class="flex items-start">
-            <i class="fa-solid fa-check-circle text-gold mr-2 mt-0.5 flex-shrink-0"></i>
+            <i class="bi bi-check-circle-fill text-warning mr-2 mt-0.5 flex-shrink-0"></i>
             Building new mosques in underserved areas
           </li>
           <li class="flex items-start">
-            <i class="fa-solid fa-check-circle text-gold mr-2 mt-0.5 flex-shrink-0"></i>
+            <i class="bi bi-check-circle-fill text-warning mr-2 mt-0.5 flex-shrink-0"></i>
             Community center facilities integration
           </li>
         </ul>
@@ -460,18 +458,18 @@
           <img src="{% static 'images/premature-baby.jpeg' %}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" alt="">
           <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
-        <h3 class="mt-4 font-semibold text-lg text-gray-800 dark:text-gray-200">Premature Baby Care Support</h3>
+        <h3 class="mt-4 font-semibold text-lg">Premature Baby Care Support</h3>
         <ul class="mt-2 text-sm text-gray-700 dark:text-gray-300 space-y-2 flex-grow">
           <li class="flex items-start">
-            <i class="fa-solid fa-check-circle text-primary mr-2 mt-0.5 flex-shrink-0"></i>
+            <i class="bi bi-check-circle-fill text-warning mr-2 mt-0.5 flex-shrink-0"></i>
             Modern incubators & medical equipment
           </li>
           <li class="flex items-start">
-            <i class="fa-solid fa-check-circle text-primary mr-2 mt-0.5 flex-shrink-0"></i>
+            <i class="bi bi-check-circle-fill text-warning mr-2 mt-0.5 flex-shrink-0"></i>
             Hospital bill assistance for families
           </li>
           <li class="flex items-start">
-            <i class="fa-solid fa-check-circle text-primary mr-2 mt-0.5 flex-shrink-0"></i>
+            <i class="bi bi-check-circle-fill text-warning mr-2 mt-0.5 flex-shrink-0"></i>
             Follow-up care and family support
           </li>
         </ul>
@@ -639,8 +637,8 @@
               </svg>
             </div>
             <div>
-              <h4 class="font-semibold text-gray-800 dark:text-gray-200">Volunteer Opportunities</h4>
-              <p class="text-sm text-gray-600 dark:text-gray-400">Join our team of dedicated volunteers in various programs</p>
+              <h4 class="font-semibold text-green-800">Volunteer Opportunities</h4>
+              <p class="text-sm">Join our team of dedicated volunteers in various programs</p>
             </div>
           </div>
           
@@ -655,8 +653,8 @@
               </svg>
             </div>
             <div>
-              <h4 class="font-semibold text-gray-800 dark:text-gray-200">Corporate Partnerships</h4>
-              <p class="text-sm text-gray-600 dark:text-gray-400">Partner with us for sustainable community development</p>
+              <h4 class="font-semibold text-green-800">Corporate Partnerships</h4>
+              <p class="text-sm">Partner with us for sustainable community development</p>
             </div>
           </div>
           
@@ -671,8 +669,8 @@
               </svg>
             </div>
             <div>
-              <h4 class="font-semibold text-gray-800 dark:text-gray-200">Skill-Based Volunteering</h4>
-              <p class="text-sm text-gray-600 dark:text-gray-400">Share your professional expertise with our programs</p>
+              <h4 class="font-semibold text-green-800">Skill-Based Volunteering</h4>
+              <p class="text-sm">Share your professional expertise with our programs</p>
             </div>
           </div>
         </div>
