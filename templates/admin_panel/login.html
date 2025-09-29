@@ -1,63 +1,175 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="sw" class="h-full" data-theme="light">
+<html lang="en" class="h-full" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin Login — Al-Hadid Foundation</title>
+  <title>Admin Sign In — Al-Hadid Foundation</title>
   <link rel="icon" href="{% static 'images/logo.png' %}">
   <link rel="stylesheet" href="{% static 'css/tw.css' %}">
+  <!-- Bootstrap Icons (unaweza ku-pack local baadaye kwenye static/) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <style>
+    /* ===================== Effects zilizokuwepo ===================== */
+    .logo-pulse { animation: pulse-subtle 2s ease-in-out infinite; }
+    @keyframes pulse-subtle { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.02);opacity:.95} }
+    .card-entrance { animation: slideUp .6s ease-out; }
+    @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .message-slide { animation: slideDown .4s ease-out; }
+    @keyframes slideDown { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
+
+    .eye-icon { transition: all .2s cubic-bezier(.4,0,.2,1); transform: scale(1); opacity: 1; }
+    .eye-icon:hover { transform: scale(1.05); color: rgb(16 185 129); }
+    .input-glow:focus { box-shadow: 0 0 0 3px rgba(16,185,129,.1); }
+
+    .btn-loading { position: relative; }
+    .btn-loading .btn-text { opacity: 0; }
+    .btn-loading::after {
+      content: ''; position: absolute; width: 20px; height: 20px; top: 50%; left: 50%;
+      margin: -10px 0 0 -10px; border: 2px solid transparent; border-top-color: #fff;
+      border-radius: 50%; animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .glassmorphism {
+      background: rgba(255,255,255,.95); backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,.2);
+    }
+    .dark .glassmorphism {
+      background: rgba(15,23,42,.8); border: 1px solid rgba(255,255,255,.1);
+    }
+
+    .floating-particles { position:absolute; width:100%; height:100%; overflow:hidden; pointer-events:none; }
+    .particle {
+      position:absolute; width:6px; height:6px; background: rgba(255,255,255,.12);
+      border-radius:50%; animation: float 6s ease-in-out infinite, bubbleGlow 3s ease-in-out infinite alternate;
+      /* ulembo: glow ndogo bila kubadili rangi */
+      filter: drop-shadow(0 0 0 rgba(255,255,255,0));
+    }
+    @keyframes float { 0%,100%{ transform:translateY(0) rotate(0); opacity:.55 } 50%{ transform:translateY(-22px) rotate(180deg); opacity:1 } }
+    @keyframes bubbleGlow { 0%{ filter: drop-shadow(0 0 0 rgba(255,255,255,.0)); } 100%{ filter: drop-shadow(0 0 8px rgba(255,255,255,.25)); } }
+
+    .form-field { transition: all .2s ease; }
+    .form-field:focus-within { transform: translateY(-1px); }
+
+    .success-checkmark { display:none; width:20px; height:20px; border-radius:50%; background: rgb(16 185 129); position:relative; margin-right:8px; }
+    .success-checkmark::after {
+      content:''; position:absolute; left:6px; top:3px; width:6px; height:10px; border:solid #fff; border-width:0 2px 2px 0; transform: rotate(45deg);
+    }
+    .success-state .success-checkmark { display:inline-block; animation: checkmark .5s ease-in-out; }
+    @keyframes checkmark { 0%{transform:scale(0)} 50%{transform:scale(1.2)} 100%{transform:scale(1)} }
+
+    /* ===================== Floating Labels ===================== */
+    .floating-group { position: relative; }
+    .floating-input {
+      /* placeholder-transparent + peer hukamilisha floating label bila JS */
+      padding-top: 1.25rem; /* nafasi ya label ndogo juu */
+    }
+    .floating-label {
+      position: absolute; left: 1rem;
+      top: 50%; transform: translateY(-50%);
+      font-size: .95rem; line-height: 1rem;
+      color: rgb(100 116 139); /* slate-500 */
+      pointer-events: none; transition: all .15s ease;
+    }
+    /* wakati input inafocus au ina value, label inapungua na kupanda juu */
+    .floating-input:focus ~ .floating-label,
+    .floating-input:not(:placeholder-shown) ~ .floating-label {
+      top: .4rem; transform: translateY(0);
+      font-size: .75rem; color: rgb(16 185 129); /* emerald-500 */
+    }
+    .dark .floating-label { color: rgb(148 163 184); } /* slate-400 */
+    .dark .floating-input:focus ~ .floating-label,
+    .dark .floating-input:not(:placeholder-shown) ~ .floating-label { color: rgb(52 211 153); } /* emerald-400 */
+
+    /* ===================== Error Styles (nyekundu) ===================== */
+    .error-message { color: #dc2626 !important; /* rose-600 */ font-size: .78rem; margin-top: .4rem; font-weight: 600; }
+    .input-invalid { border-color: #dc2626 !important; box-shadow: 0 0 0 3px rgba(220,38,38,.1) !important; }
+  </style>
 </head>
-<body class="h-full bg-gradient-to-br from-emerald-700 to-slate-900 dark:from-slate-950 dark:to-slate-900">
-  <div class="min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-md bg-white/95 dark:bg-slate-900/80 backdrop-blur rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800">
+
+<body class="h-full bg-gradient-to-br from-emerald-700 to-slate-900 dark:from-slate-950 dark:to-slate-900 relative">
+  <!-- Floating particles background -->
+  <div class="floating-particles">
+    <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+    <div class="particle" style="left: 20%; animation-delay: 1s;"></div>
+    <div class="particle" style="left: 30%; animation-delay: 2s;"></div>
+    <div class="particle" style="left: 40%; animation-delay: 3s;"></div>
+    <div class="particle" style="left: 50%; animation-delay: 4s;"></div>
+    <div class="particle" style="left: 60%; animation-delay: 5s;"></div>
+    <div class="particle" style="left: 70%; animation-delay: .5s;"></div>
+    <div class="particle" style="left: 80%; animation-delay: 1.5s;"></div>
+    <div class="particle" style="left: 90%; animation-delay: 2.5s;"></div>
+  </div>
+
+  <div class="min-h-screen flex items-center justify-center p-4 relative z-10">
+    <div class="w-full max-w-md glassmorphism rounded-2xl shadow-2xl card-entrance">
       <div class="px-8 pt-8 pb-4 text-center">
-        <img src="{% static 'images/logo.png' %}" alt="Al-Hadid" class="mx-auto h-16 w-auto mb-4" />
-        <h1 class="text-2xl font-semibold text-slate-800 dark:text-slate-100">Admin Login</h1>
-        <p class="text-sm text-slate-500 dark:text-slate-400">Al-Hadid Foundation</p>
+        <img src="{% static 'images/logo.png' %}" alt="Al-Hadid" class="mx-auto h-16 w-auto mb-4 logo-pulse" />
+        <h1 class="text-2xl font-semibold text-slate-800 dark:text-slate-100 tracking-tight">Admin Sign In</h1>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">Al-Hadid Foundation</p>
       </div>
 
       <div class="px-8 pb-8">
         {% if messages %}
           {% for message in messages %}
-            <div class="mb-3 rounded-lg border px-3 py-2 text-sm
-                        {% if message.tags == 'success' %} border-emerald-300 bg-emerald-50 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-200 {% endif %}
-                        {% if message.tags == 'error' %} border-rose-300 bg-rose-50 text-rose-800 dark:bg-rose-900/30 dark:text-rose-200 {% endif %}
-                        {% if message.tags == 'warning' %} border-amber-300 bg-amber-50 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200 {% endif %}
-                        {% if message.tags == 'info' %} border-sky-300 bg-sky-50 text-sky-800 dark:bg-sky-900/30 dark:text-sky-200 {% endif %}
-                        ">
-              {{ message }}
+            <div class="mb-3 rounded-lg border px-3 py-2 text-sm message-slide" aria-live="polite"
+                 {% if message.tags %} data-type="{{ message.tags }}" {% endif %} style="border-color:transparent;">
+              <span class="
+                {% if message.tags == 'success' %} text-emerald-700 dark:text-emerald-200 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 {% endif %}
+                {% if message.tags == 'error' %} text-rose-700 dark:text-rose-200 bg-rose-50 dark:bg-rose-900/30 border border-rose-200 dark:border-rose-800 {% endif %}
+                {% if message.tags == 'warning' %} text-amber-700 dark:text-amber-200 bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800 {% endif %}
+                {% if message.tags == 'info' %} text-sky-700 dark:text-sky-200 bg-sky-50 dark:bg-sky-900/30 border border-sky-200 dark:border-sky-800 {% endif %}
+                flex items-center rounded-lg px-3 py-2 font-medium
+              ">
+                <div class="success-checkmark"></div>
+                {{ message }}
+              </span>
             </div>
           {% endfor %}
         {% endif %}
 
-        <form method="post" class="space-y-4">
+        <form method="post" class="space-y-5" id="loginForm" novalidate>
           {% csrf_token %}
-          <div>
-            <label for="username" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Username</label>
-            <input id="username" name="username" type="text" required
-                   class="mt-1 block w-full rounded-xl border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
+
+          <!-- ===================== USERNAME (Floating label) ===================== -->
+          <div class="error-message hidden" id="username-error"></div>
+          <div class="form-field mb-2 floating-group">
+            <input id="username" name="username" type="text" required autocomplete="username" placeholder=" "
+                   class="floating-input block w-full rounded-xl border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-3 text-sm font-medium placeholder-transparent focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 input-glow transition-all duration-200" />
+            <label for="username" class="floating-label">Username</label>
           </div>
 
-          <div>
-            <label for="password" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Password</label>
-            <input id="password" name="password" type="password" required
-                   class="mt-1 block w-full rounded-xl border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
+          <!-- ===================== PASSWORD (Floating + eye ndani ya input) ===================== -->
+          <div class="error-message mt-6 hidden" id="password-error"></div>
+          <div class="form-field mb-6 floating-group">
+            <input id="password" name="password" type="password" required autocomplete="current-password" placeholder=" "
+                   class="floating-input block w-full rounded-xl border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-3 pr-12 text-sm font-medium placeholder-transparent focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 input-glow transition-all duration-200" />
+            <label for="password" class="floating-label">Password</label>
+
+            <!-- Kajicho: Bootstrap Icon ndani ya input -->
+            <button type="button" class="js-toggle-password absolute inset-y-0 mt-8 flex items-center pr-3 text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 eye-icon" aria-label="Show password" aria-pressed="false" data-target="#password">
+              <i class="bi bi-eye" aria-hidden="true"></i>
+            </button>
           </div>
 
-          <button type="submit"
-                  class="w-full inline-flex items-center justify-center rounded-xl px-4 py-2.5 font-semibold
-                         bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition">
-            Ingia
+          <button type="submit" id="submitBtn"
+                  class="w-full inline-flex items-center justify-center rounded-xl px-4 py-3 font-semibold text-base
+                         bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white shadow-lg hover:shadow-xl 
+                         transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]">
+            <span class="btn-text">Sign In</span>
           </button>
         </form>
 
-        <div class="mt-4 flex items-center justify-between text-sm">
-          <a href="{% url 'admin_panel:password_reset' %}" class="text-emerald-700 hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200">
-            Umesahau password?
+        <div class="mt-6 flex items-center justify-between text-sm">
+          <a href="{% url 'admin_panel:password_reset' %}" 
+             class="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 font-medium transition-colors duration-200 hover:underline">
+            Forgot password?
           </a>
-          <a href="{% url 'website:home' %}" class="text-slate-600 hover:text-slate-800 dark:text-slate-300 dark:hover:text-slate-100">
-            ← Rudi kwenye Tovuti
+          <a href="{% url 'website:home' %}" 
+             class="text-slate-600 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 font-medium transition-colors duration-200 hover:underline">
+            ← Back to Website
           </a>
         </div>
       </div>
@@ -65,10 +177,114 @@
   </div>
 
   <script>
-    // Respect saved theme
+    // Theme (ilivyokuwepo) + transition laini
     (function() {
       const saved = localStorage.getItem('theme');
       if (saved === 'dark') document.documentElement.classList.add('dark');
+      document.documentElement.style.transition = 'background-color 0.3s ease';
+    })();
+
+    // Toggle password (Bootstrap icon ndani ya input) - generic, itafanya kazi kwa field nyingi pia
+    (function() {
+      document.addEventListener('mousedown', function(e){
+        if (e.target.closest('.js-toggle-password')) e.preventDefault(); // zisichukue focus
+      });
+
+      document.addEventListener('click', function(e){
+        const btn = e.target.closest('.js-toggle-password');
+        if (!btn) return;
+
+        const selector = btn.getAttribute('data-target');
+        const input = document.querySelector(selector);
+        if (!input) return;
+
+        const icon = btn.querySelector('i');
+        const isShowing = input.type === 'text';
+        input.type = isShowing ? 'password' : 'text';
+        btn.setAttribute('aria-label', isShowing ? 'Show password' : 'Hide password');
+        btn.setAttribute('aria-pressed', String(!isShowing));
+
+        // Badilisha icon kati ya bi-eye <-> bi-eye-slash
+        icon.classList.toggle('bi-eye', isShowing);
+        icon.classList.toggle('bi-eye-slash', !isShowing);
+
+        // Animation ndogo ya click
+        btn.style.transform = 'scale(0.9)';
+        setTimeout(() => btn.style.transform = 'scale(1)', 100);
+      });
+    })();
+
+    // Validation + rangi nyekundu kwa error
+    (function() {
+      const form = document.getElementById('loginForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const usernameInput = document.getElementById('username');
+      const passwordInput = document.getElementById('password');
+      const usernameError = document.getElementById('username-error');
+      const passwordError = document.getElementById('password-error');
+
+      setTimeout(() => { usernameInput.focus(); }, 500);
+
+      function setError(input, errorEl, msg) {
+        errorEl.textContent = msg;
+        errorEl.classList.remove('hidden');
+        input.classList.add('input-invalid');
+        input.setAttribute('aria-invalid', 'true');
+      }
+      function clearError(input, errorEl) {
+        errorEl.classList.add('hidden');
+        errorEl.textContent = '';
+        input.classList.remove('input-invalid');
+        input.removeAttribute('aria-invalid');
+      }
+      function validateRequired(input, errorEl, msg) {
+        if (input.value.trim() === '') {
+          setError(input, errorEl, msg);
+          return false;
+        }
+        clearError(input, errorEl);
+        return true;
+      }
+
+      usernameInput.addEventListener('blur', () => validateRequired(usernameInput, usernameError, 'Username is required'));
+      passwordInput.addEventListener('blur', () => validateRequired(passwordInput, passwordError, 'Password is required'));
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const uOK = validateRequired(usernameInput, usernameError, 'Username is required');
+        const pOK = validateRequired(passwordInput, passwordError, 'Password is required');
+        if (!uOK || !pOK) return;
+
+        submitBtn.classList.add('btn-loading');
+        submitBtn.disabled = true;
+
+        // post halisi
+        form.submit();
+      });
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && (usernameInput === document.activeElement || passwordInput === document.activeElement)) {
+          form.dispatchEvent(new Event('submit'));
+        }
+      });
+    })();
+
+    // Success state animation (ilivyokuwepo)
+    (function() {
+      const messages = document.querySelectorAll('[data-type="success"]');
+      messages.forEach(message => {
+        message.parentElement.classList.add('success-state');
+      });
+    })();
+
+    // Accessibility
+    (function() {
+      const form = document.getElementById('loginForm');
+      form.setAttribute('aria-label', 'Admin login form');
+      document.querySelectorAll('.error-message').forEach(error => {
+        error.setAttribute('role', 'alert');
+        error.setAttribute('aria-live', 'polite');
+      });
     })();
   </script>
 </body>

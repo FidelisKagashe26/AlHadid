@@ -5,25 +5,87 @@ from django.contrib.auth.models import User
 from django.contrib import messages as dj_messages
 from django.utils import timezone
 from django.db.models import Q
+from django.core.cache import cache
 from django.http import HttpResponseForbidden
-
+from django.urls import reverse_lazy
+from django.contrib.auth.views import PasswordResetView
+from .forms import AdminPasswordResetForm
+from django.views.decorators.csrf import csrf_protect
 from website.models import (
     SiteSettings, Program, News, Event, DonationMethod,
     Gallery, ContactMessage
 )
-
+import time
 # ---------------------------
 # Auth
 # ---------------------------
+ATTEMPT_LIMIT = 5
+LOCKOUT_SECONDS = 180
+ATTEMPT_WINDOW_SECONDS = 900  # how long we remember attempts before resetting (15 min)
+
+def _client_ip(request):
+    # best-effort IP retrieval
+    xff = request.META.get('HTTP_X_FORWARDED_FOR')
+    if xff:
+        return xff.split(',')[0].strip()
+    return request.META.get('REMOTE_ADDR', '0.0.0.0')
+
+def _attempts_key(ip, username):
+    u = (username or 'anon').lower()
+    return f'admin_login_attempts:{ip}:{u}'
+
+def _lockout_key(ip, username):
+    u = (username or 'anon').lower()
+    return f'admin_login_lockout:{ip}:{u}'
+
+@csrf_protect
 def admin_login(request):
     if request.method == 'POST':
-        username = request.POST.get('username','').strip()
-        password = request.POST.get('password','')
+        username = (request.POST.get('username') or '').strip()
+        password = request.POST.get('password') or ''
+        ip = _client_ip(request)
+
+        # 1) If currently locked, show remaining time and stay on the same page
+        lkey = _lockout_key(ip, username)
+        unlock_at = cache.get(lkey)  # we store the unlock epoch here
+        now = time.time()
+        if unlock_at and unlock_at > now:
+            remaining = int(unlock_at - now)
+            mins, secs = divmod(remaining, 60)
+            dj_messages.error(
+                request,
+                f'Too many attempts. Try again in {mins}m {secs}s.'
+            )
+            return render(request, 'admin_panel/login.html')  # no redirect
+
+        # 2) Try to authenticate
         user = authenticate(request, username=username, password=password)
-        if user is not None and user.is_active and user.is_staff:
+        if user and user.is_active and user.is_staff:
+            # success -> clear counters and proceed
+            cache.delete(_attempts_key(ip, username))
+            cache.delete(lkey)
             login(request, user)
             return redirect('admin_panel:dashboard')
-        dj_messages.error(request, 'Invalid credentials or no admin access.')
+
+        # 3) Failed attempt -> increment counter and maybe lock
+        akey = _attempts_key(ip, username)
+        count = cache.get(akey, 0) + 1
+        cache.set(akey, count, ATTEMPT_WINDOW_SECONDS)
+        remaining_attempts = ATTEMPT_LIMIT - count
+
+        if remaining_attempts <= 0:
+            # set a 3-minute lock; keep the unlock timestamp as value for messaging
+            unlock_at = now + LOCKOUT_SECONDS
+            cache.set(lkey, unlock_at, LOCKOUT_SECONDS)
+            cache.delete(akey)
+            dj_messages.error(request, 'Too many attempts. Try again in 3 minutes.')
+        else:
+            dj_messages.error(
+                request,
+                f'Invalid credentials. {remaining_attempts} attempt(s) left before a 3-minute lock.'
+            )
+
+    # GET or after message: render same page
     return render(request, 'admin_panel/login.html')
 
 def admin_logout(request):
@@ -383,25 +445,39 @@ def gallery_delete(request, pk):
 @login_required
 @permission_required('website.view_contactmessage', raise_exception=True)
 def messages_list(request):
-    q = request.GET.get('q','').strip()
-    status = request.GET.get('status','')  # "", "read", "unread"
+    q = request.GET.get('q', '').strip()
+    status = request.GET.get('status', '')  # "", "read", "unread"
+
     qs = ContactMessage.objects.all().order_by('-created_at')
+
     if q:
         qs = qs.filter(
-            Q(subject__icontains=q) | Q(message__icontains=q) |
-            Q(name__icontains=q) | Q(email__icontains=q)
+            Q(subject__icontains=q) |
+            Q(message__icontains=q) |
+            Q(name__icontains=q) |
+            Q(email__icontains=q)
         )
+
     if status == 'read':
         qs = qs.filter(is_read=True)
     elif status == 'unread':
         qs = qs.filter(is_read=False)
-    return render(request, 'admin_panel/messages_list.html', {'messages': qs, 'q': q, 'status': status})
+
+    unread_count = ContactMessage.objects.filter(is_read=False).count()
+    notifications = ContactMessage.objects.filter(is_read=False).order_by('-created_at')[:4]
+
+    return render(request, "admin_panel/messages_list.html", {
+        "inbox": qs,
+        "unread_count": ContactMessage.objects.filter(is_read=False).count(),
+        "notifications": ContactMessage.objects.filter(is_read=False).order_by("-created_at")[:4],
+        "q": q, "status": status,
+    })
 
 @login_required
 @permission_required('website.view_contactmessage', raise_exception=True)
 def message_detail(request, pk):
     message_obj = get_object_or_404(ContactMessage, pk=pk)
-    return render(request, 'admin_panel/message_detail.html', {'message': message_obj})
+    return render(request, 'admin_panel/messages_detail.html', {'message': message_obj})
 
 @login_required
 @permission_required('website.change_contactmessage', raise_exception=True)
@@ -412,7 +488,7 @@ def messages_mark_read(request, pk):
         m.read_at = timezone.now()
         m.save(update_fields=['is_read', 'read_at'])
     dj_messages.success(request, 'Marked as read.')
-    return redirect('admin_panel:message_detail', pk=pk)
+    return redirect('admin_panel:messages_detail', pk=pk)
 
 @login_required
 @permission_required('website.change_contactmessage', raise_exception=True)
@@ -423,7 +499,7 @@ def messages_mark_unread(request, pk):
         m.read_at = None
         m.save(update_fields=['is_read', 'read_at'])
     dj_messages.success(request, 'Marked as unread.')
-    return redirect('admin_panel:message_detail', pk=pk)
+    return redirect('admin_panel:messages_detail', pk=pk)
 
 @login_required
 @permission_required('website.change_contactmessage', raise_exception=True)
@@ -439,3 +515,10 @@ def message_delete(request, pk):
     m.delete()
     dj_messages.success(request, 'Message deleted successfully!')
     return redirect('admin_panel:messages_list')
+
+class AdminPasswordResetView(PasswordResetView):
+    template_name = "admin_panel/auth/password_reset_form.html"
+    email_template_name = "admin_panel/auth/password_reset_email.txt"
+    subject_template_name = "admin_panel/auth/password_reset_subject.txt"
+    success_url = reverse_lazy("admin_panel:password_reset_done")
+    form_class = AdminPasswordResetForm

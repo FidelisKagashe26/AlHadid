@@ -26,6 +26,19 @@
     .sidebar-link.active{background:rgba(255,255,255,.12)}
     .text-gold{color:#d4af37}
   </style>
+  <style id="meta-insta-fonts">
+    /* Global small type (Instagram/Meta-like) */
+    html { font-size: 14px; }           /* default 16px → 14px */
+    body { font-size: 1rem; line-height: 1.5; }
+
+    /* Keep headings readable but compact (only font sizes) */
+    h1 { font-size: 1.5rem; }           /* ~21px */
+    h2 { font-size: 1.25rem; }          /* ~17.5px */
+    h3 { font-size: 1.125rem; }         /* ~15.75px */
+    h4 { font-size: 1rem; }             /* 14px */
+    h5 { font-size: .9375rem; }         /* ~13.1px */
+    h6 { font-size: .875rem; }          /* ~12.25px */
+  </style>
 
   {% block extra_head %}{% endblock %}
 </head>
@@ -113,7 +126,7 @@
 
         <div class="flex items-center gap-3">
           <button class="btn btn-outline" data-theme-toggle></button>
-          <div class="chip"><i class="fa-solid fa-user text-gold"></i> {{ user.first_name|default:user.username }}</div>
+          <div class="chip"><i class="fa-solid p-2 fa-user text-gold"></i>{{ user.first_name|default:user.username }}</div>
         </div>
       </div>
     </div>

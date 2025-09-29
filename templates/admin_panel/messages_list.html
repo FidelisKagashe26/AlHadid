@@ -2,6 +2,27 @@
 {% block title %}Messages — Admin{% endblock %}
 
 {% block content %}
+
+{# --- NEW: Unread notifications (compact chips) --- #}
+{% if notifications %}
+  <div class="mb-3 space-y-2">
+    {% for n in notifications %}
+      <a href="{% url 'admin_panel:messages_detail' n.id %}"
+         class="block rounded-xl border px-4 py-2
+                border-amber-200/70 bg-amber-50/60 text-amber-800
+                dark:border-amber-700/40 dark:bg-amber-900/20 dark:text-amber-200
+                hover:bg-amber-100 dark:hover:bg-amber-900/30 transition">
+        <span class="font-semibold">{{ n.subject|default:"New message" }}</span>
+        <span class="opacity-80"> — {% firstof n.name n.email "Unknown sender" %}</span>
+        <span class="ml-2 inline-flex items-center rounded-full px-2 py-0.5 text-[11px]
+                     bg-white/70 text-amber-700 dark:bg-amber-800/40 dark:text-amber-200">
+          Unread
+        </span>
+      </a>
+    {% endfor %}
+  </div>
+{% endif %}
+
 <div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
   <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">
     Messages <span class="text-sm font-normal text-slate-500 dark:text-slate-400">({{ unread_count }} unread)</span>
@@ -25,7 +46,7 @@
 
 <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-x-auto">
   <table class="min-w-full text-sm">
-    <thead class="bg-slate-50 dark:bg-slate-800/60">
+    <thead class=" ">
       <tr>
         <th class="px-4 py-2 text-left font-semibold">#</th>
         <th class="px-4 py-2 text-left font-semibold">Name</th>
@@ -116,7 +137,7 @@
   </div>
 </div>
 
-<!-- JS: search + pagination + numbering -->
+<!-- JS stays the same -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const tbody        = document.getElementById('messagesTbody');
@@ -155,7 +176,7 @@
         const email   = textOf(tr, '[data-col="email"]');
         const subject = textOf(tr, '[data-col="subject"]');
         const date    = textOf(tr, '[data-col="date"]');
-        const status  = textOf(tr, '[data-col="status"]'); // "read"/"unread"
+        const status  = textOf(tr, '[data-col="status"]');
         return q === '' || name.includes(q) || email.includes(q) || subject.includes(q) || date.includes(q) || status.includes(q);
       });
 
@@ -220,7 +241,6 @@
     }
 
     function render() {
-      // Hide all rows first
       dataRows.forEach(tr => setHidden(tr, true));
 
       if (filtered.length === 0) {
@@ -261,7 +281,6 @@
       searchInput.focus();
     }
 
-    // Events
     searchBtn.addEventListener('click', applyFilter);
     clearBtn.addEventListener('click', clearFilter);
     searchInput.addEventListener('keydown', (e) => {
@@ -290,7 +309,6 @@
       render();
     });
 
-    // Initial render
     render();
   });
 </script>

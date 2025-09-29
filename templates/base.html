@@ -27,6 +27,23 @@
       }
     })();
   </script>
+
+  <style id="meta-insta-fonts">
+    @media (max-width: 767.98px) {
+      /* Global small type (Instagram/Meta-like) */
+      html { font-size: 14px; }           /* default 16px → 14px */
+      body { font-size: 1rem; line-height: 1.5; }
+
+      /* Compact heading sizes */
+      h1 { font-size: 1.5rem; }           /* ~21px */
+      h2 { font-size: 1.25rem; }          /* ~17.5px */
+      h3 { font-size: 1.125rem; }         /* ~15.75px */
+      h4 { font-size: 1rem; }             /* 14px */
+      h5 { font-size: .9375rem; }         /* ~13.1px */
+      h6 { font-size: .875rem; }          /* ~12.25px */
+    }
+  </style>
+
 </head>
 
 <body class="bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100">
@@ -36,7 +53,7 @@
       <!-- BRAND -->
       <a href="{% url 'website:home' %}" class="flex items-center gap-2 min-w-0 select-none">
         <img src="{% static 'images/logo.png' %}" alt="Al-Hadid"
-             style="width:75px;height:75px;object-fit:contain;border-radius:6px;display:block" />
+             style="width:60px;height:60px;object-fit:contain;border-radius:6px;display:block" />
         <span class="font-semibold leading-none whitespace-nowrap">Al-Hadid Foundation</span>
       </a>
 

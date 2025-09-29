@@ -26,8 +26,7 @@
         {% endif %}
       {% endif %}
 
-      <a href="mailto:{{ message.email }}" class="ml-auto inline-flex items-center rounded-lg border px-3 py-1.5 text-sm dark:border-slate-700">Reply</a>
-
+      <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{ message.email }}" class="ml-auto inline-flex items-center rounded-lg border px-3 py-1.5 text-sm dark:border-slate-700">Reply</a>
       {% if perms.website.delete_contactmessage %}
       <form method="post" action="{% url 'admin_panel:message_delete' message.id %}" onsubmit="return confirm('Delete this message?')">{% csrf_token %}
         <button class="rounded-lg border px-3 py-1.5 text-sm dark:border-slate-700">Delete</button>

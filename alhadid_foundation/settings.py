@@ -71,7 +71,7 @@ DATABASES = {
 # === Password validation ===
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", "OPTIONS": {"min_length": 12}},
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
@@ -109,3 +109,21 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 PASSWORD_RESET_TIMEOUT = 60 * 60 * 24  # 24 hours
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Cookies & session
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_HTTPONLY = False
+CSRF_COOKIE_HTTPONLY = False
+SESSION_COOKIE_SAMESITE = "Lax"
+# Shorter admin sessions are safer
+SESSION_COOKIE_AGE = 60 * 60 * 2  # 2 hours
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+# Transport security
+SECURE_SSL_REDIRECT = False
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+SECURE_HSTS_PRELOAD = False
+SECURE_CONTENT_TYPE_NOSNIFF = False
+SECURE_REFERRER_POLICY = "same-origin"

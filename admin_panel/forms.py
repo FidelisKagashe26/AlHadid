@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User, Permission, ContentType
 from django.contrib.auth.forms import UserCreationForm, SetPasswordForm
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.forms import PasswordResetForm
 
 # ---------------------------
 # Tailwind UI helpers
@@ -37,6 +38,47 @@ RADIO_GROUP_CLS = "flex flex-col gap-2"  # tumia kwenye wrapper div/ul kwenye te
 ERROR_RING_CLS = "ring-2 ring-red-500 !border-red-500 focus:ring-red-500 focus:border-red-500"
 
 # -- tools
+class AdminPasswordResetForm(PasswordResetForm):
+    """
+    Only allow password reset for active staff (admin) users.
+    If the email doesn't match an account, raise a form error
+    so no email is sent.
+    """
+    _matched_users = None
+
+    def clean_email(self):
+        email = (self.cleaned_data.get("email") or "").strip()
+        if not email:
+            raise forms.ValidationError("Please enter your email address.")
+
+        qs = User._default_manager.filter(
+            email__iexact=email,
+            is_active=True,
+            is_staff=True,     # limit to admin accounts
+        )
+
+        if not qs.exists():
+            # Stop here: form invalid = no email will be sent
+            raise forms.ValidationError(
+                "We couldn't find an active admin account with that email."
+            )
+
+        # (Optional) handle duplicates explicitly
+        if qs.count() > 1:
+            raise forms.ValidationError(
+                "Multiple admin accounts use this email. Please contact support."
+            )
+
+        self._matched_users = list(qs)
+        return email
+
+    def get_users(self, email):
+        # Use the set we validated in clean_email so we don’t re-query.
+        users = self._matched_users if self._matched_users is not None else []
+        for u in users:
+            if u.has_usable_password():
+                yield u
+
 def _append_class(widget: forms.Widget, extra: str):
     if not extra:
         return
