@@ -1,0 +1,17 @@
+# Ignore Django settings
+**/settings.py
+**/settings/
+
+# Ignore SQLite database
+db.sqlite3
+
+# Ignore migrations cache
+**/migrations/__pycache__/
+
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+
+# Ignore virtual environment
+venv/
+.env/
