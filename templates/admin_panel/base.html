@@ -7,6 +7,14 @@
   <title>{% block title %}Admin — {{ site_settings.site_name|default:"Al-Hadid Foundation" }}{% endblock %}</title>
 
   <link rel="stylesheet" href="{% static 'css/tw.css' %}">
+
+  <link rel="icon" type="image/png" href="{% static 'images/favicon-96x96.png' %}" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon.svg' %}" />
+  <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" />
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/apple-touch-icon.png' %}" />
+  <meta name="apple-mobile-web-app-title" content="Al Hadid" />
+  <link rel="manifest" href="{% static 'site.webmanifest' %}" />
+  
   <script src="{% static 'js/theme.js' %}" defer></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
