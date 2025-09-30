@@ -370,30 +370,5 @@ class AdminSetPasswordForm(TailwindFormMixin, SetPasswordForm):
 
     def __init__(self, user, *args, **kwargs):
         super().__init__(user, *args, **kwargs)
-
-        # Hili ni style base ya input — badilisha ukitaka rangi/size nyingine
-        base_input_classes = (
-            "block w-full px-3 py-2 border rounded-lg shadow-sm placeholder-gray-400 text-sm "
-            "focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
-        )
-
-        for name in ("new_password1", "new_password2"):
-            field = self.fields.get(name)
-            if not field:
-                continue
-
-            # ensure autocomplete
-            field.widget.attrs.setdefault("autocomplete", "new-password")
-
-            # set placeholder from map (inatumia gettext _())
-            placeholder = self.placeholders.get(name)
-            if placeholder:
-                field.widget.attrs.setdefault("placeholder", placeholder)
-
-            # merge existing classes with base classes (huwashirikisha ikiwa kuna tayari)
-            existing = field.widget.attrs.get("class", "").strip()
-            merged = f"{existing} {base_input_classes}".strip() if existing else base_input_classes
-            field.widget.attrs["class"] = merged
-
-            # optional: accessibility hint if you want (uncomment line chini)
-            # field.widget.attrs.setdefault("aria-describedby", f"{name}-help")
+        self.fields["new_password1"].widget.attrs.setdefault("autocomplete", "new-password")
+        self.fields["new_password2"].widget.attrs.setdefault("autocomplete", "new-password")
