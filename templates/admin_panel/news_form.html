@@ -5,7 +5,7 @@
 <div class="card p-5">
   <form method="post" enctype="multipart/form-data">{% csrf_token %}
     {% if form %}{{ form.as_p }}{% else %}
-      <div class="space-y-3">
+      <div class="space-y-3 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
         <label class="block">
           <span class="text-sm">Title</span>
           <input name="title" class="w-full rounded-lg" value="{{ news.title }}">
@@ -16,6 +16,7 @@
         </label>
         <label class="block">
           <span class="text-sm">Image</span>
+          {% if news.image %}<img src="{{ news.image.url }}" class="h-24 rounded mb-2" alt="">{% endif %}
           <input type="file" name="image">
         </label>
         <label class="inline-flex items-center gap-2">
