@@ -5,59 +5,59 @@
 
 <form method="post" enctype="multipart/form-data" class="card p-5 space-y-4">
   {% csrf_token %}
-  <div class="grid md:grid-cols-2 gap-4 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+  <div class="grid md:grid-cols-2 gap-4">
     <label class="space-y-1">
       <span class="text-sm">Site Name</span>
-      <input type="text" name="site_name" class="w-full rounded-lg" value="{{ settings.site_name }}">
+      <input type="text" name="site_name" class="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg" value="{{ settings.site_name }}">
     </label>
     <label class="space-y-1">
       <span class="text-sm">Tagline</span>
-      <input type="text" name="tagline" class="w-full rounded-lg" value="{{ settings.tagline }}">
+      <input type="text" name="tagline" class="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg" value="{{ settings.tagline }}">
     </label>
 
     <label class="space-y-1 md:col-span-2">
       <span class="text-sm">Description</span>
-      <textarea name="description" rows="4" class="w-full rounded-lg">{{ settings.description }}</textarea>
+      <textarea name="description" rows="4" class="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg">{{ settings.description }}</textarea>
     </label>
 
     <label class="space-y-1">
       <span class="text-sm">Phone</span>
-      <input type="text" name="phone" class="w-full rounded-lg" value="{{ settings.phone }}">
+      <input type="text" name="phone" class="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg" value="{{ settings.phone }}">
     </label>
     <label class="space-y-1">
       <span class="text-sm">Email</span>
-      <input type="email" name="email" class="w-full rounded-lg" value="{{ settings.email }}">
+      <input type="email" name="email" class="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg" value="{{ settings.email }}">
     </label>
 
     <label class="space-y-1 md:col-span-2">
       <span class="text-sm">Address</span>
-      <input type="text" name="address" class="w-full rounded-lg" value="{{ settings.address }}">
+      <input type="text" name="address" class="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg" value="{{ settings.address }}">
     </label>
 
     <label class="space-y-1">
       <span class="text-sm">Facebook URL</span>
-      <input type="url" name="facebook_url" class="w-full rounded-lg" value="{{ settings.facebook_url }}">
+      <input type="url" name="facebook_url" class="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg" value="{{ settings.facebook_url }}">
     </label>
     <label class="space-y-1">
       <span class="text-sm">Twitter (X) URL</span>
-      <input type="url" name="twitter_url" class="w-full rounded-lg" value="{{ settings.twitter_url }}">
+      <input type="url" name="twitter_url" class="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg" value="{{ settings.twitter_url }}">
     </label>
     <label class="space-y-1">
       <span class="text-sm">Instagram URL</span>
-      <input type="url" name="instagram_url" class="w-full rounded-lg" value="{{ settings.instagram_url }}">
+      <input type="url" name="instagram_url" class="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg" value="{{ settings.instagram_url }}">
     </label>
     <label class="space-y-1">
       <span class="text-sm">YouTube URL</span>
-      <input type="url" name="youtube_url" class="w-full rounded-lg" value="{{ settings.youtube_url|default:'' }}">
+      <input type="url" name="youtube_url" class="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg" value="{{ settings.youtube_url|default:'' }}">
     </label>
     <label class="space-y-1">
       <span class="text-sm">WhatsApp Number</span>
-      <input type="text" name="whatsapp_number" class="w-full rounded-lg" value="{{ settings.whatsapp_number }}">
+      <input type="text" name="whatsapp_number" class="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg" value="{{ settings.whatsapp_number }}">
     </label>
 
     <label class="space-y-1 md:col-span-2">
       <span class="text-sm">Google Maps Embed (iframe HTML)</span>
-      <textarea name="google_maps_embed" rows="3" class="w-full rounded-lg">{{ settings.google_maps_embed }}</textarea>
+      <textarea name="google_maps_embed" rows="3" class="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg">{{ settings.google_maps_embed }}</textarea>
     </label>
   </div>
 

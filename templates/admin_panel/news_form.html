@@ -5,14 +5,14 @@
 <div class="card p-5">
   <form method="post" enctype="multipart/form-data">{% csrf_token %}
     {% if form %}{{ form.as_p }}{% else %}
-      <div class="space-y-3 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+      <div class="space-y-3">
         <label class="block">
           <span class="text-sm">Title</span>
-          <input name="title" class="w-full rounded-lg" value="{{ news.title }}">
+          <input name="title" class="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg" value="{{ news.title }}">
         </label>
         <label class="block">
-          <span class="text-sm">Content (HTML allowed)</span>
-          <textarea name="content" rows="8" class="w-full rounded-lg">{{ news.content }}</textarea>
+          <span class="text-sm">Content</span>
+          <textarea name="content" rows="8" class="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg">{{ news.content }}</textarea>
         </label>
         <label class="block">
           <span class="text-sm">Image</span>
