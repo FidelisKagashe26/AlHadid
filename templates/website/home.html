@@ -535,8 +535,9 @@
       </article>
       {% endif %}
       {% endwith %}
-
-      {% with e1=upcoming_events.first|default:latest_events.first %}
+      
+      {% if upcoming_events.0 %}
+      {% with e1=upcoming_events.0|default:latest_events.0 %}
       {% if e1 %}
       <article class="news-card card p-5 h-full flex flex-col">
         <div class="flex items-center gap-2 mb-3">
@@ -556,7 +557,9 @@
       </article>
       {% endif %}
       {% endwith %}
-
+      {% endif %}
+      
+      {% if upcoming_events.1 %}
       {% with n2=latest_news.1 e2=upcoming_events.1|default:latest_events.1 %}
       {% if n2 %}
       <article class="news-card card p-5 h-full flex flex-col">
@@ -611,6 +614,7 @@
       </article>
       {% endif %}
       {% endwith %}
+      {% endif %}
     </div>
   </div>
 </section>
