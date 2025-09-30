@@ -536,7 +536,7 @@
       {% endif %}
       {% endwith %}
 
-      {% with e1=upcoming_events.0|default:latest_events.0 %}
+      {% with e1=upcoming_events.first|default:latest_events.first %}
       {% if e1 %}
       <article class="news-card card p-5 h-full flex flex-col">
         <div class="flex items-center gap-2 mb-3">
