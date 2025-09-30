@@ -7,8 +7,25 @@
   <a href="{% url 'admin_panel:admin_users_create' %}" class="btn btn-primary"><span class="me-1">＋</span> Add Admin</a>
 </div>
 
+<div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+  <!-- Client-side Search (button-triggered like other pages) -->
+  <div class="flex items-center gap-2">
+    <label for="searchInput" class="sr-only">Search users</label>
+    <input id="searchInput" type="text" placeholder="Search by title or active (yes/no)…"
+           class="w-64 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm">
+    <button id="searchBtn"
+            class="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 text-sm">
+      Search
+    </button>
+    <button id="clearBtn"
+            class="rounded-xl border border-slate-300 dark:border-slate-700 px-3 py-2 text-sm">
+      Clear
+    </button>
+  </div>
+</div>
+
 <!-- Search Bar (client-side like News/Events) -->
-<div class="card mb-4">
+{% comment %} <div class="card mb-4">
   <div class="p-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
     <div class="flex items-center gap-2 w-full md:w-auto">
       <label for="searchInput" class="sr-only">Search users</label>
@@ -20,7 +37,7 @@
       <button id="clearBtn" class="btn btn-outline">Clear</button>
     </div>
   </div>
-</div>
+</div> {% endcomment %}
 
 <div class="card overflow-x-auto">
   <table class="min-w-full text-sm">
@@ -73,7 +90,8 @@
     <!-- Page size -->
     <div class="flex items-center gap-2">
       <label for="pageSize" class="text-sm text-slate-600 dark:text-slate-300">Rows per page</label>
-      <select id="pageSize" class="input px-3 py-2">
+      <select id="pageSize"
+              class="px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm">
         <option value="10" selected>10</option>
         <option value="25">25</option>
         <option value="50">50</option>

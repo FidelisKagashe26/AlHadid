@@ -65,7 +65,7 @@
 
         <td class="px-4 py-2 font-medium text-slate-800 dark:text-slate-100" data-col="name">{{ m.name }}</td>
         <td class="px-4 py-2" data-col="email">
-          <a class="text-emerald-700 hover:underline dark:text-emerald-300" href="mailto:{% if m.email %}{{ m.email }}{% endif %}">
+          <a class="text-emerald-700 hover:underline dark:text-emerald-300" href="https://mail.google.com/mail/?view=cm&fs=1&to={% if m.email %}{{ m.email }}{% endif %}">
             {{ m.email }}
           </a>
         </td>

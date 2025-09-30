@@ -66,9 +66,9 @@
 
         <div class="h-px bg-white/10 my-2"></div>
 
-        <a class="sidebar-link {% if 'program' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:programs_list' %}">
+        {% comment %} <a class="sidebar-link {% if 'program' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:programs_list' %}">
           <i class="fa-solid fa-project-diagram w-5 text-gold"></i> <span>Programs</span>
-        </a>
+        </a> {% endcomment %}
         <a class="sidebar-link {% if 'news' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:news_list' %}">
           <i class="fa-solid fa-newspaper w-5 text-gold"></i> <span>News</span>
         </a>
@@ -173,9 +173,9 @@
 
           <div class="h-px bg-white/10 my-2"></div>
 
-          <a class="sidebar-link py-2 px-3 {% if 'program' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:programs_list' %}">
+          {% comment %} <a class="sidebar-link py-2 px-3 {% if 'program' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:programs_list' %}">
             <i class="fa-solid fa-project-diagram w-4"></i> <span>Programs</span>
-          </a>
+          </a> {% endcomment %}
           <a class="sidebar-link py-2 px-3 {% if 'news' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_panel:news_list' %}">
             <i class="fa-solid fa-newspaper w-4"></i> <span>News</span>
           </a>

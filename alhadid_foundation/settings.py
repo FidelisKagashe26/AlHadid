@@ -4,8 +4,8 @@ import os
 # === Base ===
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-only-secret-key-change-me')
-DEBUG = True  # DEV ONLY — we will turn off in production later
-ALLOWED_HOSTS = ["*"]  # DEV ONLY
+DEBUG = False  # DEV ONLY — we will turn off in production later
+ALLOWED_HOSTS = ["alhadidtestingsite.pythonanywhere.com", "al-hadidfoundation.org"]  # DEV ONLY
 
 # === Installed apps ===
 INSTALLED_APPS = [
@@ -111,19 +111,19 @@ PASSWORD_RESET_TIMEOUT = 60 * 60 * 24  # 24 hours
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Cookies & session
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
-SESSION_COOKIE_HTTPONLY = False
-CSRF_COOKIE_HTTPONLY = False
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = "Lax"
 # Shorter admin sessions are safer
 SESSION_COOKIE_AGE = 60 * 60 * 2  # 2 hours
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Transport security
-SECURE_SSL_REDIRECT = False
+SECURE_SSL_REDIRECT = True
 SECURE_HSTS_SECONDS = 31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = False
-SECURE_HSTS_PRELOAD = False
-SECURE_CONTENT_TYPE_NOSNIFF = False
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_REFERRER_POLICY = "same-origin"

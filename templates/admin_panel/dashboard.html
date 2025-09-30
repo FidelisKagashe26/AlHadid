@@ -9,10 +9,10 @@
 
 <!-- Stats: 2 cols on mobile, 3 cols on md+ (iPad/Desktop) -->
 <div class="grid gap-4 grid-cols-2 md:grid-cols-3 mb-6">
-  <a href="{% url 'admin_panel:programs_list' %}" class="rounded-2xl border border-slate-200 dark:border-darkborder p-4 bg-white dark:bg-darksurface shadow-sm">
+  {% comment %} <a href="{% url 'admin_panel:programs_list' %}" class="rounded-2xl border border-slate-200 dark:border-darkborder p-4 bg-white dark:bg-darksurface shadow-sm">
     <div class="text-sm text-slate-500 dark:text-slate-400">Programs</div>
     <div class="mt-1 text-3xl font-bold text-gold">{{ programs_count|default:0 }}</div>
-  </a>
+  </a> {% endcomment %}
 
   <a href="{% url 'admin_panel:news_list' %}" class="rounded-2xl border border-slate-200 dark:border-darkborder p-4 bg-white dark:bg-darksurface shadow-sm">
     <div class="text-sm text-slate-500 dark:text-slate-400">News</div>
