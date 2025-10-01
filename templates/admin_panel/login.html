@@ -44,6 +44,100 @@
 
 
   <style>
+    /* container na spacing */
+    .form-field {
+      margin-bottom: 1.5rem;
+      position: relative; /* muhimu kwa positioning ya eye icon na label */
+    }
+
+    /* input - hakikisha padding-right inatoa nafasi ya icon */
+    .floating-input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px 44px 12px 12px; /* haki: top/right/bottom/left - right = nafasi icon */
+      border-radius: 12px;
+      border: 2px solid #cbd5e1; /* grey-ish */
+      background: #ffffff;
+      color: #0f172a;
+      font-size: 14px;
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+
+    /* floating label (anza katikati ya input) */
+    .floating-label {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      color: #64748b;
+      font-size: 14px;
+      padding: 0 6px;
+      pointer-events: none;
+      transition: all .15s ease;
+    }
+
+    /* focus state ya input */
+    .floating-input:focus {
+      border-color: #10b981; /* emerald-like */
+      box-shadow: 0 0 0 4px rgba(16,185,129,0.06);
+    }
+
+    /* wakati input ina value au focus: label inainuka (floating) */
+    .floating-input:focus + .floating-label,
+    .floating-input:not(:placeholder-shown) + .floating-label {
+      top: -8px;
+      transform: none;
+      font-size: 12px;
+      color: #065f46;
+      background: #ffffff;
+    }
+
+    /* eye icon (button) */
+    .eye-icon {
+      position: absolute;
+      right: 10px;                /* nafasi kutoka kulia */
+      top: 50%;
+      transform: translateY(-50%);
+      height: 32px;
+      width: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: #94a3b8;             /* muted slate */
+      padding: 0;
+      line-height: 0;
+      border-radius: 6px;
+    }
+
+    /* hover na focus kwa aksesibiliti */
+    .eye-icon:hover {
+      color: #059669;
+    }
+    .eye-icon:focus {
+      outline: 2px solid rgba(5,150,105,0.15);
+      outline-offset: 2px;
+      box-shadow: none;
+    }
+
+    /* responsive: kama screen ndogo, punguza right */
+    @media (max-width: 420px) {
+      .floating-input { padding-right: 40px; }
+      .eye-icon { right: 8px; height: 28px; width: 28px; }
+    }
+
+    /* optional: error message styling */
+    .error-message {
+      color: #b91c1c;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+
+
     /* ===================== Effects zilizokuwepo ===================== */
     .logo-pulse { animation: pulse-subtle 2s ease-in-out infinite; }
     @keyframes pulse-subtle { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.02);opacity:.95} }
@@ -176,13 +270,24 @@
 
           <!-- ===================== PASSWORD (Floating + eye ndani ya input) ===================== -->
           <div class="error-message mt-6 hidden" id="password-error"></div>
-          <div class="form-field mb-6 floating-group">
-            <input id="password" name="password" type="password" required autocomplete="current-password" placeholder=" "
-                   class="floating-input block w-full rounded-xl border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-3 pr-12 text-sm font-medium placeholder-transparent focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 input-glow transition-all duration-200" />
+          <div class="form-field floating-group">
+            <input id="password"
+                  name="password"
+                  type="password"
+                  required
+                  autocomplete="current-password"
+                  placeholder=" "
+                  class="floating-input" />
+
             <label for="password" class="floating-label">Password</label>
 
-            <!-- Kajicho: Bootstrap Icon ndani ya input -->
-            <button type="button" style="padding-bottom: 40px; left: 200px; padding-left: 150px;" class="js-toggle-password absolute inset-y-0 mt-8 flex items-center pr-3 text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 eye-icon" aria-label="Show password" aria-pressed="false" data-target="#password">
+            <!-- Kajicho ndani ya input (usitumie inline styles) -->
+            <button type="button"
+                    class="js-toggle-password eye-icon"
+                    aria-label="Show password"
+                    aria-pressed="false"
+                    data-target="#password">
+              <!-- Hapa tumetumia bootstrap icon class, lakini kuna alternative SVG chini -->
               <i class="bi bi-eye" aria-hidden="true"></i>
             </button>
           </div>
